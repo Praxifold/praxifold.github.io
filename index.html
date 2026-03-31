@@ -7,43 +7,26 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="loadingBanner" class="auth-banner hidden">
-        <div class="loader-content">
-            <p id="loaderText">Tikrinama paskyra...</p>
-            <small>Aptiktas automatinis prisijungimas, prašome palaukti...</small>
+    <div id="waitOverlay" class="notif-overlay hidden">
+        <div class="notif-box" style="text-align:center">
+            <div class="spinner"></div>
+            <p>Prašome palaukti...</p>
         </div>
-    </div>
-
-    <div id="vImpNotif" class="notif-overlay hidden">
-        <div class="notif-box">
-            <button class="notif-close" onclick="closeNotif('vImpNotif')">✖</button>
-            <p id="vImpText"></p>
-        </div>
-    </div>
-    
-    <div id="nImpNotif" class="notif-banner hidden">
-        <button class="notif-close-small" onclick="closeNotif('nImpNotif')">✖</button>
-        <p id="nImpText"></p>
     </div>
 
     <div id="landing" class="center">
         <h1>Mathexa</h1>
         <div class="auth-card">
-            <div class="btn-group">
-                <button id="btnLogin">Prisijungti</button>
-                <button id="btnSignup" style="background: var(--glass); border: 1px solid var(--primary);">Registruotis</button>
-            </div>
+            <button id="btnLogin">Prisijungti</button>
+            <button id="btnSignup" class="btn-outline">Registruotis</button>
         </div>
     </div>
 
     <div id="login" class="center hidden">
         <div class="auth-card">
             <h2>Prisijungti</h2>
-            <div class="input-wrap">
-                <input id="email" type="email" placeholder="El. paštas">
-                <input id="password" type="password" placeholder="Slaptažodis">
-            </div>
-            <div id="loginStatus" class="status-msg"></div>
+            <input id="email" type="email" placeholder="El. paštas">
+            <input id="password" type="password" placeholder="Slaptažodis">
             <button id="loginBtn">Eiti</button>
             <button class="btn-flat" onclick="back()">Atgal</button>
         </div>
@@ -52,24 +35,22 @@
     <div id="signup" class="center hidden">
         <div class="auth-card">
             <h2>Nauja paskyra</h2>
-            <div class="input-wrap">
-                <input id="name" placeholder="Vardas Pavardė">
-                <input id="email2" type="email" placeholder="El. paštas">
-                <select id="role">
-                    <option value="student">Studentas</option>
-                    <option value="teacher">Mokytojas</option>
-                </select>
-                <div class="val-wrap">
-                    <input id="password2" type="password" placeholder="Slaptažodis">
-                    <span id="valLen" class="val-tag">Min. 8 simb.</span>
-                </div>
-                <div class="val-wrap">
-                    <input id="password3" type="password" placeholder="Pakartokite slaptažodį">
-                    <span id="valMatch" class="val-tag">Nesutampa</span>
-                </div>
+            <input id="name" placeholder="Vardas Pavardė">
+            <input id="email2" type="email" placeholder="El. paštas">
+            <select id="role">
+                <option value="student">Studentas</option>
+                <option value="teacher">Mokytojas</option>
+            </select>
+            <div class="val-wrap">
+                <input id="password2" type="password" placeholder="Slaptažodis">
+                <span id="valLen" class="val-tag">8+ simb.</span>
             </div>
-            <div class="legal-box">
-                Kurdami paskyrą sutinkate su <a href="policy.txt" target="_blank">taisyklėmis</a>.
+            <div class="val-wrap">
+                <input id="password3" type="password" placeholder="Pakartokite slaptažodį">
+                <span id="valMatch" class="val-tag"></span>
+            </div>
+            <div class="policy-notice">
+                Norėdami sužinoti, kaip tvarkomi jūsų duomenys, skaitykite <a href="policy.txt" target="_blank">čia</a>.
             </div>
             <button id="signupBtn">Sukurti</button>
             <button class="btn-flat" onclick="back()">Atgal</button>
@@ -81,15 +62,15 @@
             <div class="logo">Mathexa</div>
             <div class="actions">
                 <span id="headerClicks">--</span>
-                <button id="settingsBtn">⚙</button>
+                <button onclick="show('settings')">⚙</button>
             </div>
         </div>
         <div class="search-area">
             <input id="searchInput" placeholder="Ieškoti pamokos...">
             <select id="langFilter">
-                <option value="all">Visi</option>
-                <option value="lt">LT</option>
-                <option value="en">EN</option>
+                <option value="all">Visos kalbos</option>
+                <option value="lt">Lietuvių (LT)</option>
+                <option value="en">English (EN)</option>
             </select>
         </div>
         <div id="videos" class="video-grid"></div>
@@ -98,48 +79,35 @@
     <div id="settings" class="center hidden">
         <div class="auth-card">
             <h2>Nustatymai</h2>
-            <div id="supportIdView" class="id-badge">
+            <div class="id-badge">
                 <span id="idText">ID: Kraunama...</span>
-                <button id="copyId" onclick="copySupportId()">📋</button>
+                <button onclick="copySupportId()">📋</button>
             </div>
-            
             <div class="clicks-box">
-                <div class="clicks-label">LIKUSIOS PERŽIŪROS</div>
                 <h1 id="clicksInfo">--</h1>
-                <div id="expiryInfo" class="exp-text"></div>
+                <p>Likusios peržiūros</p>
             </div>
-
-            <div class="settings-card">
-                <label class="toggle"><input type="checkbox" id="stayLogged"> Likti prisijungus</label>
-            </div>
-
-            <div class="settings-card">
-                <input id="subCode" placeholder="Prenumeratos kodas">
-                <button id="btnRedeem">Aktyvuoti</button>
-                <div id="subStatus" class="status-msg"></div>
-            </div>
+            <input id="subCode" placeholder="Prenumeratos kodas">
+            <button id="btnRedeem">Aktyvuoti</button>
             
             <div class="danger-zone">
                 <p class="dz-title">DANGER ZONE:</p>
                 <button onclick="openDeleteModal()" class="btn-outline">Ištrinti paskyrą</button>
-                <button onclick="alert('Susisiekite su mathexa.dev@gmail.com ir būkite pasiruošę atsakyti į saugos klausimus.')" class="btn-flat">Pamiršau slaptažodį</button>
+                <button onclick="alert('Susisiekite: mathexa.dev@gmail.com')" class="btn-flat">Pamiršau slaptažodį</button>
             </div>
-
             <button id="logoutBtn" class="btn-danger">Atsijungti</button>
-            <button id="closeSettings" class="btn-flat">Grįžti</button>
+            <button onclick="show('app')" class="btn-flat">Grįžti</button>
         </div>
     </div>
 
     <div id="deleteModal" class="notif-overlay hidden">
         <div class="notif-box">
-            <h3>Patvirtinkite tapatybę</h3>
-            <p>Įveskite duomenis, kad suplanuotumėte ištrynimą.</p>
-            <input id="delEmail" type="email" placeholder="El. paštas" style="margin-top:10px">
-            <input id="delPass" type="password" placeholder="Slaptažodis" style="margin-top:10px">
-            <div class="btn-group" style="margin-top:20px">
-                <button onclick="confirmDeletion()" class="btn-danger">Ištrinti</button>
-                <button onclick="document.getElementById('deleteModal').classList.add('hidden')" class="btn-flat">Atšaukti</button>
-            </div>
+            <h3>Ištrinti paskyrą?</h3>
+            <p>Įveskite duomenis patvirtinimui.</p>
+            <input id="delEmail" type="email" placeholder="El. paštas">
+            <input id="delPass" type="password" placeholder="Slaptažodis">
+            <button onclick="confirmDeletion()" class="btn-danger">Patvirtinti ištrynimą</button>
+            <button onclick="document.getElementById('deleteModal').classList.add('hidden')" class="btn-flat">Atšaukti</button>
         </div>
     </div>
 
