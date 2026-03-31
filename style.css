@@ -1,48 +1,43 @@
-:root { --primary: #4da3ff; --bg-dark: #0a1f44; --bg-light: #1e3c72; --glass: rgba(255, 255, 255, 0.1); --error: #ff4d4d; --success: #4dff88; }
+:root { --primary: #4da3ff; --bg-dark: #0a1f44; --bg-light: #1e3c72; --glass: rgba(255, 255, 255, 0.1); --error: #ff4d4d; }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-body { background: linear-gradient(135deg, var(--bg-dark), var(--bg-light)); color: white; min-height: 100vh; }
+body { background: linear-gradient(135deg, var(--bg-dark), var(--bg-light)); color: white; min-height: 100vh; overflow-x: hidden; }
 
-.center { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+.center { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; text-align: center; }
 .hidden { display: none !important; }
 
-/* PC FIX: The Auth Card prevents squishing */
+/* PC Auth Card */
 .auth-card { 
-    width: 100%; 
-    max-width: 400px; 
-    background: rgba(255,255,255,0.05); 
-    padding: 30px; 
-    border-radius: 20px; 
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass);
+    width: 100%; max-width: 400px; background: rgba(0,0,0,0.3); padding: 30px; 
+    border-radius: 24px; border: 1px solid var(--glass); backdrop-filter: blur(15px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
 input, select, button { 
-    width: 100%; 
-    padding: 14px; 
-    margin: 8px 0; 
-    border-radius: 10px; 
-    border: 1px solid var(--glass); 
-    background: var(--glass); 
-    color: white; 
-    font-size: 16px;
+    width: 100%; padding: 15px; margin: 8px 0; border-radius: 12px; 
+    border: 1px solid var(--glass); background: var(--glass); color: white; font-size: 16px; outline: none;
 }
 
-button { background: var(--primary); font-weight: bold; border: none; cursor: pointer; }
+/* FIX: Dropdown Options Visibility */
+select option { background: var(--bg-light); color: white; }
+
+button { background: var(--primary); font-weight: bold; border: none; cursor: pointer; transition: 0.2s; }
+button:active { transform: scale(0.98); }
 button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.val-wrap { position: relative; margin-bottom: 5px; }
-.val-tag { font-size: 11px; position: absolute; right: 10px; bottom: -5px; color: var(--error); }
+.val-wrap { position: relative; width: 100%; }
+.val-tag { font-size: 11px; position: absolute; right: 12px; top: 26px; font-weight: bold; pointer-events: none; }
 
-.id-badge { display: flex; justify-content: space-between; align-items: center; border: 1px dashed var(--primary); padding: 10px; margin: 10px 0; }
-#copyId { width: 40px; padding: 5px; margin: 0; background: transparent; }
+.video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; padding: 20px; }
+.video-card { background: var(--glass); border: 1px solid var(--glass); border-radius: 18px; padding: 20px; cursor: pointer; transition: 0.3s; }
+.video-card:hover { background: rgba(255,255,255,0.15); transform: translateY(-3px); }
 
-.danger-zone { 
-    margin-top: 30px; 
-    padding-top: 20px; 
-    border-top: 1px solid rgba(255,77,77,0.3); 
-    text-align: left;
-}
-.dz-title { color: var(--error); font-weight: bold; font-size: 12px; margin-bottom: 10px; }
-.btn-outline { background: transparent; border: 1px solid var(--error); color: var(--error); }
+.id-badge { display: flex; justify-content: space-between; align-items: center; border: 1px dashed var(--primary); padding: 12px; border-radius: 10px; margin: 15px 0; font-family: monospace; }
+#copyId { width: 45px; background: transparent; margin: 0; padding: 0; font-size: 20px; }
 
-.loader-content { text-align: center; padding: 20px; }
+.danger-zone { margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); text-align: left; }
+.dz-title { color: var(--error); font-size: 12px; font-weight: 900; margin-bottom: 8px; }
+.btn-danger { background: var(--error); }
+.btn-flat { background: transparent; opacity: 0.7; font-size: 14px; }
+
+.notif-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.notif-box { background: var(--bg-dark); border: 1px solid var(--primary); padding: 30px; border-radius: 20px; max-width: 350px; width: 100%; }
