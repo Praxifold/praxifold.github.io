@@ -1,10 +1,12 @@
-const API = "https://script.google.com/macros/s/AKfycbzPJmUfl2klgpQ2u8F2z8_Z0nnvNo-FYguxqwej83SNkIZTVzPE8ACIAFP7jsOUAedymQ/exec"; 
-const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const API = "https://script.google.com/macros/s/AKfycbzecv7dpXYU3dAN2_s7uybsMtS4gpAeOKhMizL_v1Bk9w8ChBD2GOd-66IUYxuTnHZRVQ/exec"; // PASTE YOUR URL HERE
 
-let notificationsDB = [];
 let VIDEOS_DB = [];
+let notificationsDB = [];
+let CURRENT_CLICKS = 0;
+let IS_INFINITY = false;
 
 document.addEventListener("DOMContentLoaded", () => {
+    // UI Triggers
     document.getElementById("btnLogin").onclick = () => show("login");
     document.getElementById("btnSignup").onclick = () => show("signup");
     document.getElementById("loginBtn").onclick = login;
@@ -14,6 +16,24 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("closeSettings").onclick = () => show("app");
     document.getElementById("logoutBtn").onclick = () => { localStorage.clear(); location.reload(); };
     
+    // Real-time Password Feedback
+    const p2 = document.getElementById("password2");
+    const p3 = document.getElementById("password3");
+    p2.oninput = () => {
+        const tag = document.getElementById("valLen");
+        tag.style.color = p2.value.length >= 8 ? "#4dff88" : "#ff4d4d";
+        checkMatch();
+    };
+    p3.oninput = checkMatch;
+
+    function checkMatch() {
+        const tag = document.getElementById("valMatch");
+        if(p3.value === "") { tag.innerText = "Nesutampa"; tag.style.color = "#ff4d4d"; return; }
+        const match = p2.value === p3.value;
+        tag.innerText = match ? "Sutampa" : "Nesutampa";
+        tag.style.color = match ? "#4dff88" : "#ff4d4d";
+    }
+
     const stayToggle = document.getElementById("stayLogged");
     stayToggle.onchange = () => localStorage.setItem('mathexa_stay', stayToggle.checked);
     stayToggle.checked = localStorage.getItem('mathexa_stay') === 'true';
@@ -24,182 +44,127 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function checkSession() {
     const stay = localStorage.getItem('mathexa_stay') === 'true';
-    const s = JSON.parse(localStorage.getItem('mathexa_session'));
-    const sid = localStorage.getItem('mathexa_support');
+    const session = JSON.parse(localStorage.getItem('mathexa_session'));
 
-    if (!s && !stay) return;
-
-    // 7-Hour session limit check
-    if (s && s.token) {
-        try {
-            const time = parseInt(atob(s.token.replace(/-/g, '+').replace(/_/g, '/')).split("|")[1]);
-            if ((Date.now() - time) / 3600000 > 7) {
-                localStorage.removeItem('mathexa_session');
-                if (!stay) return;
-            } else {
-                // 1 in 10 chance to refresh subscription data from server
-                if (Math.random() < 0.1) await validateSession(s.token);
-                else showApp();
-                return;
-            }
-        } catch(e) { localStorage.removeItem('mathexa_session'); }
-    }
-
-    if (stay && sid) {
+    if (stay && session?.token) {
         document.getElementById("loadingBanner").classList.remove("hidden");
         try {
-            const res = await fetch(API, { method:"POST", body: JSON.stringify({ action:"login", support_id: sid })});
-            const data = await res.json();
-            if (data.success) {
-                localStorage.setItem('mathexa_session', JSON.stringify({ token: data.token }));
-                updateUI(data.clicks_remaining, data.expiry, data.support_id);
+            const res = await fetch(API, { method:"POST", body: JSON.stringify({ action:"login", token: session.token })});
+            const d = await res.json();
+            if (d.success) {
+                localStorage.setItem('mathexa_session', JSON.stringify({ token: d.token }));
+                updateUI(d.clicks_remaining, d.expiry, d.support_id);
                 showApp();
             } else { show("landing"); }
         } catch(e) { show("landing"); }
         finally { document.getElementById("loadingBanner").classList.add("hidden"); }
+    } else {
+        show("landing");
     }
-}
-
-async function validateSession(token) {
-    try {
-        const res = await fetch(API, { method:"POST", body: JSON.stringify({ action:"validateToken", token })});
-        const d = await res.json();
-        if (d.success && d.banned !== "yes") {
-            updateUI(d.clicks_remaining, d.expiry, d.support_id);
-            showApp();
-        } else { localStorage.clear(); location.reload(); }
-    } catch(e) { showApp(); }
 }
 
 async function showApp() {
     show("app");
     const grid = document.getElementById("videos");
-    const search = document.getElementById("searchInput");
-    const filter = document.getElementById("langFilter");
-
-    const render = () => {
-        grid.innerHTML = "";
-        const q = search.value.toLowerCase();
-        const l = filter.value;
-        VIDEOS_DB.filter(v => v.title.toLowerCase().includes(q) && (l === "all" || v.lang === l)).forEach(v => {
-            const div = document.createElement("div");
-            div.className = "video-card";
-            div.innerHTML = `<div class="v-meta">${v.platform} • ${v.category}</div><h3>${v.title}</h3><div class="v-footer"><span class="v-tag">Žiūrėti</span></div>`;
-            div.onclick = async () => {
-                const tag = div.querySelector(".v-tag");
-                tag.innerText = "Kraunama...";
-                try {
-                    const s = JSON.parse(localStorage.getItem('mathexa_session'));
-                    const r = await fetch(API, { method:"POST", body: JSON.stringify({ action:"watch", token: s.token })});
-                    const d = await r.json();
-                    if(d.allowed) {
-                        updateUI(d.remaining, null, null);
-                        if(isIOS()) window.location.href = v.url; else window.open(v.url, "_blank");
-                    } else alert(d.error);
-                } catch(e) { alert("Klaida."); }
-                tag.innerText = "Žiūrėti";
-            };
-            grid.appendChild(div);
-        });
-    };
-
     if (VIDEOS_DB.length === 0) {
         try {
             const res = await fetch('videos.json');
             VIDEOS_DB = await res.json();
-        } catch(e) { grid.innerHTML = "Nepavyko užkrauti video."; return; }
+        } catch(e) { grid.innerHTML = "Klaida užkraunant."; return; }
     }
-    search.oninput = render; filter.onchange = render; render();
+    renderVideos();
+}
+
+function renderVideos() {
+    const grid = document.getElementById("videos");
+    const q = document.getElementById("searchInput").value.toLowerCase();
+    grid.innerHTML = "";
+    VIDEOS_DB.filter(v => v.title.toLowerCase().includes(q)).forEach(v => {
+        const div = document.createElement("div");
+        div.className = "video-card";
+        div.innerHTML = `<h3>${v.title}</h3><div class="v-footer"><span class="v-tag">Žiūrėti</span></div>`;
+        div.onclick = () => openVideo(v);
+        grid.appendChild(div);
+    });
+}
+
+async function openVideo(v) {
+    if (IS_INFINITY || CURRENT_CLICKS > 0) {
+        // Instant open for PC/Background sync
+        window.open(v.url, "_blank");
+        
+        // Background update (PC only logic or non-blocking)
+        const session = JSON.parse(localStorage.getItem('mathexa_session'));
+        fetch(API, { method:"POST", body: JSON.stringify({ action:"watch", token: session.token })})
+            .then(r => r.json())
+            .then(d => { if(!IS_INFINITY) updateUI(CURRENT_CLICKS - 1, null, null); });
+    } else {
+        alert("Neturite peržiūrų.");
+    }
 }
 
 function updateUI(c, e, id) {
+    CURRENT_CLICKS = c;
     const now = new Date();
     const exp = e ? new Date(e) : null;
-    const isToday = exp && exp.toDateString() === now.toDateString();
-    const isExpired = exp && exp < now && !isToday;
+    IS_INFINITY = exp && exp > now;
 
-    document.getElementById("headerClicks").innerText = (exp && exp > now) ? "∞" : "Liko: " + c;
-    document.getElementById("clicksInfo").innerText = (exp && exp > now) ? "∞" : c;
-    if(id) document.getElementById("supportIdView").innerText = "ID: " + id;
-    
-    const expDiv = document.getElementById("expiryInfo");
-    if (isExpired) expDiv.innerText = "Prenumerata baigėsi";
-    else if (isToday) { expDiv.innerText = "Baigiasi šiandien!"; alert("Dėmesio: Jūsų prenumerata baigiasi šiandien!"); }
-    else if (exp) expDiv.innerText = "Galioja iki: " + exp.toLocaleDateString();
-    else expDiv.innerText = "Nėra aktyvios prenumeratos";
+    document.getElementById("headerClicks").innerText = IS_INFINITY ? "∞" : "Liko: " + c;
+    document.getElementById("clicksInfo").innerText = IS_INFINITY ? "∞" : c;
+    if(id) document.getElementById("idText").innerText = "ID: " + id;
 }
 
 async function login() {
+    const btn = document.getElementById("loginBtn");
+    btn.disabled = true;
     const email = document.getElementById("email").value, password = document.getElementById("password").value;
-    if(!email || !password) return;
-    document.getElementById("loginStatus").innerText = "Jungiamasi...";
+    
     try {
         const res = await fetch(API, { method:"POST", body: JSON.stringify({ action:"login", email, password })});
-        const data = await res.json();
-        if(data.success) {
-            localStorage.setItem('mathexa_session', JSON.stringify({ token: data.token }));
-            localStorage.setItem('mathexa_support', data.support_id);
-            updateUI(data.clicks_remaining, data.expiry, data.support_id);
+        const d = await res.json();
+        
+        if(d.success) {
+            localStorage.setItem('mathexa_session', JSON.stringify({ token: d.token }));
+            updateUI(d.clicks_remaining, d.expiry, d.support_id);
             showApp();
-        } else document.getElementById("loginStatus").innerText = data.error;
-    } catch(e) { document.getElementById("loginStatus").innerText = "Ryšio klaida."; }
+        } else if (d.error === "DELETION_PENDING") {
+            if(confirm("Ši paskyra suplanuota ištrynimui. Ar norite ją reaktyvuoti?")) {
+                reactivate(d.email, password);
+            }
+        } else {
+            alert(d.error);
+        }
+    } catch(e) { alert("Ryšio klaida."); }
+    btn.disabled = false;
 }
 
-async function signup() {
-    const p2 = document.getElementById("password2").value, p3 = document.getElementById("password3").value;
-    const name = document.getElementById("name").value, email = document.getElementById("email2").value;
-    if(!name || !email || p2.length < 8) { alert("Užpildykite visus laukus (Slaptažodis min. 8)"); return; }
-    if(p2 !== p3) { alert("Slaptažodžiai nesutampa!"); return; }
-    const res = await fetch(API, { method:"POST", body: JSON.stringify({ action:"signup", full_name: name, email, password: p2, role: document.getElementById("role").value })});
+async function reactivate(email, password) {
+    const res = await fetch(API, { method:"POST", body: JSON.stringify({ action:"accountAction", actionType: "reactivate", email, password })});
     const d = await res.json();
-    if(d.success) { alert("Paskyra sukurta!"); show("login"); } else alert(d.error);
+    if(d.success) { alert("Paskyra reaktyvuota! Prašome prisijungti iš naujo."); location.reload(); }
+    else alert(d.error);
 }
 
-async function redeem() {
-    const code = document.getElementById("subCode").value;
-    const s = JSON.parse(localStorage.getItem('mathexa_session'));
-    if(!code || !s) return;
-    document.getElementById("subStatus").innerText = "Tikrinama...";
-    const res = await fetch(API, { method:"POST", body: JSON.stringify({ action:"redeemCode", token: s.token, code })});
+function copySupportId() {
+    const text = document.getElementById("idText").innerText.replace("ID: ", "");
+    navigator.clipboard.writeText(text);
+    alert("Nukopijuota!");
+}
+
+function openDeleteModal() { document.getElementById("deleteModal").classList.remove("hidden"); }
+
+async function confirmDeletion() {
+    const email = document.getElementById("delEmail").value;
+    const password = document.getElementById("delPass").value;
+    const res = await fetch(API, { method:"POST", body: JSON.stringify({ action:"accountAction", actionType: "requestDeletion", email, password })});
     const d = await res.json();
-    if(d.success) { document.getElementById("subStatus").innerText = "Aktyvuota!"; setTimeout(() => location.reload(), 1000); }
-    else document.getElementById("subStatus").innerText = d.error;
+    if(d.success) { alert(d.message); localStorage.clear(); location.reload(); }
+    else alert(d.error);
 }
 
 function show(id) {
     ["landing","login","signup","app","settings"].forEach(d => document.getElementById(d)?.classList.add("hidden"));
     document.getElementById(id).classList.remove("hidden");
-    const locMap = { "login": "log.in", "app": "m.s", "settings": "s" };
-    if(locMap[id]) displayNotif(locMap[id]);
 }
 
-async function fetchNotifications() {
-    try {
-        const res = await fetch(API, { method:"POST", body: JSON.stringify({ action:"getNotifications" }) });
-        const d = await res.json();
-        notificationsDB = d.notifications || [];
-    } catch(e) {}
-}
-
-function displayNotif(loc) {
-    const notif = notificationsDB.find(n => n.location === loc);
-    if(!notif || !notif.message) return;
-    const seen = JSON.parse(localStorage.getItem('seen_notifs') || "[]");
-    if (seen.includes(notif.message)) return;
-    if(notif.importance === "v.imp") {
-        document.getElementById('vImpText').innerText = notif.message;
-        document.getElementById('vImpNotif').classList.remove('hidden');
-    } else {
-        document.getElementById('nImpText').innerText = notif.message;
-        document.getElementById('nImpNotif').classList.remove('hidden');
-    }
-}
-
-function closeNotif(id) { 
-    const tid = id === 'vImpNotif' ? 'vImpText' : 'nImpText';
-    const msg = document.getElementById(tid).innerText;
-    const seen = JSON.parse(localStorage.getItem('seen_notifs') || "[]");
-    if (!seen.includes(msg)) { seen.push(msg); localStorage.setItem('seen_notifs', JSON.stringify(seen)); }
-    document.getElementById(id).classList.add('hidden'); 
-}
 function back() { show("landing"); }
