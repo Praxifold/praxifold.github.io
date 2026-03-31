@@ -1,62 +1,48 @@
-/* --- Global Fixes & Reset --- */
+:root { --primary: #4da3ff; --bg-dark: #0a1f44; --bg-light: #1e3c72; --glass: rgba(255, 255, 255, 0.1); --error: #ff4d4d; --success: #4dff88; }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-:root { --primary: #4da3ff; --bg-dark: #0a1f44; --bg-light: #1e3c72; --glass: rgba(255, 255, 255, 0.1); --error: #ff4d4d; }
+body { background: linear-gradient(135deg, var(--bg-dark), var(--bg-light)); color: white; min-height: 100vh; }
 
-body { background: linear-gradient(135deg, var(--bg-dark), var(--bg-light)); color: white; min-height: 100vh; overflow-x: hidden; }
-
-/* --- Mobile First Layout --- */
-.center { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; gap: 20px; text-align: center; }
+.center { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
 .hidden { display: none !important; }
 
-/* --- Inputs & Buttons (Responsive) --- */
+/* PC FIX: The Auth Card prevents squishing */
+.auth-card { 
+    width: 100%; 
+    max-width: 400px; 
+    background: rgba(255,255,255,0.05); 
+    padding: 30px; 
+    border-radius: 20px; 
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass);
+}
+
 input, select, button { 
     width: 100%; 
-    max-width: 320px; 
-    padding: 15px; 
-    border-radius: 12px; 
-    border: 1px solid rgba(255,255,255,0.2); 
+    padding: 14px; 
+    margin: 8px 0; 
+    border-radius: 10px; 
+    border: 1px solid var(--glass); 
     background: var(--glass); 
     color: white; 
-    font-size: 16px; /* Prevents iOS zoom on focus */
-    outline: none;
+    font-size: 16px;
 }
 
-button { background: var(--primary); font-weight: bold; border: none; cursor: pointer; transition: 0.2s; }
-button:active { transform: scale(0.98); }
-.btn-flat { background: transparent; border: none; font-size: 14px; opacity: 0.7; }
-.btn-danger { background: var(--error); }
+button { background: var(--primary); font-weight: bold; border: none; cursor: pointer; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* --- Legal Text Fix --- */
-.legal-box { width: 100%; max-width: 300px; font-size: 13px; margin: 5px 0; color: rgba(255,255,255,0.7); }
-.legal-box a { color: #fff; text-decoration: underline; font-weight: 800; background: rgba(77,163,255,0.3); padding: 2px 5px; border-radius: 4px; }
+.val-wrap { position: relative; margin-bottom: 5px; }
+.val-tag { font-size: 11px; position: absolute; right: 10px; bottom: -5px; color: var(--error); }
 
-/* --- App View --- */
-.topbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(0,0,0,0.4); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
-.logo { font-weight: 900; letter-spacing: 1px; }
+.id-badge { display: flex; justify-content: space-between; align-items: center; border: 1px dashed var(--primary); padding: 10px; margin: 10px 0; }
+#copyId { width: 40px; padding: 5px; margin: 0; background: transparent; }
 
-.search-area { display: flex; padding: 15px; gap: 8px; max-width: 600px; margin: 0 auto; }
-.search-area input { flex: 1; }
-.search-area select { width: 80px; }
-
-.video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; padding: 15px; }
-.video-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; transition: 0.3s; }
-.v-tag { background: var(--primary); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; }
-
-/* --- Settings UI --- */
-#supportIdView { border: 1px dashed var(--primary); padding: 10px; font-family: monospace; font-size: 14px; margin-bottom: 10px; }
-.clicks-box { margin: 20px 0; }
-#clicksInfo { font-size: 60px; text-shadow: 0 0 20px var(--primary); }
-.exp-text { font-size: 14px; opacity: 0.8; margin-top: 5px; }
-.settings-card { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 15px; width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 10px; }
-
-/* --- Notifications --- */
-.auth-banner { position: fixed; top: 0; width: 100%; background: var(--primary); padding: 12px; text-align: center; z-index: 1000; font-weight: bold; }
-.notif-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
-.notif-box { background: var(--bg-light); border: 2px solid var(--primary); border-radius: 20px; padding: 30px; position: relative; width: 100%; max-width: 350px; text-align: center; }
-
-@media (max-width: 480px) {
-    h1 { font-size: 2rem; }
-    .video-grid { grid-template-columns: 1fr; }
-    .search-area { flex-direction: column; }
-    .search-area select { width: 100%; }
+.danger-zone { 
+    margin-top: 30px; 
+    padding-top: 20px; 
+    border-top: 1px solid rgba(255,77,77,0.3); 
+    text-align: left;
 }
+.dz-title { color: var(--error); font-weight: bold; font-size: 12px; margin-bottom: 10px; }
+.btn-outline { background: transparent; border: 1px solid var(--error); color: var(--error); }
+
+.loader-content { text-align: center; padding: 20px; }
