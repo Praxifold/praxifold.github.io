@@ -3,114 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mathexa 2026</title>
+    <title>Mathexa</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="waitOverlay" class="notif-overlay hidden">
-        <div class="notif-box" style="text-align:center">
+
+    <div id="status-overlay" style="display:none;">
+        <div class="glass" style="text-align:center;">
             <div class="spinner"></div>
-            <p>Prašome palaukti...</p>
+            <p id="status-text">Jungiamasi prie serverio, palaukite...</p>
         </div>
     </div>
 
-    <div id="landing" class="center">
-        <h1>Mathexa</h1>
-        <div class="auth-card">
-            <button id="btnLogin">Prisijungti</button>
-            <button id="btnSignup" class="btn-outline">Registruotis</button>
-        </div>
+    <div id="cookie-popup" class="glass" style="display:none; position:fixed; bottom:20px; z-index:1000; width:90%; max-width:350px;">
+        <p>Naudojame slapukus užtikrinti geriausią patirtį.</p>
+        <button onclick="acceptCookies('all')">Sutinku su visais</button>
+        <button onclick="acceptCookies('req')" style="margin-top:10px; background:rgba(255,255,255,0.1)">Tik būtini</button>
     </div>
 
-    <div id="login" class="center hidden">
-        <div class="auth-card">
-            <h2>Prisijungti</h2>
-            <input id="email" type="email" placeholder="El. paštas">
-            <input id="password" type="password" placeholder="Slaptažodis">
-            <button id="loginBtn">Eiti</button>
-            <button class="btn-flat" onclick="back()">Atgal</button>
-        </div>
-    </div>
-
-    <div id="signup" class="center hidden">
-        <div class="auth-card">
-            <h2>Nauja paskyra</h2>
-            <input id="name" placeholder="Vardas Pavardė">
-            <input id="email2" type="email" placeholder="El. paštas">
-            <select id="role">
-                <option value="student">Studentas</option>
-                <option value="teacher">Mokytojas</option>
-            </select>
-            <div class="val-wrap">
-                <input id="password2" type="password" placeholder="Slaptažodis">
-                <span id="valLen" class="val-tag">8+ simb.</span>
-            </div>
-            <div class="val-wrap">
-                <input id="password3" type="password" placeholder="Pakartokite slaptažodį">
-                <span id="valMatch" class="val-tag"></span>
-            </div>
-            <div class="policy-notice">
-                Norėdami sužinoti, kaip tvarkomi jūsų duomenys, skaitykite <a href="policy.txt" target="_blank">čia</a>.
-            </div>
-            <button id="signupBtn">Sukurti</button>
-            <button class="btn-flat" onclick="back()">Atgal</button>
-        </div>
-    </div>
-
-    <div id="app" class="hidden">
-        <div class="topbar">
-            <div class="logo">Mathexa</div>
-            <div class="actions">
-                <span id="headerClicks">--</span>
-                <button onclick="show('settings')">⚙</button>
-            </div>
-        </div>
-        <div class="search-area">
-            <input id="searchInput" placeholder="Ieškoti pamokos...">
-            <select id="langFilter">
-                <option value="all">Visos kalbos</option>
-                <option value="lt">Lietuvių (LT)</option>
-                <option value="en">English (EN)</option>
-            </select>
-        </div>
-        <div id="videos" class="video-grid"></div>
-    </div>
-
-    <div id="settings" class="center hidden">
-        <div class="auth-card">
-            <h2>Nustatymai</h2>
-            <div class="id-badge">
-                <span id="idText">ID: Kraunama...</span>
-                <button onclick="copySupportId()">📋</button>
-            </div>
-            <div class="clicks-box">
-                <h1 id="clicksInfo">--</h1>
-                <p>Likusios peržiūros</p>
-            </div>
-            <input id="subCode" placeholder="Prenumeratos kodas">
-            <button id="btnRedeem">Aktyvuoti</button>
+    <div class="container" id="app">
+        <div id="auth-screen" class="glass">
+            <h1 style="text-align:center; letter-spacing:-1px;">Mathexa</h1>
             
-            <div class="danger-zone">
-                <p class="dz-title">DANGER ZONE:</p>
-                <button onclick="openDeleteModal()" class="btn-outline">Ištrinti paskyrą</button>
-                <button onclick="alert('Susisiekite: mathexa.dev@gmail.com')" class="btn-flat">Pamiršau slaptažodį</button>
+            <div id="auth-buttons">
+                <button onclick="showSignUp()">Esu naujas (Sukurti paskyrą)</button>
+                <button onclick="showLogin()" style="margin-top:15px; background:rgba(255,255,255,0.1)">Prisijungti</button>
             </div>
-            <button id="logoutBtn" class="btn-danger">Atsijungti</button>
-            <button onclick="show('app')" class="btn-flat">Grįžti</button>
+
+            <div id="form-area" style="display:none; margin-top:20px;">
+                </div>
+        </div>
+
+        <div id="main-screen" class="glass" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3>Mathexa</h3>
+                <span id="user-clicks" style="font-size:12px; opacity:0.8;"></span>
+            </div>
+            
+            <div id="video-container" style="margin-top:20px;">
+                </div>
+
+            <button onclick="showSettings()" style="margin-top:20px; background:rgba(255,255,255,0.05);">Nustatymai</button>
+        </div>
+
+        <div id="settings-screen" class="glass" style="display:none;">
+            <h3>Nustatymai</h3>
+            <div id="settings-content">
+                </div>
+            <button onclick="backToMain()" style="margin-top:20px; background:none;">Grįžti atgal</button>
         </div>
     </div>
 
-    <div id="deleteModal" class="notif-overlay hidden">
-        <div class="notif-box">
-            <h3>Ištrinti paskyrą?</h3>
-            <p>Įveskite duomenis patvirtinimui.</p>
-            <input id="delEmail" type="email" placeholder="El. paštas">
-            <input id="delPass" type="password" placeholder="Slaptažodis">
-            <button onclick="confirmDeletion()" class="btn-danger">Patvirtinti ištrynimą</button>
-            <button onclick="document.getElementById('deleteModal').classList.add('hidden')" class="btn-flat">Atšaukti</button>
-        </div>
-    </div>
-
-    <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
