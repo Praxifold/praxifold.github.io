@@ -2,55 +2,61 @@
 <html lang="lt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mathexa</title>
+    <title>MATHEXA</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <nav class="top-nav">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform" target="_blank">Vabalų pranešimai 🐛</a>
+        <button id="set-btn" style="display:none" onclick="ui('settings')">⚙️ Nustatymai</button>
+    </nav>
 
-    <div id="status-overlay" style="display:none;">
-        <div class="glass" style="text-align:center;">
-            <div class="spinner"></div>
-            <p id="status-text">Jungiamasi prie serverio, palaukite...</p>
+    <div id="auth-box" class="container">
+        <h1>MATHEXA</h1>
+        <div class="card">
+            <div id="login-form">
+                <h2>Prisijungti</h2>
+                <input type="email" id="l-email" placeholder="El. paštas">
+                <input type="password" id="l-pass" placeholder="Slaptažodis">
+                <button onclick="auth('login')">Prisijungti</button>
+                <p onclick="toggleAuth()" style="cursor:pointer; font-size:12px">Esu naujas - susikurti paskyrą</p>
+            </div>
+            <div id="reg-form" style="display:none">
+                <h2>Registracija</h2>
+                <p class="note">Nerekomenduojame naudoti kasdienių slaptažodžių.</p>
+                <input type="email" id="r-email" placeholder="El. paštas">
+                <input type="password" id="r-pass" placeholder="Slaptažodis (min 8)" onkeyup="vPass()">
+                <input type="password" id="r-pass2" placeholder="Pakartoti slaptažodį" onkeyup="vPass()">
+                <select id="r-role"><option value="student">Mokinys</option><option value="teacher">Mokytojas</option></select>
+                <label><input type="checkbox" id="r-pol" onchange="vPass()"> Sutinku su <a href="policy.txt">taisyklėmis</a></label>
+                <button id="r-btn" onclick="auth('signup')" disabled>Sukurti paskyrą</button>
+                <p onclick="toggleAuth()" style="cursor:pointer; font-size:12px">Jau turiu paskyrą</p>
+            </div>
+            <p id="msg" class="error"></p>
         </div>
     </div>
 
-    <div id="cookie-popup" class="glass" style="display:none; position:fixed; bottom:20px; z-index:1000; width:90%; max-width:350px;">
-        <p>Naudojame slapukus užtikrinti geriausią patirtį.</p>
-        <button onclick="acceptCookies('all')">Sutinku su visais</button>
-        <button onclick="acceptCookies('req')" style="margin-top:10px; background:rgba(255,255,255,0.1)">Tik būtini</button>
+    <div id="main-app" class="container" style="display:none">
+        <div class="stats">Liko paspaudimų: <span id="c-count">0</span></div>
+        <div class="search-bar">
+            <input type="text" id="q" placeholder="Ieškoti..." onkeyup="render()">
+            <button onclick="tab('videos')">Video</button>
+            <button onclick="tab('ai')">AI Paaiškinimai</button>
+        </div>
+        <div id="grid" class="grid"></div>
     </div>
 
-    <div class="container" id="app">
-        <div id="auth-screen" class="glass">
-            <h1 style="text-align:center; letter-spacing:-1px;">Mathexa</h1>
-            
-            <div id="auth-buttons">
-                <button onclick="showSignUp()">Esu naujas (Sukurti paskyrą)</button>
-                <button onclick="showLogin()" style="margin-top:15px; background:rgba(255,255,255,0.1)">Prisijungti</button>
-            </div>
-
-            <div id="form-area" style="display:none; margin-top:20px;">
-                </div>
-        </div>
-
-        <div id="main-screen" class="glass" style="display:none;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h3>Mathexa</h3>
-                <span id="user-clicks" style="font-size:12px; opacity:0.8;"></span>
-            </div>
-            
-            <div id="video-container" style="margin-top:20px;">
-                </div>
-
-            <button onclick="showSettings()" style="margin-top:20px; background:rgba(255,255,255,0.05);">Nustatymai</button>
-        </div>
-
-        <div id="settings-screen" class="glass" style="display:none;">
-            <h3>Nustatymai</h3>
-            <div id="settings-content">
-                </div>
-            <button onclick="backToMain()" style="margin-top:20px; background:none;">Grįžti atgal</button>
+    <div id="settings" class="container" style="display:none">
+        <div class="card">
+            <h2>Nustatymai</h2>
+            <p>Support ID: <b id="s-id"></b> <button onclick="copySid()">📋</button></p>
+            <input type="text" placeholder="Promo kodas">
+            <label><input type="checkbox" checked> Siųsti strigčių ataskaitas</label>
+            <hr>
+            <button class="danger" onclick="alert('Kreipkitės: mathexa.dev@gmail.com')">Atkurti slaptažodį</button>
+            <button class="danger" onclick="delAcc()">Ištrinti paskyrą</button>
+            <button onclick="ui('main')">Grįžti</button>
+            <p class="build-info">Build 3 | Ver 11.2.0 | Sec 2</p>
         </div>
     </div>
 
