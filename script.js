@@ -1,62 +1,77 @@
-const URL = "https://script.google.com/macros/s/AKfycbyUrd7So2mNiWLy-xGWiWqdTlSZKZFGHeK5ZQw24kGxMEU9D-rjN1QhcEQ-_Z6Fo7TIgQ/exec";
-let user = null;
+const GAS_URL = "https://script.google.com/macros/s/AKfycbz-CyY-_WhbUr6Oq7Til8cxu5uy3nNzSZ7V-WVY8HMRc2Dx_FVwxZK6SFO1ax62JaCjJw/exec";
+let user = { clicks: 0, sid: "", sub: false };
+let currentTab = 'videos';
 
-// Logic for Login/Signup/AI
-async function api(action, data) {
-    const r = await fetch(URL, { method: 'POST', body: JSON.stringify({ action, ...data }) });
-    return await r.json();
-}
+async function auth(type) {
+    const email = document.getElementById(type === 'login' ? 'l-email' : 'r-email').value;
+    const pass = document.getElementById(type === 'login' ? 'l-pass' : 'r-pass').value;
+    const role = document.getElementById('r-role').value;
+    const ipRes = await fetch('https://api.ipify.org?format=json');
+    const { ip } = await ipRes.json();
 
-async function handleLogin() {
-    const email = document.getElementById('email').value;
-    const pass = document.getElementById('pass').value;
-    const res = await api('login', { email, password: pass });
-    if (res.success) {
-        user = res.user;
-        renderHome();
-    } else alert(res.msg);
-}
+    document.getElementById('msg').innerText = "Jungiamasi...";
+    
+    const res = await fetch(GAS_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: type, email, password: pass, role, ip, device: navigator.userAgent })
+    });
+    const data = await res.json();
 
-async function playVideo(vidUrl) {
-    document.getElementById('loading').innerText = "Jungiamasi prie serverio, palaukite...";
-    const res = await api('click', { email: user.email });
-    if (res.success) {
-        window.location.href = vidUrl; // Standard redirect for iOS
+    if (data.success) {
+        user.clicks = data.clicks;
+        user.sid = data.supportId;
+        user.sub = data.subExp && new Date(data.subExp) > new Date();
+        ui('main');
+        render();
     } else {
-        alert("Limitas išnaudotas arba klaida.");
-        document.getElementById('loading').innerText = "";
+        document.getElementById('msg').innerText = data.error;
     }
 }
 
-async function askAI() {
-    const msg = document.getElementById('ai-msg').value;
-    const res = await api('ai', { email: user.email, msg });
-    if (res.success) {
-        document.getElementById('ai-res').innerText = res.answer;
-    } else alert(res.msg);
+function vPass() {
+    const p1 = document.getElementById('r-pass').value;
+    const p2 = document.getElementById('r-pass2').value;
+    const pol = document.getElementById('r-pol').checked;
+    document.getElementById('r-btn').disabled = !(p1.length >= 8 && p1 === p2 && pol);
 }
 
-function renderHome() {
-    document.getElementById('app').innerHTML = `
-        <div class="glass">
-            <h2>Mathexa</h2>
-            <p id="loading"></p>
-            <div id="video-list"></div>
-            <hr>
-            <button onclick="renderSettings()">Nustatymai</button>
-        </div>
-    `;
-    loadVideos();
+function ui(screen) {
+    document.getElementById('auth-box').style.display = screen === 'auth' ? 'block' : 'none';
+    document.getElementById('main-app').style.display = screen === 'main' ? 'block' : 'none';
+    document.getElementById('settings').style.display = screen === 'settings' ? 'block' : 'none';
+    document.getElementById('set-btn').style.display = screen !== 'auth' ? 'block' : 'none';
+    if(screen === 'main') {
+        document.getElementById('c-count').innerText = user.sub ? "Begalė" : user.clicks;
+        document.getElementById('s-id').innerText = user.sid;
+    }
 }
 
-async function loadVideos() {
-    const vids = await (await fetch('videos.json')).json();
-    const list = document.getElementById('video-list');
-    vids.forEach(v => {
+async function render() {
+    const q = document.getElementById('q').value.toLowerCase();
+    const res = await fetch(`data/${currentTab}.json`);
+    const data = await res.json();
+    const grid = document.getElementById('grid');
+    grid.innerHTML = "";
+
+    data.filter(i => i.title.toLowerCase().includes(q)).forEach(i => {
         const div = document.createElement('div');
-        div.className = 'v-card';
-        div.innerHTML = `<b>${v.title}</b><br><small>${v.lang} | ${v.duration}</small>`;
-        div.onclick = () => playVideo(v.url);
-        list.appendChild(div);
+        div.className = "item";
+        div.innerHTML = `<h4>${i.title}</h4><small>${i.subject} | ${i.duration || ''}</small>`;
+        div.onclick = () => {
+            if (!user.sub && user.clicks <= 0) return alert("Baigėsi paspaudimai!");
+            if (!user.sub) user.clicks--;
+            document.getElementById('c-count').innerText = user.sub ? "Begalė" : user.clicks;
+            window.open(i.url, '_blank');
+        };
+        grid.appendChild(div);
     });
 }
+
+function tab(t) { currentTab = t; render(); }
+function toggleAuth() {
+    const l = document.getElementById('login-form'), r = document.getElementById('reg-form');
+    l.style.display = l.style.display === 'none' ? 'block' : 'none';
+    r.style.display = r.style.display === 'none' ? 'block' : 'none';
+}
+function copySid() { navigator.clipboard.writeText(user.sid); alert("Nukopijuota!"); }
+function delAcc() { if(confirm("Ar tikrai?")) location.reload(); }
