@@ -1,0 +1,47 @@
+[
+  {
+    "platform": "YouTube",
+    "duration": "10:25",
+    "subject": "Matematika",
+    "language": "LT",
+    "title": "Trupmenų sudėtis ir atimtis",
+    "category": "12-15",
+    "url": "https://youtube.com/watch?v=placeholder1"
+  },
+  {
+    "platform": "Vimeo",
+    "duration": "45:00",
+    "subject": "Fizika",
+    "language": "EN",
+    "title": "Niutono dėsniai paaiškinti paprastai",
+    "category": "15-17",
+    "url": "https://vimeo.com/placeholder2"
+  },
+  {
+    "platform": "YouTube",
+    "duration": "15:30",
+    "subject": "Chemija",
+    "language": "LT",
+    "title": "Periodinė elementų lentelė",
+    "category": "12-15",
+    "url": "https://youtube.com/watch?v=placeholder3"
+  },
+  {
+    "platform": "Mathexa Hosted",
+    "duration": "08:15",
+    "subject": "Informatika",
+    "language": "LT",
+    "title": "Įvadas į Python programavimą",
+    "category": "17-20",
+    "url": "https://mathexa.lt/video/placeholder4"
+  },
+  {
+    "platform": "YouTube",
+    "duration": "22:10",
+    "subject": "Biologija",
+    "language": "EN",
+    "title": "Ląstelės dalijimasis: Mitozė ir Mejozė",
+    "category": "15-17",
+    "url": "https://youtube.com/watch?v=placeholder5"
+  }
+]
