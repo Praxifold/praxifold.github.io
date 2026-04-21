@@ -2,64 +2,278 @@
 <html lang="lt">
 <head>
     <meta charset="UTF-8">
-    <title>MATHEXA</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATHEXA - Edukacinė platforma</title>
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --text-main: #c9d1d9;
+            --accent-blue: #1f6feb;
+            --accent-hover: #58a6ff;
+            --error-red: #ff7b72;
+        }
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .view { display: none; }
+        .view.active { display: block; }
+        
+        .card { background: var(--bg-card); padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid #30363d; margin-bottom: 20px;}
+        input, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 6px; box-sizing: border-box; }
+        input { background: var(--bg-dark); border: 1px solid #30363d; color: white; }
+        button { background: var(--accent-blue); color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background: var(--accent-hover); }
+        
+        .error-msg { color: var(--error-red); font-size: 14px; margin-top: 10px; }
+        .video-card { background: var(--bg-card); padding: 15px; border-radius: 6px; border: 1px solid #30363d; margin-bottom: 15px; }
+        .video-card a { display: inline-block; margin-top:10px; color: var(--accent-blue); text-decoration: none; }
+        
+        nav { display: flex; justify-content: space-between; padding: 15px 20px; background: var(--bg-card); border-bottom: 1px solid #30363d; }
+        nav h1 { margin: 0; font-size: 20px; color: var(--accent-blue); }
+        nav div button { width: auto; margin-top: 0; margin-left: 10px; padding: 5px 15px; }
+
+        /* Cookie banner */
+        #cookie-banner { position: fixed; bottom: 0; left: 0; width: 100%; background: #161b22; padding: 15px; border-top: 1px solid #30363d; display: flex; justify-content: center; gap: 10px; z-index: 1000; }
+        #cookie-banner button { width: auto; }
+    </style>
 </head>
 <body>
-    <nav class="top-nav">
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform" target="_blank">Vabalų pranešimai 🐛</a>
-        <button id="set-btn" style="display:none" onclick="ui('settings')">⚙️ Nustatymai</button>
+
+    <nav id="main-nav" style="display:none;">
+        <h1>MATHEXA</h1>
+        <div>
+            <button onclick="navigate('dashboard')">Pamokos</button>
+            <button onclick="navigate('settings')">Nustatymai</button>
+            <button onclick="logout()" style="background:#21262d;">Atsijungti</button>
+        </div>
     </nav>
 
-    <div id="auth-box" class="container">
-        <h1>MATHEXA</h1>
-        <div class="card">
-            <div id="login-form">
-                <h2>Prisijungti</h2>
-                <input type="email" id="l-email" placeholder="El. paštas">
-                <input type="password" id="l-pass" placeholder="Slaptažodis">
-                <button onclick="auth('login')">Prisijungti</button>
-                <p onclick="toggleAuth()" style="cursor:pointer; font-size:12px">Esu naujas - susikurti paskyrą</p>
-            </div>
-            <div id="reg-form" style="display:none">
-                <h2>Registracija</h2>
-                <p class="note">Nerekomenduojame naudoti kasdienių slaptažodžių.</p>
-                <input type="email" id="r-email" placeholder="El. paštas">
-                <input type="password" id="r-pass" placeholder="Slaptažodis (min 8)" onkeyup="vPass()">
-                <input type="password" id="r-pass2" placeholder="Pakartoti slaptažodį" onkeyup="vPass()">
-                <select id="r-role"><option value="student">Mokinys</option><option value="teacher">Mokytojas</option></select>
-                <label><input type="checkbox" id="r-pol" onchange="vPass()"> Sutinku su <a href="policy.txt">taisyklėmis</a></label>
-                <button id="r-btn" onclick="auth('signup')" disabled>Sukurti paskyrą</button>
-                <p onclick="toggleAuth()" style="cursor:pointer; font-size:12px">Jau turiu paskyrą</p>
-            </div>
-            <p id="msg" class="error"></p>
+    <div class="container">
+        <div id="login-view" class="view active card">
+            <h2>Prisijungimas</h2>
+            <input type="email" id="log-email" placeholder="El. paštas" required>
+            <input type="password" id="log-pass" placeholder="Slaptažodis" required>
+            <button onclick="login()">Prisijungti</button>
+            <div id="log-error" class="error-msg"></div>
+            <p style="text-align:center; font-size:14px; margin-top:20px;">Neturite paskyros? <a href="#" onclick="navigate('register')" style="color:var(--accent-blue);">Registruotis</a></p>
         </div>
-    </div>
 
-    <div id="main-app" class="container" style="display:none">
-        <div class="stats">Liko paspaudimų: <span id="c-count">0</span></div>
-        <div class="search-bar">
-            <input type="text" id="q" placeholder="Ieškoti..." onkeyup="render()">
-            <button onclick="tab('videos')">Video</button>
-            <button onclick="tab('ai')">AI Paaiškinimai</button>
+        <div id="register-view" class="view card">
+            <h2>Registracija</h2>
+            <input type="text" id="reg-name" placeholder="Vardas Pavardė" required>
+            <input type="email" id="reg-email" placeholder="El. paštas" required>
+            <input type="password" id="reg-pass" placeholder="Slaptažodis" required>
+            <label style="display:block; margin-top:15px; font-size: 14px;">
+                <input type="checkbox" id="reg-crash" style="width:auto; margin:0 5px 0 0;" checked> 
+                Leisti rinkti klaidos (crash) žurnalus
+            </label>
+            <button onclick="register()">Registruotis</button>
+            <div id="reg-error" class="error-msg"></div>
+            <p style="text-align:center; font-size:14px; margin-top:20px;">Jau turite paskyrą? <a href="#" onclick="navigate('login')" style="color:var(--accent-blue);">Prisijungti</a></p>
         </div>
-        <div id="grid" class="grid"></div>
-    </div>
 
-    <div id="settings" class="container" style="display:none">
-        <div class="card">
+        <div id="dashboard-view" class="view">
+            <h2>Pamokos</h2>
+            <div id="video-list">Kraunami duomenys...</div>
+        </div>
+
+        <div id="settings-view" class="view card">
             <h2>Nustatymai</h2>
-            <p>Support ID: <b id="s-id"></b> <button onclick="copySid()">📋</button></p>
-            <input type="text" placeholder="Promo kodas">
-            <label><input type="checkbox" checked> Siųsti strigčių ataskaitas</label>
-            <hr>
-            <button class="danger" onclick="alert('Kreipkitės: mathexa.dev@gmail.com')">Atkurti slaptažodį</button>
-            <button class="danger" onclick="delAcc()">Ištrinti paskyrą</button>
-            <button onclick="ui('main')">Grįžti</button>
-            <p class="build-info">Build 3 | Ver 11.2.0 | Sec 2</p>
+            
+            <p>Jūsų Support ID: <strong id="set-support-id">...</strong> 
+               <button onclick="copySupportID()" style="width:auto; padding:3px 10px; margin-left:10px;">Kopijuoti</button>
+            </p>
+
+            <hr style="border: 1px solid #30363d; margin: 20px 0;">
+
+            <h3>Aktyvuoti kodą</h3>
+            <input type="text" id="promo-code" placeholder="Įveskite kodą">
+            <button onclick="applyCode()">Aktyvuoti</button>
+
+            <hr style="border: 1px solid #30363d; margin: 20px 0;">
+            
+            <h3 style="color:#ff7b72;">Paskyros valdymas</h3>
+            <p style="font-size: 14px;">Norėdami atstatyti slaptažodį, susisiekite: <a href="mailto:mathexa.dev@gmail.com" style="color:var(--accent-blue);">mathexa.dev@gmail.com</a></p>
+            <button onclick="deleteAccount()" style="background:var(--error-red);">Ištrinti paskyrą</button>
+            
+            <div id="bug-report-link" style="display:none; margin-top:20px; font-size:14px;">
+                Išjungėte klaidų sekimą. Jei radote klaidą: <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header" target="_blank" style="color:var(--accent-blue);">Pranešti apie klaidą</a>
+            </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <div id="cookie-banner" style="display:none;">
+        <p style="margin:0; align-self:center;">Mes naudojame slapukus sistemos veikimui ir saugumui.</p>
+        <button onclick="acceptCookies('all')">Priimti visus</button>
+        <button onclick="acceptCookies('necessary')" style="background:#21262d;">Tik būtini</button>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbyhgd9fI15Bw-Fp5gW_iU0rOvFxt_XaioHdcpDrCy3FOJy6kRfKQHv8DkHjsMh7CeVE7A/exec"; // PAKEISKITE
+        
+        let currentUser = null;
+        let clickCount = 0;
+        let clickTimer = null;
+
+        // --- Core Logic ---
+        function navigate(viewId) {
+            document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId + '-view').classList.add('active');
+            
+            const isAuth = viewId === 'dashboard' || viewId === 'settings';
+            document.getElementById('main-nav').style.display = isAuth ? 'flex' : 'none';
+
+            if(viewId === 'dashboard') loadVideos();
+        }
+
+        async function apiCall(action, data) {
+            data.action = action;
+            data.ip = "192.168.1.1"; // Realybėje IP surenkamas serveryje, GAS to padaryti negali tiesiogiai, reikia naudoti papildomą API (pvz. ipify)
+            const response = await fetch(API_URL, {
+                method: "POST",
+                body: JSON.stringify(data)
+            });
+            return await response.json();
+        }
+
+        // --- Auth ---
+        async function register() {
+            const data = {
+                fullName: document.getElementById('reg-name').value,
+                email: document.getElementById('reg-email').value,
+                password: document.getElementById('reg-pass').value,
+                collectCrash: document.getElementById('reg-crash').checked,
+                policyRead: true,
+                cookiePref: localStorage.getItem('cookiePref') || 'none'
+            };
+            const res = await apiCall("register", data);
+            if (res.success) {
+                currentUser = { uid: res.uid, supportId: res.supportId, collectCrash: data.collectCrash };
+                localStorage.setItem('mathexa_user', JSON.stringify(currentUser));
+                navigate('dashboard');
+                setupCrashLogs();
+            } else {
+                document.getElementById('reg-error').innerText = res.error;
+            }
+        }
+
+        async function login() {
+            const data = {
+                email: document.getElementById('log-email').value,
+                password: document.getElementById('log-pass').value
+            };
+            const res = await apiCall("login", data);
+            if (res.success) {
+                currentUser = { uid: res.uid, supportId: res.supportId, collectCrash: res.collectCrash };
+                localStorage.setItem('mathexa_user', JSON.stringify(currentUser));
+                document.getElementById('set-support-id').innerText = currentUser.supportId;
+                navigate('dashboard');
+                setupCrashLogs();
+            } else {
+                document.getElementById('log-error').innerText = res.error;
+                if(res.error.includes("002") || res.error.includes("003")) {
+                    document.getElementById('log-error').innerHTML += '<br><a href="https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header" target="_blank" style="color:var(--accent-blue);">Apeliacijos forma</a>';
+                }
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('mathexa_user');
+            navigate('login');
+        }
+
+        // --- Videos & AI Data (JSON merging) ---
+        async function loadVideos() {
+            // Realybėje šie failai turėtų gulėti tame pačiame GitHub Pages repozitorijoje
+            // Demo tikslais naudojame mock duomenis
+            const mockVideos = [{ id: "vid1", title: "Kvadratinės lygtys", duration: "12:30", platform: "YouTube", link: "#" }];
+            const mockExps = [{ videoId: "vid1", explanation: "Šiame video AI paaiškina, kaip diskriminantas padeda nustatyti šaknų skaičių." }];
+
+            const list = document.getElementById('video-list');
+            list.innerHTML = '';
+
+            mockVideos.forEach(vid => {
+                const exp = mockExps.find(e => e.videoId === vid.id);
+                const html = `
+                    <div class="video-card">
+                        <h3>${vid.title} <span style="font-size:12px; color:#8b949e;">(${vid.duration})</span></h3>
+                        <p style="font-size:14px; color:#c9d1d9;">${exp ? exp.explanation : 'Paaiškinimas nerastas'}</p>
+                        <a href="${vid.link}" target="_blank">Žiūrėti ${vid.platform} platformoje</a>
+                    </div>
+                `;
+                list.innerHTML += html;
+            });
+        }
+
+        // --- Settings & Utils ---
+        function copySupportID() {
+            navigator.clipboard.writeText(currentUser.supportId);
+            alert('Support ID nukopijuotas!');
+        }
+
+        function deleteAccount() {
+            if(confirm("Ar tikrai norite ištrinti paskyrą? Paskyra bus visiškai panaikinta po 1 mėnesio.")){
+                // Realybėje čia būtų kreipimasis į API su slaptažodžio patvirtinimu
+                alert("Prašymas ištrinti paskyrą priimtas.");
+                logout();
+            }
+        }
+
+        // --- Anti-Bot & Crash Logs ---
+        document.addEventListener('click', () => {
+            if (!currentUser) return;
+            clickCount++;
+            if (!clickTimer) {
+                clickTimer = setTimeout(() => {
+                    if (clickCount > 10) { // 10 paspaudimų per 2 sekundes = bot
+                        apiCall("logActivity", { uid: currentUser.uid, actionType: "suspend_bot", metadata: { clicks: clickCount } });
+                        alert("Sistemos saugumas: aptikta neįprasta veikla. Paskyra sustabdyta (Klaida 003).");
+                        logout();
+                    }
+                    clickCount = 0;
+                    clickTimer = null;
+                }, 2000);
+            }
+        });
+
+        function setupCrashLogs() {
+            if (currentUser && !currentUser.collectCrash) {
+                document.getElementById('bug-report-link').style.display = 'block';
+                return;
+            }
+            window.onerror = function(msg, url, lineNo, columnNo, error) {
+                if(currentUser) {
+                    apiCall("logCrash", { uid: currentUser.uid, errorMessage: msg, stackTrace: error?.stack, deviceInfo: navigator.userAgent });
+                }
+                return false;
+            };
+        }
+
+        // --- Initialization ---
+        window.onload = () => {
+            if (!localStorage.getItem('cookiePref')) document.getElementById('cookie-banner').style.display = 'flex';
+            
+            const saved = localStorage.getItem('mathexa_user');
+            if(saved) {
+                currentUser = JSON.parse(saved);
+                document.getElementById('set-support-id').innerText = currentUser.supportId;
+                navigate('dashboard');
+                setupCrashLogs();
+            } else {
+                navigate('login');
+            }
+        };
+
+        function acceptCookies(type) {
+            localStorage.setItem('cookiePref', type);
+            document.getElementById('cookie-banner').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
