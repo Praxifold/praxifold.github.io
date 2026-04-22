@@ -1,1 +1,29 @@
-
+[
+    {
+        "id": "v1001",
+        "title": "Išvestinių skaičiavimo pagrindai",
+        "subject": "Matematinė analizė",
+        "duration": 15,
+        "language": "LT",
+        "platform": "YouTube",
+        "link": "https://www.youtube.com/watch?v=p_di4Zn4wz4"
+    },
+    {
+        "id": "v1002",
+        "title": "Kvadratinės lygtys ir diskriminantas",
+        "subject": "Algebra",
+        "duration": 10,
+        "language": "LT",
+        "platform": "Vimeo",
+        "link": "https://vimeo.com/123456789"
+    },
+    {
+        "id": "v1003",
+        "title": "Trikampių panašumo požymiai",
+        "subject": "Geometrija",
+        "duration": 12,
+        "language": "LT",
+        "platform": "MATHEXA Player",
+        "link": "https://mathexa.lt/player/v1003"
+    }
+]
