@@ -1,0 +1,53 @@
+:root {
+    --bg-color: #0d0d0d;
+    --text-color: #f0f0f0;
+    --primary-color: #005bb5;
+    --primary-hover: #0073e6;
+    --card-bg: #1a1a1a;
+    --danger: #b50000;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+.container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+.logo { color: var(--primary-color); text-align: center; letter-spacing: 2px; }
+
+h1, h2, h3 { color: var(--text-color); }
+a { color: var(--primary-color); text-decoration: none; }
+
+input {
+    width: 100%; padding: 12px; margin: 10px 0;
+    background: #262626; border: 1px solid #333; color: white;
+    border-radius: 5px; box-sizing: border-box;
+}
+
+button {
+    width: 100%; padding: 12px; background: var(--primary-color);
+    color: white; border: none; border-radius: 5px;
+    cursor: pointer; font-size: 16px; margin: 5px 0; transition: 0.3s;
+}
+button:hover { background: var(--primary-hover); }
+button.btn-secondary { background: #333; }
+button.btn-danger { background: var(--danger); }
+
+/* Navigation */
+header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px;}
+nav button { width: auto; padding: 10px 20px; margin-left: 10px; }
+.logout-btn { background: #333; }
+
+/* Grid / Cards */
+.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
+.card { background: var(--card-bg); padding: 15px; border-radius: 8px; border: 1px solid #333; cursor: pointer; transition: 0.2s; }
+.card:hover { border-color: var(--primary-color); transform: translateY(-3px); }
+.settings-card { background: var(--card-bg); padding: 20px; border-radius: 8px; }
+
+/* Overlays & Banners */
+.overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.cookie-banner { position: fixed; bottom: 0; width: 100%; background: #222; padding: 15px; text-align: center; border-top: 2px solid var(--primary-color); z-index: 999; }
+.cookie-banner button { width: auto; padding: 8px 15px; margin: 0 5px; }
