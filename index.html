@@ -3,317 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Praxifold - Pagrindinis</title>
+    <title>Praxifold</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; margin: 0; color: #333; }
-        header { background: #fff; padding: 15px 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: bold; font-size: 24px; color: #0078D7; }
-        .settings-btn { background: #e1dfdd; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        
-        .container { max-width: 900px; margin: 40px auto; padding: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .card h3 { margin-top: 0; color: #0078D7; }
-        .card .version { font-size: 12px; color: #888; margin-bottom: 15px; display: block; }
-        
-        .btn { background: #0078D7; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 14px; width: 100%; margin-top: 5px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        img.logo { max-width: 150px; margin-bottom: 20px; }
+        .btn { background: #0078D7; color: white; border: none; padding: 12px 20px; margin: 10px 0; border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s; }
         .btn:hover { background: #005a9e; }
         .btn-secondary { background: #e1dfdd; color: #333; }
-        
-        /* Modals */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 400px; max-height: 80vh; overflow-y: auto; }
-        .modal-content h2 { margin-top: 0; }
-        .close { float: right; cursor: pointer; font-size: 20px; font-weight: bold; }
-        
-        input { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        .setting-group { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-        .info-text { font-size: 12px; color: #666; }
-        .error { color: red; font-size: 13px; }
-        .success { color: green; font-size: 13px; }
-        
-        /* Toggle Switch */
-        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: #0078D7; }
-        input:checked + .slider:before { transform: translateX(20px); }
+        .btn-secondary:hover { background: #c8c6c4; }
+        .hidden { display: none; }
+        input, select { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        .error-msg { color: red; font-size: 12px; margin-top: -5px; margin-bottom: 10px; display: block; }
+        a { color: #0078D7; text-decoration: none; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">Praxifold</div>
-        <button class="settings-btn" onclick="openModal('settings-modal')">⚙ Nustatymai</button>
-    </header>
-
-    <div class="container">
-        <h2>Kategorijos: Failai</h2>
-        <div id="loading" style="text-align:center;">Kraunama...</div>
-        <div class="grid" id="file-grid">
-            </div>
-    </div>
-
-    <div id="settings-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('settings-modal')">&times;</span>
-            <h2>Nustatymai</h2>
-            
-            <div class="setting-group">
-                <strong>Paskyros ID:</strong> <span id="ui-support-id">...</span>
-                <button class="btn btn-secondary" onclick="copySupportId()" style="width:auto; float:right; padding: 4px 8px;">Kopijuoti</button>
-            </div>
-
-            <div class="setting-group">
-                <strong>Prenumeratos būsena:</strong> <span id="ui-sub-status">...</span><br>
-                <span class="info-text" id="ui-sub-exp"></span><br><br>
-                <input type="text" id="promo-code" placeholder="Įveskite prenumeratos kodą">
-                <button class="btn" onclick="activateCode()">Aktyvuoti</button>
-                <div id="promo-msg"></div>
-            </div>
-
-            <div class="setting-group">
-                <strong>Istorija:</strong> <br>
-                <span class="info-text">Atsisiųsti failai: <span id="ui-downloads">0</span></span>
-            </div>
-
-            <div class="setting-group">
-                <strong>Likti prisijungus:</strong>
-                <label class="switch" style="float:right;">
-                    <input type="checkbox" id="stay-logged" onchange="toggleStayLogged()">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <div class="setting-group">
-                <button class="btn btn-secondary" onclick="alert('Klaida: Prašome susisiekti su palaikymo komanda praxifold@gmail.com norint pakeisti slaptažodį.')">Pakeisti slaptažodį</button>
-            </div>
-
-            <div class="setting-group">
-                <button class="btn" style="background:#d9534f;" onclick="document.getElementById('delete-box').style.display='block'">Ištrinti paskyrą</button>
-                <div id="delete-box" style="display:none; margin-top:10px;">
-                    <input type="email" id="del-email" placeholder="El. paštas">
-                    <input type="password" id="del-pass" placeholder="Slaptažodis">
-                    <input type="text" id="del-confirm" placeholder="i understand my data will not be recoerable after deletion" style="font-size:11px;">
-                    <button class="btn" style="background:#c9302c;" onclick="deleteAccount()">Patvirtinti ištrynimą</button>
-                    <div id="del-msg"></div>
-                </div>
-            </div>
-
-            <div class="info-text" style="text-align:center;">
-                Svetainės versija: 1.0.4 | Build: 892<br>
-                Protokolo saugumo Nr: PXF-SEC-2026
-            </div>
-            <button class="btn btn-secondary" style="margin-top:15px;" onclick="logout()">Atsijungti</button>
+    <div class="container" id="main-menu">
+        <img src="logo.png" alt="Logo" class="logo">
+        <div id="loading-ip">Tikrinamas regionas...</div>
+        <div id="auth-buttons" class="hidden">
+            <button class="btn" onclick="showSection('signup-section')">Aš čia naujokas (Registruotis)</button>
+            <button class="btn btn-secondary" onclick="showSection('login-section')">Turiu paskyrą (Prisijungti)</button>
         </div>
     </div>
 
-    <div id="preview-modal" class="modal">
-        <div class="modal-content" style="text-align: center;">
-            <span class="close" onclick="closeModal('preview-modal')">&times;</span>
-            <h2>Peržiūra</h2>
-            <div class="info-text" style="margin-bottom: 15px; color:red; font-weight:bold;">
-                Failo slaptažodis: <span id="preview-pass" style="font-size: 16px;"></span>
-            </div>
-            <p>Saugokite šį slaptažodį. Jis reikalingas atidaryti failui.</p>
-            <div style="height: 200px; background: #eee; display:flex; align-items:center; justify-content:center; border: 1px dashed #ccc;">
-                [Peržiūros aplinka sugeneruota]
-            </div>
+    <div class="container hidden" id="signup-section">
+        <h2>Registracija</h2>
+        <input type="text" id="reg-name" placeholder="Pilnas vardas" required>
+        <input type="email" id="reg-email" placeholder="El. paštas" required>
+        <input type="password" id="reg-pass" placeholder="Slaptažodis (min 8 simboliai)" onkeyup="checkPassword()" required>
+        <span id="pass-feedback" class="error-msg"></span>
+        <input type="password" id="reg-pass2" placeholder="Pakartokite slaptažodį" required>
+        <select id="reg-role">
+            <option value="Teacher">Mokytojas (Teacher)</option>
+            <option value="Engineer">Inžinierius (Engineer)</option>
+            <option value="Hobbyist">Mėgėjas (Hobbyist)</option>
+            <option value="Other">Kita (Other)</option>
+        </select>
+        <div style="text-align: left; font-size: 12px; margin-bottom: 10px;">
+            <input type="checkbox" id="reg-terms" required style="width: auto;"> Registruodamiesi sutinkate su mūsų <a href="policy.txt" target="_blank">Naudojimo sąlygomis ir Privatumo politika</a>.<br><br>
+            <input type="radio" name="cookies" value="all" checked style="width: auto;"> Visi slapukai
+            <input type="radio" name="cookies" value="necessary" style="width: auto;"> Tik būtini slapukai
         </div>
+        <button class="btn" onclick="submitSignup()">Sukurti paskyrą</button>
+        <button class="btn btn-secondary" onclick="showSection('main-menu')">Atgal</button>
     </div>
 
-    <div id="download-modal" class="modal">
-        <div class="modal-content" style="text-align: center;">
-            <h2>Atsisiunčiama...</h2>
-            <div class="info-text" style="margin-bottom: 15px; color:red; font-weight:bold;">
-                Prisiminkite šį slaptažodį: <span id="dl-pass" style="font-size: 16px;"></span>
-            </div>
-            <p>Prašome palaukti. Langas užsidarys po <span id="timer" style="font-weight:bold; font-size: 20px;">25</span> s.</p>
-        </div>
+    <div class="container hidden" id="login-section">
+        <h2>Prisijungti</h2>
+        <input type="email" id="log-email" placeholder="El. paštas" required>
+        <input type="password" id="log-pass" placeholder="Slaptažodis" required>
+        <button class="btn" onclick="submitLogin()">Prisijungti</button>
+        <button class="btn btn-secondary" onclick="showSection('main-menu')">Atgal</button>
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbw28KnEaqSIQ-mIvtY81RsiHQhZYSjnuBoAQwJqKZ6Un0WiYqtldThkpqK72RsVSCk7/exec"; // Paste GAS URL
-        let currentUser = null;
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwM5V48Z1c7goUQ-3JLKA2yRU1BbQHgOBQOl1Xaw8o3KBRLzFM8FVAYKetok50mXKXZ/exec"; // Paste your GAS Web App URL here
+        let userIP = "0.0.0.0";
+        let userBrowser = navigator.userAgent;
 
-        // Check auth on load
         window.onload = function() {
-            const token = getCookie("token");
-            if (!token) { window.location.href = "index.html"; return; }
-            
-            // Refresh token if active
-            const stayLogged = getCookie("stayLogged") === "true";
-            if (stayLogged) document.getElementById('stay-logged').checked = true;
-            document.cookie = `token=${token}; path=/; max-age=${stayLogged ? 86400 * 30 : 600}`;
-
-            fetchUserData(token);
+            fetch('https://ipapi.co/json/')
+                .then(response => response.json())
+                .then(data => {
+                    userIP = data.ip;
+                    if (data.country_code === 'LT') {
+                        document.getElementById('loading-ip').classList.add('hidden');
+                        document.getElementById('auth-buttons').classList.remove('hidden');
+                    } else {
+                        showError("010");
+                        document.getElementById('loading-ip').innerText = "Prieiga negalima iš jūsų regiono.";
+                    }
+                })
+                .catch(err => {
+                    showError("0010");
+                    document.getElementById('loading-ip').innerText = "Nepavyko patikrinti regiono.";
+                });
         };
 
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
+        function showSection(id) {
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('signup-section').classList.add('hidden');
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById(id).classList.remove('hidden');
         }
 
-        function fetchUserData(token) {
-            fetch(GAS_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "getUserData", token: token })
-            }).then(r => r.json()).then(data => {
-                if (data.success) {
-                    currentUser = data.user;
-                    currentUser.token = token; // Store for later requests
-                    updateUI();
-                    renderFiles(data.files);
-                    document.getElementById('loading').style.display = 'none';
-                } else {
-                    alert(`Klaida ${data.error}: Prašome susisiekti su palaikymo komanda praxifold@gmail.com`);
-                    logout();
-                }
-            }).catch(e => alert("Klaida 060: Prašome susisiekti su palaikymo komanda..."));
+        function checkPassword() {
+            const pass = document.getElementById('reg-pass').value;
+            const feedback = document.getElementById('pass-feedback');
+            feedback.innerText = pass.length < 8 ? "Slaptažodis turi būti bent 8 simbolių." : "";
         }
 
-        function updateUI() {
-            document.getElementById('ui-support-id').innerText = currentUser.supportId;
-            document.getElementById('ui-sub-status').innerText = currentUser.subType.toUpperCase();
-            document.getElementById('ui-downloads').innerText = currentUser.totalDownloads;
-            
-            if(currentUser.subExpDate) {
-                const date = new Date(currentUser.subExpDate).toLocaleDateString('lt-LT');
-                document.getElementById('ui-sub-exp').innerText = `Galioja iki: ${date}`;
-            }
+        function showError(code) {
+            alert(`Klaida ${code}: Prašome susisiekti su palaikymo komanda praxifold@gmail.com`);
         }
 
-        function renderFiles(files) {
-            const grid = document.getElementById('file-grid');
-            grid.innerHTML = '';
+        function submitSignup() {
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-pass').value;
+            const pass2 = document.getElementById('reg-pass2').value;
+            const role = document.getElementById('reg-role').value;
+            const terms = document.getElementById('reg-terms').checked;
+            const cookies = document.querySelector('input[name="cookies"]:checked').value;
 
-            files.forEach(f => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <h3>${f.name}</h3>
-                    <span class="version">V ${f.version}</span>
-                `;
+            if (pass !== pass2 || pass.length < 8) return alert("Slaptažodžiai nesutampa arba yra per trumpi.");
+            if (!terms) return alert("Privalote sutikti su sąlygomis.");
 
-                // Logic for Preview vs Download based on Subscription & Developer Restriction
-                const sub = currentUser.subType;
-                const manualAllow = currentUser.allowedDownloads === "yes";
-                const devRestrict = f.devRestricted === "yes";
+            const payload = {
+                action: "signup", name: name, email: email, password: pass, role: role,
+                ip: userIP, browser: userBrowser, cookies: cookies
+            };
 
-                // PREVIEW BUTTON
-                const btnPrev = document.createElement('button');
-                btnPrev.className = 'btn btn-secondary';
-                btnPrev.innerText = 'Peržiūra';
-                btnPrev.onclick = () => handlePreview(f);
-                card.appendChild(btnPrev);
-
-                // DOWNLOAD BUTTON (Only if Pro, or manually allowed)
-                if ((sub === "pro" || manualAllow) && !devRestrict) {
-                    const btnDl = document.createElement('button');
-                    btnDl.className = 'btn';
-                    btnDl.innerText = 'Atsisiųsti';
-                    btnDl.onclick = () => handleDownload(f);
-                    card.appendChild(btnDl);
-                } else if (devRestrict) {
-                    const btnRestricted = document.createElement('button');
-                    btnRestricted.className = 'btn btn-secondary';
-                    btnRestricted.innerText = 'Apribota Kūrėjo';
-                    btnRestricted.disabled = true;
-                    card.appendChild(btnRestricted);
-                }
-
-                grid.appendChild(card);
-            });
+            fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) })
+                .then(res => res.json()).then(data => {
+                    if (data.success) {
+                        document.cookie = `token=${data.token}; path=/; max-age=600`; 
+                        window.location.href = "dashboard.html"; 
+                    } else {
+                        showError(data.error);
+                    }
+                }).catch(e => showError("060"));
         }
 
-        function handlePreview(file) {
-            if (currentUser.subType === "free" && currentUser.previewsLeft <= 0) {
-                alert("Klaida 041: Pasiekėte peržiūrų limitą. Prašome įsigyti prenumeratą.");
-                return;
-            }
-            document.getElementById('preview-pass').innerText = file.password;
-            openModal('preview-modal');
-        }
+        function submitLogin() {
+            const email = document.getElementById('log-email').value;
+            const pass = document.getElementById('log-pass').value;
 
-        function handleDownload(file) {
-            document.getElementById('dl-pass').innerText = file.password;
-            openModal('download-modal');
-            
-            let timeLeft = 25;
-            const timerEl = document.getElementById('timer');
-            timerEl.innerText = timeLeft;
+            const payload = { action: "login", email: email, password: pass, ip: userIP };
 
-            const countdown = setInterval(() => {
-                timeLeft--;
-                timerEl.innerText = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(countdown);
-                    closeModal('download-modal');
-                    // Simulate actual file trigger here in the future
-                }
-            }, 1000);
-        }
-
-        function activateCode() {
-            const code = document.getElementById('promo-code').value;
-            const msgBox = document.getElementById('promo-msg');
-            msgBox.innerHTML = "Kraunama...";
-            
-            fetch(GAS_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "activateCode", token: currentUser.token, code: code })
-            }).then(r => r.json()).then(data => {
-                if (data.success) {
-                    msgBox.className = "success";
-                    msgBox.innerText = "Sėkmingai aktyvuota!";
-                    setTimeout(() => window.location.reload(), 1500);
-                } else {
-                    msgBox.className = "error";
-                    msgBox.innerText = `Klaida ${data.error}: Nepavyko aktyvuoti.`;
-                }
-            });
-        }
-
-        function deleteAccount() {
-            const email = document.getElementById('del-email').value;
-            const pass = document.getElementById('del-pass').value;
-            const confirm = document.getElementById('del-confirm').value;
-            const msgBox = document.getElementById('del-msg');
-
-            fetch(GAS_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "deleteAccount", token: currentUser.token, email: email, password: pass, confirmation: confirm })
-            }).then(r => r.json()).then(data => {
-                if (data.success) {
-                    msgBox.className = "success";
-                    msgBox.innerText = "{your account has been successfully scheduled for deletion}";
-                    setTimeout(logout, 3000);
-                } else {
-                    msgBox.className = "error";
-                    msgBox.innerText = `Klaida ${data.error}: Prašome susisiekti su palaikymo komanda...`;
-                }
-            });
-        }
-
-        // Utilities
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        
-        function copySupportId() {
-            navigator.clipboard.writeText(currentUser.supportId);
-            alert("Nukopijuota!");
-        }
-
-        function toggleStayLogged() {
-            const isChecked = document.getElementById('stay-logged').checked;
-            document.cookie = `stayLogged=${isChecked}; path=/; max-age=2592000`; // 30 days
-        }
-
-        function logout() {
-            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            window.location.href = "index.html";
+            fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) })
+                .then(res => res.json()).then(data => {
+                    if (data.success) {
+                        document.cookie = `token=${data.token}; path=/; max-age=600`;
+                        window.location.href = "dashboard.html";
+                    } else {
+                        showError(data.error);
+                    }
+                }).catch(e => showError("060"));
         }
     </script>
 </body>
