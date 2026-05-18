@@ -104,16 +104,12 @@
     </div>
 
     <script>
-        // ĮKLIJUOKITE SAVO WEB APP URL ŽEMIAU
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxb1EdPoSpegeg6X01ez6QV_MljE0semKcGL8TEBAS3vU0U3-TGBTTG5rzdyl0T6y3A/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycby34gszuZOpcs8q29HcKmJmgFEY6iw70-ei2KEVTHHgT9pcsftjdpO5RRTURrk8ka1Z/exec"; 
         let currentUser = null;
 
         window.onload = function() {
             const token = getCookie("token");
-            if (!token) { 
-                window.location.href = "index.html"; 
-                return; 
-            }
+            if (!token) { window.location.href = "index.html"; return; }
             fetchUserData(token);
         };
 
@@ -137,10 +133,7 @@
                     alert("Klaida: " + data.error);
                     logout();
                 }
-            }).catch(e => { 
-                alert("Tinklo klaida jungiantis prie duomenų bazės."); 
-                logout(); 
-            });
+            }).catch(e => { logout(); });
         }
 
         function updateUI() {
