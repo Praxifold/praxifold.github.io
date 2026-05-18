@@ -18,7 +18,6 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .loading-text { font-size: 18px; font-weight: bold; color: #333; max-width: 450px; line-height: 1.5; }
         
-        /* Geo-block ekrano stilius */
         #geo-blocked { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:10000; flex-direction:column; align-items:center; justify-content:center; color:#333; }
         #geo-blocked h1 { color:#d9534f; margin-bottom:10px; }
     </style>
@@ -27,7 +26,7 @@
 
     <div id="geo-blocked">
         <h1>Prieiga apribota (403 Forbidden)</h1>
-        <p>Apgailestaujame, tačiau ši svetainė yra prieinama tik vartotojams, esantiems Lietuvos teritorijoje.</p>
+        <p>Apgailestaujame, tačiau ši svetainė ir jos serverio paslaugos yra prieinamos tik vartotojams iš Lietuvos.</p>
     </div>
 
     <div id="security-loader" class="loading-overlay">
@@ -54,13 +53,10 @@
 
     <script>
         // ĮKLIJUOKITE SAVO WEB APP URL ŽEMIAU:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxb1EdPoSpegeg6X01ez6QV_MljE0semKcGL8TEBAS3vU0U3-TGBTTG5rzdyl0T6y3A/exec"; 
-        
-        let userIp = "";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzgeXTQl5K9P_MYDVxgEtVQyi0a94ms8nbs7yJjhwNRgQXwOYu30_vKwd7-jOYRd07a/exec"; 
 
-        // Paleidžiama automatiškai, kai tik atidaromas puslapis
         window.onload = function() {
-            checkLocation();
+            checkLocalGeo();
         };
 
         function toggleForm(id) {
@@ -74,44 +70,37 @@
         }
         function hideLoader() { document.getElementById('security-loader').style.display = 'none'; }
 
-        // Funkcija, kuri tikrina vartotojo šalį pagal jo IP
-        function checkLocation() {
-            showLoader("Tikrinama jūsų geografinė vieta...");
-            
+        // Pirminis vietinis tikrinimas naršyklėje
+        function checkLocalGeo() {
+            showLoader("Tikrinami saugumo sertifikatai ir geografinė vieta...");
             fetch('https://ipapi.co/json/')
             .then(res => res.json())
             .then(geo => {
                 hideLoader();
-                // Tikriname, ar šalis yra Lietuva (LT)
                 if (geo.country_code !== "LT") {
-                    document.getElementById('geo-blocked').style.display = 'flex';
-                    // Sustabdomas bet koks tolesnis svetainės krovimas/vykdymas
-                    throw new Error("Prieiga blokuojama: Vartotojas ne Lietuvoje.");
+                    showGeoBlockScreen();
                 }
-                // Jei viskas gerai, išsaugome tikrąjį IP adresą vėlesniam naudojimui
-                userIp = geo.ip;
             })
-            .catch(err => {
-                if(err.message.includes("blokuojama")) {
-                    console.log(err.message);
-                } else {
-                    hideLoader();
-                    alert("Nepavyko nustatyti jūsų vietos. Patikrinkite interneto ryšį.");
-                }
+            .catch(() => {
+                hideLoader();
+                console.log("Vietinis GeoAPI nepasiekiamas, bus naudojama serverio apsauga.");
             });
+        }
+
+        function showGeoBlockScreen() {
+            document.getElementById('geo-blocked').style.display = 'flex';
         }
 
         function login() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
             if(!email || !pass) { alert("Užpildykite visus laukus"); return; }
-            if(!userIp) { alert("Sistemos klaida: IP adresas dar nenustatytas. Palaukite sekundę."); return; }
 
             showLoader("Jungiamasi prie saugaus serverio...");
             
             fetch(GAS_URL, {
                 method: "POST",
-                body: JSON.stringify({ action: "login", email: email, password: pass, ip: userIp }) 
+                body: JSON.stringify({ action: "login", email: email, password: pass }) 
             })
             .then(r => r.json())
             .then(data => {
@@ -120,12 +109,16 @@
                     document.cookie = `token=${data.token}; path=/; max-age=86400;`;
                     window.location.href = "dashboard.html";
                 } else {
-                    alert("Klaida: " + data.error);
+                    if (data.error === "403_GEO_BLOCKED") {
+                        showGeoBlockScreen();
+                    } else {
+                        alert("Klaida: " + data.error);
+                    }
                 }
             })
             .catch(() => { 
                 hideLoader(); 
-                alert("Nepavyko prisijungti prie serverio. Patikrinkite GAS URL."); 
+                alert("Nepavyko susisiekti su serveriu."); 
             });
         }
 
@@ -134,9 +127,8 @@
             const email = document.getElementById('reg-email').value;
             const pass = document.getElementById('reg-pass').value;
             if(!name || !email || !pass) { alert("Užpildykite visus laukus"); return; }
-            if(!userIp) { alert("Sistemos klaida: IP adresas dar nenustatytas. Palaukite sekundę."); return; }
 
-            showLoader("Kuriama paskyra...");
+            showLoader("Kuriama paskyra ir tikrinami duomenys...");
             
             fetch(GAS_URL, {
                 method: "POST",
@@ -146,7 +138,6 @@
                     email: email, 
                     password: pass, 
                     role: "user", 
-                    ip: userIp, 
                     cookies: "necessary", 
                     browser: navigator.userAgent 
                 })
@@ -155,10 +146,14 @@
             .then(data => {
                 hideLoader();
                 if (data.success) {
-                    alert("Registracija sėkminga! El. paštu išsiuntėme patvirtinimą. Daugalite prisijungti.");
+                    alert("Registracija sėkminga! El. paštu išsiųstas patvirtinimas.");
                     toggleForm('login-box');
                 } else {
-                    alert("Klaida: " + data.error);
+                    if (data.error === "403_GEO_BLOCKED") {
+                        showGeoBlockScreen();
+                    } else {
+                        alert("Klaida: " + data.error);
+                    }
                 }
             })
             .catch(() => { hideLoader(); alert("Registracijos klaida."); });
