@@ -13,12 +13,21 @@
         .btn:hover { background: #005a9e; }
         .switch-link { margin-top: 15px; display: block; color: #666; text-decoration: none; font-size: 14px; }
         
-        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.85); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #0078D7; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Geo-block lango stilius */
+        #geo-blocked { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:10000; flex-direction:column; align-items:center; justify-content:center; color:#333; }
+        #geo-blocked h1 { color:#d9534f; margin-bottom:10px; }
     </style>
 </head>
 <body>
+
+    <div id="geo-blocked">
+        <h1>Prieiga apribota (403 Forbidden)</h1>
+        <p>Apgailestaujame, tačiau ši svetainė prieinama tik vartotojams iš Lietuvos.</p>
+    </div>
 
     <div id="loader" class="loading-overlay"><div class="spinner"></div></div>
 
@@ -40,7 +49,15 @@
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycby34gszuZOpcs8q29HcKmJmgFEY6iw70-ei2KEVTHHgT9pcsftjdpO5RRTURrk8ka1Z/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxIanLSY9BjxClVElKByxN-itwcqkPq3EzqctZJ6zdYvXDarfYTvxsgEpbTafwr7y0t/exec"; 
+        
+        // Kintamasis, kuriame saugosime TIKRĄ vartotojo IP adresą
+        let realUserIp = ""; 
+
+        // Tikriname vietą iškart atidarius puslapį
+        window.onload = function() {
+            getRealIpAndCheckGeo();
+        };
 
         function toggleForm(id) {
             document.getElementById('login-box').style.display = id === 'login-box' ? 'block' : 'none';
@@ -50,15 +67,40 @@
         function showLoader() { document.getElementById('loader').style.display = 'flex'; }
         function hideLoader() { document.getElementById('loader').style.display = 'none'; }
 
+        // Gauname tikrą kliento IP ir šalį per naršyklę (kompiuterio IP)
+        function getRealIpAndCheckGeo() {
+            showLoader();
+            fetch('https://ipapi.co/json/')
+            .then(res => res.json())
+            .then(data => {
+                hideLoader();
+                
+                // Jei šalis ne Lietuva (LT), iškart blokuojame ekrane
+                if (data.country_code !== "LT") {
+                    document.getElementById('geo-blocked').style.display = 'flex';
+                    return;
+                }
+                
+                // Jei viskas gerai, išsaugome TIKRĄ IP adresą
+                realUserIp = data.ip; 
+            })
+            .catch(() => {
+                hideLoader();
+                alert("Saugumo klaida: Nepavyko nustatyti jūsų tinklo vietos.");
+            });
+        }
+
         function login() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
             if(!email || !pass) { alert("Užpildykite visus laukus"); return; }
+            if(!realUserIp) { alert("Sistemos klaida: IP adresas dar kraunamas."); return; }
 
             showLoader();
             fetch(GAS_URL, {
                 method: "POST",
-                body: JSON.stringify({ action: "login", email: email, password: pass, ip: "127.0.0.1" })
+                // Siunčiame tikrą IP kintamąjį (realUserIp) vietoj senojo "127.0.0.1"
+                body: JSON.stringify({ action: "login", email: email, password: pass, ip: realUserIp })
             })
             .then(r => r.json())
             .then(data => {
@@ -77,13 +119,15 @@
             const email = document.getElementById('reg-email').value;
             const pass = document.getElementById('reg-pass').value;
             if(!name || !email || !pass) { alert("Užpildykite visus laukus"); return; }
+            if(!realUserIp) { alert("Sistemos klaida: IP adresas dar kraunamas."); return; }
 
             showLoader();
             fetch(GAS_URL, {
                 method: "POST",
+                // Siunčiame tikrą IP registracijai
                 body: JSON.stringify({ 
                     action: "signup", name: name, email: email, password: pass, 
-                    role: "user", ip: "127.0.0.1", cookies: "necessary", browser: navigator.userAgent 
+                    role: "user", ip: realUserIp, cookies: "necessary", browser: navigator.userAgent 
                 })
             })
             .then(r => r.json())
