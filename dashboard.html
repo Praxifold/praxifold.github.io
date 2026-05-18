@@ -5,22 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Praxifold - Valdymo Panelė</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f4f9; margin: 0; color: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; margin: 0; color: #333; }
         header { background: #fff; padding: 15px 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
         .logo { font-weight: bold; font-size: 24px; color: #0078D7; }
         .settings-btn { background: #e1dfdd; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .container { max-width: 900px; margin: 40px auto; padding: 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
         .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .card h3 { margin-top: 0; color: #0078D7; }
+        .card h3 { margin-top: 0; color: #0078D7; text-transform: capitalize; }
         .card .version { font-size: 12px; color: #888; margin-bottom: 15px; display: block; }
         .btn { background: #0078D7; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 14px; width: 100%; margin-top: 5px; }
         .btn:hover { background: #005a9e; }
         .btn-secondary { background: #e1dfdd; color: #333; }
+        
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 400px; }
+        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 400px; max-height: 85vh; overflow-y: auto; }
         .close { float: right; cursor: pointer; font-size: 20px; font-weight: bold; }
-        input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        input { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        .setting-group { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .info-text { font-size: 12px; color: #666; }
+        .links-group a { display: block; margin: 5px 0; color: #0078D7; text-decoration: none; font-size: 14px; }
+        .links-group a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -31,50 +36,76 @@
     </header>
 
     <div class="container">
-        <h2>Jūsų aktyvūs failai ir įrankiai</h2>
-        <div id="loading" style="text-align:center;">Kraunama sistema, prašome palaukti...</div>
+        <h2>Įrankiai ir Failai</h2>
+        <div id="loading" style="text-align:center;">Kraunama sistema...</div>
         <div class="grid" id="file-grid"></div>
     </div>
 
     <div id="settings-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('settings-modal')">&times;</span>
-            <h2>Paskyros nustatymai</h2>
-            <p><strong>Paskyros ID:</strong> <span id="ui-support-id">...</span></p>
-            <p><strong>Planas:</strong> <span id="ui-sub-status">...</span></p>
+            <h2>Vartotojo Nustatymai</h2>
             
-            <input type="text" id="promo-code" placeholder="Įveskite aktyvavimo kodą">
-            <button class="btn" onclick="activateCode()">Aktyvuoti kodą</button>
-            <hr>
-            <button class="btn btn-secondary" onclick="logout()">Atsijungti</button>
+            <div class="setting-group">
+                <strong>Paskyros ID:</strong> <span id="ui-support-id">...</span>
+            </div>
+
+            <div class="setting-group">
+                <strong>Prenumeratos planas:</strong> <span id="ui-sub-status" style="font-weight: bold; color: #0078D7;">...</span><br>
+                <span class="info-text" id="ui-sub-exp"></span><br><br>
+                <input type="text" id="promo-code" placeholder="Įveskite aktyvavimo kodą">
+                <button class="btn" onclick="activateCode()">Aktyvuoti</button>
+            </div>
+
+            <div class="setting-group">
+                <strong>Atsisiuntimų statistika:</strong> <br>
+                <span class="info-text">Iš viso atsisiųsta: <span id="ui-downloads">0</span> failų.</span><br>
+                <span class="info-text">Likusios nemokamos peržiūros: <span id="ui-previews">10</span></span>
+            </div>
+
+            <div class="setting-group links-group">
+                <a href="policy.txt" target="_blank">📄 Skaityti Naudojimo Sąlygas (Terms & Conditions)</a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header" target="_blank">🐞 Pranešti apie klaidą (Bug Report)</a>
+            </div>
+
+            <div class="setting-group">
+                <button class="btn" style="background:#d9534f;" onclick="document.getElementById('delete-box').style.display='block'">Ištrinti paskyrą</button>
+                <div id="delete-box" style="display:none; margin-top:10px;">
+                    <input type="email" id="del-email" placeholder="Patvirtinkite el. paštą">
+                    <input type="text" id="del-confirm" placeholder="Įrašykite: suprantu, kad mano duomenys bus ištrinti" style="font-size:11px;">
+                    <button class="btn" style="background:#c9302c;" onclick="deleteAccount()">Suplanuoti ištrynimą</button>
+                </div>
+            </div>
+
+            <button class="btn btn-secondary" style="margin-top:15px;" onclick="logout()">Atsijungti</button>
         </div>
     </div>
 
     <div id="preview-modal" class="modal">
         <div class="modal-content" style="text-align: center;">
             <span class="close" onclick="closeModal('preview-modal')">&times;</span>
-            <h2>Peržiūros slaptažodis</h2>
+            <h2>Įrankio Peržiūros Slaptažodis</h2>
             <div style="background:#fff3cd; padding:15px; border-radius:6px; margin:15px 0;">
-                <code id="preview-pass" style="font-size: 18px; font-weight:bold; color:#856404;">Generuojama...</code>
+                <code id="preview-pass" style="font-size: 18px; font-weight:bold; color:#856404;">Kraunama...</code>
             </div>
-            <p>Nukopijuokite šį slaptažodį įrankio atrakinimui.</p>
+            <p class="info-text">Naudokite šį slaptažodį, kad atrakintumėte pasirodžiusį įrankio puslapį.</p>
         </div>
     </div>
 
     <div id="download-modal" class="modal">
         <div class="modal-content" style="text-align: center;">
-            <h2>Siuntimas pradėtas!</h2>
-            <p>Failo išpakavimo slaptažodis:</p>
+            <h2>Atsisiuntimas Pradėtas!</h2>
+            <p>Jūsų failo atrakinimo slaptažodis:</p>
             <div style="background:#d4edda; padding:15px; border-radius:6px; margin:15px 0;">
-                <code id="dl-pass" style="font-size: 20px; font-weight:bold; color:#155724;">Generuojama...</code>
+                <code id="dl-pass" style="font-size: 20px; font-weight:bold; color:#155724;">Kraunama...</code>
             </div>
-            <p>Šis langas užsidarys po <span id="timer" style="font-weight:bold;">25</span> sek.</p>
+            <p>Šis saugumo langas automatiškai užsidarys po <span id="timer" style="font-weight:bold; font-size: 18px; color:#0078D7;">25</span> sekundžių.</p>
         </div>
     </div>
 
     <script>
-        // ĮKLIJUOKITE SAVO WEB APP URL ŽEMIAU:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycby380OHtPsVlFqYRoNre_rXiX88zuLVXQaSIeu6E_P7juaDyXLdaPufMgy1-CC7VY9I/exec"; 
+        // ĮKLIJUOKITE SAVO WEB APP URL ŽEMIAU
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxb1EdPoSpegeg6X01ez6QV_MljE0semKcGL8TEBAS3vU0U3-TGBTTG5rzdyl0T6y3A/exec"; 
         let currentUser = null;
 
         window.onload = function() {
@@ -99,18 +130,29 @@
                 if (data.success) {
                     currentUser = data.user;
                     currentUser.token = token; 
-                    document.getElementById('ui-support-id').innerText = currentUser.supportId;
-                    document.getElementById('ui-sub-status').innerText = currentUser.subType.toUpperCase();
+                    updateUI();
                     renderFiles(data.files);
                     document.getElementById('loading').style.display = 'none';
                 } else {
-                    alert("Klaida gaunant duomenis: " + data.error);
+                    alert("Klaida: " + data.error);
                     logout();
                 }
-            }).catch(() => { 
+            }).catch(e => { 
                 alert("Tinklo klaida jungiantis prie duomenų bazės."); 
                 logout(); 
             });
+        }
+
+        function updateUI() {
+            document.getElementById('ui-support-id').innerText = currentUser.supportId;
+            document.getElementById('ui-sub-status').innerText = currentUser.subType.toUpperCase();
+            document.getElementById('ui-downloads').innerText = currentUser.totalDownloads;
+            document.getElementById('ui-previews').innerText = currentUser.previewsLeft;
+            
+            if(currentUser.subExpDate) {
+                const date = new Date(currentUser.subExpDate).toLocaleDateString('lt-LT');
+                document.getElementById('ui-sub-exp').innerText = `Galioja iki: ${date}`;
+            }
         }
 
         function renderFiles(files) {
@@ -118,7 +160,7 @@
             grid.innerHTML = '';
 
             if(!files || files.length === 0) {
-                grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#888;">Skaičiuoklėje nerasta aktyvių failų. Patikrinkite „Files“ kortelę.</p>';
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#888;">Šiuo metu aktyvių failų sistemoje nėra.</p>';
                 return;
             }
 
@@ -135,7 +177,7 @@
 
                 const btnDl = document.createElement('button');
                 btnDl.className = 'btn';
-                btnDl.innerText = 'Atsisiųsti';
+                btnDl.innerText = 'Atsisiusti';
                 btnDl.onclick = () => requestAccess(f.name, 'download');
                 card.appendChild(btnDl);
 
@@ -144,7 +186,13 @@
         }
 
         function requestAccess(fileName, type) {
-            openModal(type === 'preview' ? 'preview-modal' : 'download-modal');
+            if (type === 'preview') {
+                document.getElementById('preview-pass').innerText = "Generuojama prieiga...";
+                openModal('preview-modal');
+            } else {
+                document.getElementById('dl-pass').innerText = "Generuojamas slaptažodis...";
+                openModal('download-modal');
+            }
 
             fetch(GAS_URL, {
                 method: "POST",
@@ -169,7 +217,7 @@
                     }
                 } else {
                     closeModal(type === 'preview' ? 'preview-modal' : 'download-modal');
-                    alert(`Klaida: ${data.error}`);
+                    alert(`Prieiga atmesta: ${data.error}`);
                 }
             });
         }
@@ -178,6 +226,7 @@
             let timeLeft = 25;
             const timerEl = document.getElementById('timer');
             timerEl.innerText = timeLeft;
+
             const countdown = setInterval(() => {
                 timeLeft--;
                 timerEl.innerText = timeLeft;
@@ -193,14 +242,26 @@
             const code = document.getElementById('promo-code').value;
             fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: "activateCode", token: currentUser.token, code: code })
             }).then(r => r.json()).then(data => {
-                if (data.success) { alert("Kodas aktyvuotas sėkmingai!"); window.location.reload(); } 
-                else alert("Nepavyko aktyvuoti kodo.");
+                if (data.success) { alert("Kodas aktyvuotas!"); window.location.reload(); } 
+                else alert("Kodas neteisingas arba jau panaudotas.");
+            });
+        }
+
+        function deleteAccount() {
+            const email = document.getElementById('del-email').value;
+            const confirm = document.getElementById('del-confirm').value;
+            if(confirm !== "suprantu, kad mano duomenys bus ištrinti") {
+                alert("Neteisinga patvirtinimo frazė."); return;
+            }
+            fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: "deleteAccount", token: currentUser.token, email: email })
+            }).then(r => r.json()).then(data => {
+                if (data.success) { alert("Ištrynimas sėkmingai suplanuotas."); logout(); }
+                else { alert("Klaida: " + data.error); }
             });
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        
         function logout() { 
             document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; 
             window.location.href = "index.html"; 
