@@ -13,26 +13,14 @@
         .btn:hover { background: #005a9e; }
         .switch-link { margin-top: 15px; display: block; color: #666; text-decoration: none; font-size: 14px; }
         
-        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
-        .spinner { border: 5px solid #f3f3f3; border-top: 5px solid #0078D7; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.85); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #0078D7; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loading-text { font-size: 18px; font-weight: bold; color: #333; max-width: 450px; line-height: 1.5; }
-        
-        #geo-blocked { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:10000; flex-direction:column; align-items:center; justify-content:center; color:#333; }
-        #geo-blocked h1 { color:#d9534f; margin-bottom:10px; }
     </style>
 </head>
 <body>
 
-    <div id="geo-blocked">
-        <h1>Prieiga apribota (403 Forbidden)</h1>
-        <p>Apgailestaujame, tačiau ši svetainė yra prieinama tik vartotojams, esantiems Lietuvos teritorijoje.</p>
-    </div>
-
-    <div id="security-loader" class="loading-overlay">
-        <div class="spinner"></div>
-        <div class="loading-text" id="loader-text">Tikrinama saugi prieiga...</div>
-    </div>
+    <div id="loader" class="loading-overlay"><div class="spinner"></div></div>
 
     <div class="box" id="login-box">
         <h2>Prisijungti</h2>
@@ -52,59 +40,25 @@
     </div>
 
     <script>
-        // ĮKLIJUOKITE SAVO WEB APP URL ŽEMIAU:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbzgeXTQl5K9P_MYDVxgEtVQyi0a94ms8nbs7yJjhwNRgQXwOYu30_vKwd7-jOYRd07a/exec"; 
-        
-        let clientIp = "";
-
-        // Užsikrovus puslapiui, tikriname geografinę vietą iš kliento pusės
-        window.onload = function() {
-            checkClientGeo();
-        };
+        const GAS_URL = "https://script.google.com/macros/s/AKfycby34gszuZOpcs8q29HcKmJmgFEY6iw70-ei2KEVTHHgT9pcsftjdpO5RRTURrk8ka1Z/exec"; 
 
         function toggleForm(id) {
             document.getElementById('login-box').style.display = id === 'login-box' ? 'block' : 'none';
             document.getElementById('register-box').style.display = id === 'register-box' ? 'block' : 'none';
         }
 
-        function showLoader(text) { 
-            if(text) document.getElementById('loader-text').innerText = text;
-            document.getElementById('security-loader').style.display = 'flex'; 
-        }
-        function hideLoader() { document.getElementById('security-loader').style.display = 'none'; }
-
-        // Ši funkcija pasileidžia tavo naršyklėje, todėl tiksliai mato tavo LT vietą pagal IP
-        function checkClientGeo() {
-            showLoader("Tikrinama jūsų prieigos vieta...");
-            
-            fetch('https://ipapi.co/json/')
-            .then(res => res.json())
-            .then(geo => {
-                hideLoader();
-                if (geo.country_code !== "LT") {
-                    document.getElementById('geo-blocked').style.display = 'flex';
-                    return;
-                }
-                // Jei šalis LT, išsaugome TIKRĄ kompiuterio IP adresą
-                clientIp = geo.ip;
-            })
-            .catch(() => {
-                hideLoader();
-                alert("Nepavyko saugiai patvirtinti jūsų tinklo vietos. Patikrinkite interneto ryšį.");
-            });
-        }
+        function showLoader() { document.getElementById('loader').style.display = 'flex'; }
+        function hideLoader() { document.getElementById('loader').style.display = 'none'; }
 
         function login() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
             if(!email || !pass) { alert("Užpildykite visus laukus"); return; }
-            if(!clientIp) { alert("Palaukite, kol sistema nustatys jūsų saugų IP."); return; }
 
-            showLoader("Autorizuojama paskyra...");
-            
+            showLoader();
             fetch(GAS_URL, {
                 method: "POST",
-                body: JSON.stringify({ action: "login", email: email, password: pass, ip: clientIp }) 
+                body: JSON.stringify({ action: "login", email: email, password: pass, ip: "127.0.0.1" })
             })
             .then(r => r.json())
             .then(data => {
@@ -115,11 +69,7 @@
                 } else {
                     alert("Klaida: " + data.error);
                 }
-            })
-            .catch(() => { 
-                hideLoader(); 
-                alert("Nepavyko prisijungti prie duomenų bazės serverio."); 
-            });
+            }).catch(() => { hideLoader(); alert("Klaida jungiantis prie serverio."); });
         }
 
         function signup() {
@@ -127,21 +77,13 @@
             const email = document.getElementById('reg-email').value;
             const pass = document.getElementById('reg-pass').value;
             if(!name || !email || !pass) { alert("Užpildykite visus laukus"); return; }
-            if(!clientIp) { alert("Palaukite, kol sistema nustatys jūsų saugų IP."); return; }
 
-            showLoader("Kuriama paskyra saugykloje...");
-            
+            showLoader();
             fetch(GAS_URL, {
                 method: "POST",
                 body: JSON.stringify({ 
-                    action: "signup", 
-                    name: name, 
-                    email: email, 
-                    password: pass, 
-                    role: "user", 
-                    ip: clientIp, // Tikrasis IP išsiunčiamas įrašymui į Sheets
-                    cookies: "necessary", 
-                    browser: navigator.userAgent 
+                    action: "signup", name: name, email: email, password: pass, 
+                    role: "user", ip: "127.0.0.1", cookies: "necessary", browser: navigator.userAgent 
                 })
             })
             .then(r => r.json())
@@ -153,8 +95,7 @@
                 } else {
                     alert("Klaida: " + data.error);
                 }
-            })
-            .catch(() => { hideLoader(); alert("Registracijos klaida."); });
+            }).catch(() => { hideLoader(); alert("Registracijos klaida."); });
         }
     </script>
 </body>
