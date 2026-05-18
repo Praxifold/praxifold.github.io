@@ -17,13 +17,22 @@
         .spinner { border: 5px solid #f3f3f3; border-top: 5px solid #0078D7; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .loading-text { font-size: 18px; font-weight: bold; color: #333; max-width: 450px; line-height: 1.5; }
+        
+        /* Geo-block ekrano stilius */
+        #geo-blocked { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:10000; flex-direction:column; align-items:center; justify-content:center; color:#333; }
+        #geo-blocked h1 { color:#d9534f; margin-bottom:10px; }
     </style>
 </head>
 <body>
 
+    <div id="geo-blocked">
+        <h1>Prieiga apribota (403 Forbidden)</h1>
+        <p>Apgailestaujame, tačiau ši svetainė yra prieinama tik vartotojams, esantiems Lietuvos teritorijoje.</p>
+    </div>
+
     <div id="security-loader" class="loading-overlay">
         <div class="spinner"></div>
-        <div class="loading-text">Saugumas mums svarbiau už greitį. Prašome palaukti, kol sinchronizuojame serverius...</div>
+        <div class="loading-text" id="loader-text">Saugumas mums svarbiau už greitį. Tikrinama jūsų prieigos vieta...</div>
     </div>
 
     <div class="box" id="login-box">
@@ -45,26 +54,67 @@
 
     <script>
         // ĮKLIJUOKITE SAVO WEB APP URL ŽEMIAU:
-        const GAS_URL = "https://script.google.com/macros/s/AKfycby380OHtPsVlFqYRoNre_rXiX88zuLVXQaSIeu6E_P7juaDyXLdaPufMgy1-CC7VY9I/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxb1EdPoSpegeg6X01ez6QV_MljE0semKcGL8TEBAS3vU0U3-TGBTTG5rzdyl0T6y3A/exec"; 
+        
+        let userIp = "";
+
+        // Paleidžiama automatiškai, kai tik atidaromas puslapis
+        window.onload = function() {
+            checkLocation();
+        };
 
         function toggleForm(id) {
             document.getElementById('login-box').style.display = id === 'login-box' ? 'block' : 'none';
             document.getElementById('register-box').style.display = id === 'register-box' ? 'block' : 'none';
         }
 
-        function showLoader() { document.getElementById('security-loader').style.display = 'flex'; }
+        function showLoader(text) { 
+            if(text) document.getElementById('loader-text').innerText = text;
+            document.getElementById('security-loader').style.display = 'flex'; 
+        }
         function hideLoader() { document.getElementById('security-loader').style.display = 'none'; }
+
+        // Funkcija, kuri tikrina vartotojo šalį pagal jo IP
+        function checkLocation() {
+            showLoader("Tikrinama jūsų geografinė vieta...");
+            
+            fetch('https://ipapi.co/json/')
+            .then(res => res.json())
+            .then(geo => {
+                hideLoader();
+                // Tikriname, ar šalis yra Lietuva (LT)
+                if (geo.country_code !== "LT") {
+                    document.getElementById('geo-blocked').style.display = 'flex';
+                    // Sustabdomas bet koks tolesnis svetainės krovimas/vykdymas
+                    throw new Error("Prieiga blokuojama: Vartotojas ne Lietuvoje.");
+                }
+                // Jei viskas gerai, išsaugome tikrąjį IP adresą vėlesniam naudojimui
+                userIp = geo.ip;
+            })
+            .catch(err => {
+                if(err.message.includes("blokuojama")) {
+                    console.log(err.message);
+                } else {
+                    hideLoader();
+                    alert("Nepavyko nustatyti jūsų vietos. Patikrinkite interneto ryšį.");
+                }
+            });
+        }
 
         function login() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
             if(!email || !pass) { alert("Užpildykite visus laukus"); return; }
+            if(!userIp) { alert("Sistemos klaida: IP adresas dar nenustatytas. Palaukite sekundę."); return; }
 
-            showLoader();
+            showLoader("Jungiamasi prie saugaus serverio...");
+            
             fetch(GAS_URL, {
                 method: "POST",
-                body: JSON.stringify({ action: "login", email: email, password: pass, ip: "127.0.0.1" }) 
-            }).then(r => r.json()).then(data => {
+                body: JSON.stringify({ action: "login", email: email, password: pass, ip: userIp }) 
+            })
+            .then(r => r.json())
+            .then(data => {
                 hideLoader();
                 if (data.success) {
                     document.cookie = `token=${data.token}; path=/; max-age=86400;`;
@@ -72,7 +122,8 @@
                 } else {
                     alert("Klaida: " + data.error);
                 }
-            }).catch(() => { 
+            })
+            .catch(() => { 
                 hideLoader(); 
                 alert("Nepavyko prisijungti prie serverio. Patikrinkite GAS URL."); 
             });
@@ -83,20 +134,34 @@
             const email = document.getElementById('reg-email').value;
             const pass = document.getElementById('reg-pass').value;
             if(!name || !email || !pass) { alert("Užpildykite visus laukus"); return; }
+            if(!userIp) { alert("Sistemos klaida: IP adresas dar nenustatytas. Palaukite sekundę."); return; }
 
-            showLoader();
+            showLoader("Kuriama paskyra...");
+            
             fetch(GAS_URL, {
                 method: "POST",
-                body: JSON.stringify({ action: "signup", name: name, email: email, password: pass, role: "user", ip: "127.0.0.1", cookies: "necessary", browser: navigator.userAgent })
-            }).then(r => r.json()).then(data => {
+                body: JSON.stringify({ 
+                    action: "signup", 
+                    name: name, 
+                    email: email, 
+                    password: pass, 
+                    role: "user", 
+                    ip: userIp, 
+                    cookies: "necessary", 
+                    browser: navigator.userAgent 
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
                 hideLoader();
                 if (data.success) {
-                    alert("Registracija sėkminga! Dabar galite prisijungti.");
+                    alert("Registracija sėkminga! El. paštu išsiuntėme patvirtinimą. Daugalite prisijungti.");
                     toggleForm('login-box');
                 } else {
                     alert("Klaida: " + data.error);
                 }
-            }).catch(() => { hideLoader(); alert("Registracijos klaida."); });
+            })
+            .catch(() => { hideLoader(); alert("Registracijos klaida."); });
         }
     </script>
 </body>
