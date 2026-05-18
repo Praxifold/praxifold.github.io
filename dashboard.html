@@ -57,7 +57,7 @@
 
             <div class="setting-group">
                 <strong>Atsisiuntimų statistika:</strong> <br>
-                <span class="info-text">Atsisiųsta iš viso: <span id="ui-downloads">0</span> failų. (Limitas nemokamam planui: 5)</span><br>
+                <span class="info-text">Atsisiųsta iš viso: <span id="ui-downloads">0</span> failų.</span><br>
                 <span class="info-text">Likusios peržiūros (Free): <span id="ui-previews">10</span></span>
             </div>
 
@@ -102,12 +102,17 @@
     </div>
 
     <script>
+        // CHANGE THIS TO YOUR CURRENT WEB APP URL
         const GAS_URL = "https://script.google.com/macros/s/AKfycbwM5V48Z1c7goUQ-3JLKA2yRU1BbQHgOBQOl1Xaw8o3KBRLzFM8FVAYKetok50mXKXZ/exec"; 
         let currentUser = null;
 
         window.onload = function() {
             const token = getCookie("token");
-            if (!token) { window.location.href = "index.html"; return; }
+            if (!token) { 
+                console.log("No token found in cookies, redirecting to login.");
+                window.location.href = "index.html"; 
+                return; 
+            }
             fetchUserData(token);
         };
 
@@ -128,11 +133,15 @@
                     renderFiles(data.files);
                     document.getElementById('loading').style.display = 'none';
                 } else {
-                    if (data.error === "403_BANNED") alert("Paskyra užblokuota dėl saugumo taisyklių pažeidimo.");
-                    else alert("Sesija pasibaigė.");
+                    // DIAGNOSTIC ALERT: Tells you exactly why the database rejected the login token
+                    alert("Database rejected token. Error Code from server: " + data.error + "\nCheck if your script is deployed properly.");
                     logout();
                 }
-            }).catch(e => { alert("Klaida jungiantis prie serverio."); logout(); });
+            }).catch(e => { 
+                console.error(e);
+                alert("Network error connecting to Google Sheets. Check your GAS_URL."); 
+                logout(); 
+            });
         }
 
         function updateUI() {
@@ -151,15 +160,17 @@
             const grid = document.getElementById('file-grid');
             grid.innerHTML = '';
 
+            if(!files || files.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#888;">No active files found in the database. Check your "Files" tab in Google Sheets.</p>';
+                return;
+            }
+
             files.forEach(f => {
-                // Jei prenumerata pasibaigė (Free) ir vartotojas jau bent kartą sąveikavo su failu, paslepiame
                 const hasDownloadedBefore = currentUser.history && currentUser.history[f.name] !== undefined;
                 if (currentUser.subType === 'free' && hasDownloadedBefore) return;
 
                 const card = document.createElement('div');
                 card.className = 'card';
-                
-                // Kadangi Sheet'e nebėra .html plėtinio, tiesiog išvedame pavadinimą saugiai
                 card.innerHTML = `<h3>${f.name}</h3><span class="version">Versija: V${f.version}</span>`;
 
                 const sub = currentUser.subType;
@@ -167,14 +178,12 @@
                 const manualDeny = currentUser.allowedDownloads === "no";
                 const devRestrict = f.devRestricted === "yes";
 
-                // Peržiūros mygtukas
                 const btnPrev = document.createElement('button');
                 btnPrev.className = 'btn btn-secondary';
                 btnPrev.innerText = 'Peržiūrėti';
                 btnPrev.onclick = () => requestAccess(f.name, 'preview');
                 card.appendChild(btnPrev);
 
-                // Atsisiuntimo mygtuko generavimo taisyklės
                 let canDownload = (sub === "pro" || (currentUser.totalDownloads < 5 && !manualDeny) || manualAllow) && !devRestrict;
 
                 if (canDownload) {
@@ -183,7 +192,7 @@
                     btnDl.innerText = 'Atsisiųsti';
                     btnDl.onclick = () => requestAccess(f.name, 'download');
                     card.appendChild(btnDl);
-                } else if (devRestrict || manualDeny) {
+                } else {
                     const btnRestricted = document.createElement('button');
                     btnRestricted.className = 'btn btn-secondary';
                     btnRestricted.innerText = 'Apribota';
@@ -208,7 +217,6 @@
                 body: JSON.stringify({ action: "requestAccess", token: currentUser.token, fileName: fileName, type: type })
             }).then(r => r.json()).then(data => {
                 if (data.success) {
-                    // Svarbu: kreipiantis į GitHub Pages failų serverį pridedama '.html' galūnė
                     const gitHubPath = `tools/${fileName}.html`;
 
                     if (type === 'preview') {
@@ -231,12 +239,7 @@
                     }
                 } else {
                     closeModal(type === 'preview' ? 'preview-modal' : 'download-modal');
-                    if(data.error === "403_BANNED") { 
-                        alert("Sistema užblokavo paskyrą dėl per greitų užklausų / botų veiklos."); 
-                        logout(); 
-                    } else { 
-                        alert(`Prieiga atmesta. Pasiektas plano limitas.`); 
-                    }
+                    alert(`Prieiga atmesta. Klaidos kodas: ${data.error}`);
                 }
             });
         }
@@ -280,7 +283,10 @@
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function logout() { document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; window.location.href = "index.html"; }
+        function logout() { 
+            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; 
+            window.location.href = "index.html"; 
+        }
     </script>
 </body>
 </html>
