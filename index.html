@@ -23,7 +23,7 @@
 
     <div id="security-loader" class="loading-overlay">
         <div class="spinner"></div>
-        <div class="loading-text">We prioritize security instead of speed. Please wait while we sync our servers...</div>
+        <div class="loading-text">Saugumas mums svarbiau už greitį. Prašome palaukti, kol sinchronizuojame serverius...</div>
     </div>
 
     <div class="box" id="login-box">
@@ -44,8 +44,8 @@
     </div>
 
     <script>
-        // CHANGE THIS TO YOUR CURRENT WEB APP URL
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwM5V48Z1c7goUQ-3JLKA2yRU1BbQHgOBQOl1Xaw8o3KBRLzFM8FVAYKetok50mXKXZ/exec"; 
+        // ĮKLIJUOKITE SAVO WEB APP URL ŽEMIAU:
+        const GAS_URL = "https://script.google.com/macros/s/AKfycby380OHtPsVlFqYRoNre_rXiX88zuLVXQaSIeu6E_P7juaDyXLdaPufMgy1-CC7VY9I/exec"; 
 
         function toggleForm(id) {
             document.getElementById('login-box').style.display = id === 'login-box' ? 'block' : 'none';
@@ -70,13 +70,11 @@
                     document.cookie = `token=${data.token}; path=/; max-age=86400;`;
                     window.location.href = "dashboard.html";
                 } else {
-                    if(data.error === "403_BANNED") alert("Paskyra užblokuota dėl taisyklių pažeidimo.");
-                    else alert("Neteisingas el. paštas arba slaptažodis.");
+                    alert("Klaida: " + data.error);
                 }
-            }).catch((err) => { 
+            }).catch(() => { 
                 hideLoader(); 
-                console.error(err);
-                alert("Server connection error. Make sure your GAS URL is correct and deployed as a New Version."); 
+                alert("Nepavyko prisijungti prie serverio. Patikrinkite GAS URL."); 
             });
         }
 
@@ -93,10 +91,10 @@
             }).then(r => r.json()).then(data => {
                 hideLoader();
                 if (data.success) {
-                    alert("Registracija sėkminga! Prisijunkite.");
+                    alert("Registracija sėkminga! Dabar galite prisijungti.");
                     toggleForm('login-box');
                 } else {
-                    alert("Toks el. paštas jau užregistruotas.");
+                    alert("Klaida: " + data.error);
                 }
             }).catch(() => { hideLoader(); alert("Registracijos klaida."); });
         }
