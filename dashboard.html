@@ -9,27 +9,21 @@
         header { background: #fff; padding: 15px 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
         .logo { font-weight: bold; font-size: 24px; color: #0078D7; }
         .settings-btn { background: #e1dfdd; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        
         .container { max-width: 900px; margin: 40px auto; padding: 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
         .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .card h3 { margin-top: 0; color: #0078D7; }
         .card .version { font-size: 12px; color: #888; margin-bottom: 15px; display: block; }
-        
         .btn { background: #0078D7; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 14px; width: 100%; margin-top: 5px; }
         .btn:hover { background: #005a9e; }
         .btn-secondary { background: #e1dfdd; color: #333; }
-        
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
         .modal-content { background: white; padding: 30px; border-radius: 12px; width: 400px; max-height: 80vh; overflow-y: auto; }
         .close { float: right; cursor: pointer; font-size: 20px; font-weight: bold; }
-        
         input { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
         .setting-group { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         .info-text { font-size: 12px; color: #666; }
-        .error { color: red; font-size: 13px; }
-        .success { color: green; font-size: 13px; }
-        
+        .links-group a { display: block; margin: 5px 0; color: #0078D7; text-decoration: none; font-size: 14px; }
         .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
@@ -58,7 +52,6 @@
             
             <div class="setting-group">
                 <strong>Paskyros ID:</strong> <span id="ui-support-id">...</span>
-                <button class="btn btn-secondary" onclick="copySupportId()" style="width:auto; float:right; padding: 4px 8px;">Kopijuoti</button>
             </div>
 
             <div class="setting-group">
@@ -71,19 +64,13 @@
 
             <div class="setting-group">
                 <strong>Istorija:</strong> <br>
-                <span class="info-text">Atsisiųsti failai: <span id="ui-downloads">0</span></span>
+                <span class="info-text">Atsisiųsti failai: <span id="ui-downloads">0</span>/5 (Free/Std limitas)</span><br>
+                <span class="info-text">Likusios peržiūros (Free): <span id="ui-previews">10</span></span>
             </div>
 
-            <div class="setting-group">
-                <strong>Likti prisijungus:</strong>
-                <label class="switch" style="float:right;">
-                    <input type="checkbox" id="stay-logged" onchange="toggleStayLogged()">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <div class="setting-group">
-                <button class="btn btn-secondary" onclick="alert('Klaida: Prašome susisiekti su palaikymo komanda praxifold@gmail.com norint pakeisti slaptažodį.')">Pakeisti slaptažodį</button>
+            <div class="setting-group links-group">
+                <a href="policy.txt" target="_blank">📄 Skaityti Naudojimo Sąlygas</a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header" target="_blank">🐞 Pranešti apie klaidą (Bug Report)</a>
             </div>
 
             <div class="setting-group">
@@ -97,10 +84,6 @@
                 </div>
             </div>
 
-            <div class="info-text" style="text-align:center;">
-                Svetainės versija: 1.0.4 | Build: 892<br>
-                Protokolo saugumo Nr: PXF-SEC-2026
-            </div>
             <button class="btn btn-secondary" style="margin-top:15px;" onclick="logout()">Atsijungti</button>
         </div>
     </div>
@@ -110,7 +93,7 @@
             <span class="close" onclick="closeModal('preview-modal')">&times;</span>
             <h2>Peržiūra</h2>
             <div class="info-text" style="margin-bottom: 15px; color:red; font-weight:bold;">
-                Failo slaptažodis: <span id="preview-pass" style="font-size: 16px;"></span>
+                Failo slaptažodis: <span id="preview-pass" style="font-size: 16px;">Kraunama...</span>
             </div>
             <p>Saugokite šį slaptažodį. Jis reikalingas atidaryti failui.</p>
         </div>
@@ -120,24 +103,19 @@
         <div class="modal-content" style="text-align: center;">
             <h2>Atsisiunčiama...</h2>
             <div class="info-text" style="margin-bottom: 15px; color:red; font-weight:bold;">
-                Prisiminkite šį slaptažodį: <span id="dl-pass" style="font-size: 16px;"></span>
+                Prisiminkite šį slaptažodį: <span id="dl-pass" style="font-size: 16px;">Kraunama...</span>
             </div>
             <p>Prašome palaukti. Langas užsidarys po <span id="timer" style="font-weight:bold; font-size: 20px;">25</span> s.</p>
         </div>
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwM5V48Z1c7goUQ-3JLKA2yRU1BbQHgOBQOl1Xaw8o3KBRLzFM8FVAYKetok50mXKXZ/exec"; // Paste your GAS Web App URL here
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwM5V48Z1c7goUQ-3JLKA2yRU1BbQHgOBQOl1Xaw8o3KBRLzFM8FVAYKetok50mXKXZ/exec"; 
         let currentUser = null;
 
         window.onload = function() {
             const token = getCookie("token");
             if (!token) { window.location.href = "index.html"; return; }
-            
-            const stayLogged = getCookie("stayLogged") === "true";
-            if (stayLogged) document.getElementById('stay-logged').checked = true;
-            document.cookie = `token=${token}; path=/; max-age=${stayLogged ? 86400 * 30 : 600}`;
-
             fetchUserData(token);
         };
 
@@ -149,8 +127,7 @@
 
         function fetchUserData(token) {
             fetch(GAS_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "getUserData", token: token })
+                method: "POST", body: JSON.stringify({ action: "getUserData", token: token })
             }).then(r => r.json()).then(data => {
                 if (data.success) {
                     currentUser = data.user;
@@ -159,16 +136,18 @@
                     renderFiles(data.files);
                     document.getElementById('loading').style.display = 'none';
                 } else {
-                    alert(`Klaida ${data.error}: Prašome susisiekti su palaikymo komanda praxifold@gmail.com`);
+                    if (data.error === "403_BANNED") alert("Jūsų paskyra užblokuota. Patikrinkite el. paštą.");
+                    else alert("Klaida. Prašome prisijungti iš naujo.");
                     logout();
                 }
-            }).catch(e => alert("Klaida 060: Serverio ryšio klaida."));
+            }).catch(e => { alert("Ryšio klaida."); logout(); });
         }
 
         function updateUI() {
             document.getElementById('ui-support-id').innerText = currentUser.supportId;
             document.getElementById('ui-sub-status').innerText = currentUser.subType.toUpperCase();
             document.getElementById('ui-downloads').innerText = currentUser.totalDownloads;
+            document.getElementById('ui-previews').innerText = currentUser.previewsLeft;
             
             if(currentUser.subExpDate) {
                 const date = new Date(currentUser.subExpDate).toLocaleDateString('lt-LT');
@@ -181,25 +160,36 @@
             grid.innerHTML = '';
 
             files.forEach(f => {
+                // Paslėpti failus, jei vartotojas Free ir jau atsisiuntė failą (Cookie / History)
+                const isDownloaded = currentUser.history && currentUser.history[f.name] !== undefined;
+                if (currentUser.subType === 'free' && isDownloaded) return; // Praleisti atvaizdavimą
+
                 const card = document.createElement('div');
                 card.className = 'card';
-                card.innerHTML = `<h3>${f.name}</h3><span class="version">V ${f.version}</span>`;
+                // Pašaliname .html galūnę
+                const displayName = f.name.replace(/\.html$/i, '');
+                card.innerHTML = `<h3>${displayName}</h3><span class="version">V ${f.version}</span>`;
 
                 const sub = currentUser.subType;
                 const manualAllow = currentUser.allowedDownloads === "yes";
+                const manualDeny = currentUser.allowedDownloads === "no";
                 const devRestrict = f.devRestricted === "yes";
 
+                // Preview mygtukas
                 const btnPrev = document.createElement('button');
                 btnPrev.className = 'btn btn-secondary';
                 btnPrev.innerText = 'Peržiūra';
-                btnPrev.onclick = () => handlePreview(f);
+                btnPrev.onclick = () => requestAccess(f.name, 'preview');
                 card.appendChild(btnPrev);
 
-                if ((sub === "pro" || manualAllow) && !devRestrict) {
+                // Download mygtukas (Logika: Max 5 atsisiuntimai Free ir Standartui)
+                let canDownload = (sub === "pro" || (currentUser.totalDownloads < 5 && !manualDeny) || manualAllow) && !devRestrict;
+
+                if (canDownload) {
                     const btnDl = document.createElement('button');
                     btnDl.className = 'btn';
                     btnDl.innerText = 'Atsisiųsti';
-                    btnDl.onclick = () => handleDownload(f);
+                    btnDl.onclick = () => requestAccess(f.name, 'download');
                     card.appendChild(btnDl);
                 } else if (devRestrict) {
                     const btnRestricted = document.createElement('button');
@@ -212,19 +202,39 @@
             });
         }
 
-        function handlePreview(file) {
-            if (currentUser.subType === "free" && currentUser.previewsLeft <= 0) {
-                alert("Klaida 041: Pasiekėte peržiūrų limitą.");
-                return;
+        function requestAccess(fileName, type) {
+            if (type === 'preview') {
+                document.getElementById('preview-pass').innerText = "Kraunama...";
+                openModal('preview-modal');
+            } else {
+                document.getElementById('dl-pass').innerText = "Kraunama...";
+                openModal('download-modal');
             }
-            document.getElementById('preview-pass').innerText = file.password;
-            openModal('preview-modal');
+
+            fetch(GAS_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "requestAccess", token: currentUser.token, fileName: fileName, type: type })
+            }).then(r => r.json()).then(data => {
+                if (data.success) {
+                    if (type === 'preview') {
+                        document.getElementById('preview-pass').innerText = data.password;
+                        currentUser.previewsLeft--;
+                        updateUI();
+                    } else {
+                        document.getElementById('dl-pass').innerText = data.password;
+                        startDownloadTimer();
+                        currentUser.totalDownloads++;
+                        updateUI();
+                    }
+                } else {
+                    closeModal(type === 'preview' ? 'preview-modal' : 'download-modal');
+                    if(data.error === "403_BANNED") { alert("Aptikta neįprasta veikla. Paskyra blokuojama."); logout(); }
+                    else { alert(`Klaida: Limitas pasiektas arba prieiga draudžiama. (${data.error})`); }
+                }
+            });
         }
 
-        function handleDownload(file) {
-            document.getElementById('dl-pass').innerText = file.password;
-            openModal('download-modal');
-            
+        function startDownloadTimer() {
             let timeLeft = 25;
             const timerEl = document.getElementById('timer');
             timerEl.innerText = timeLeft;
@@ -235,68 +245,33 @@
                 if (timeLeft <= 0) {
                     clearInterval(countdown);
                     closeModal('download-modal');
+                    // Perkrauti, kad pasislėptų failas jei sub === free
+                    window.location.reload(); 
                 }
             }, 1000);
         }
 
         function activateCode() {
             const code = document.getElementById('promo-code').value;
-            const msgBox = document.getElementById('promo-msg');
-            msgBox.innerHTML = "Kraunama...";
-            
-            fetch(GAS_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "activateCode", token: currentUser.token, code: code })
+            fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: "activateCode", token: currentUser.token, code: code })
             }).then(r => r.json()).then(data => {
-                if (data.success) {
-                    msgBox.className = "success";
-                    msgBox.innerText = "Sėkmingai aktyvuota!";
-                    setTimeout(() => window.location.reload(), 1500);
-                } else {
-                    msgBox.className = "error";
-                    msgBox.innerText = `Klaida ${data.error}: Nepavyko aktyvuoti.`;
-                }
+                if (data.success) { alert("Sėkminga!"); window.location.reload(); } 
+                else alert("Klaida. Kodas neteisingas.");
             });
         }
 
         function deleteAccount() {
             const email = document.getElementById('del-email').value;
-            const pass = document.getElementById('del-pass').value;
             const confirm = document.getElementById('del-confirm').value;
-            const msgBox = document.getElementById('del-msg');
-
-            fetch(GAS_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "deleteAccount", token: currentUser.token, email: email, password: pass, confirmation: confirm })
+            fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: "deleteAccount", token: currentUser.token, email: email, confirmation: confirm })
             }).then(r => r.json()).then(data => {
-                if (data.success) {
-                    msgBox.className = "success";
-                    msgBox.innerText = "{your account has been successfully scheduled for deletion}";
-                    setTimeout(logout, 3000);
-                } else {
-                    msgBox.className = "error";
-                    msgBox.innerText = `Klaida ${data.error}`;
-                }
+                if (data.success) { alert("Suplanuota. Patikrinkite el. paštą."); logout(); }
             });
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        
-        function copySupportId() {
-            navigator.clipboard.writeText(currentUser.supportId);
-            alert("Nukopijuota!");
-        }
-
-        function toggleStayLogged() {
-            const isChecked = document.getElementById('stay-logged').checked;
-            document.cookie = `stayLogged=${isChecked}; path=/; max-age=2592000`;
-        }
-
-        function logout() {
-            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            window.location.href = "index.html";
-        }
+        function logout() { document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; window.location.href = "index.html"; }
     </script>
 </body>
 </html>
