@@ -3,146 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Praxifold</title>
+    <title>Praxifold - Prisijungimas</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-        img.logo { max-width: 150px; margin-bottom: 20px; }
-        .btn { background: #0078D7; color: white; border: none; padding: 12px 20px; margin: 10px 0; border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 350px; text-align: center; }
+        h2 { color: #0078D7; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .btn { background: #0078D7; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
         .btn:hover { background: #005a9e; }
-        .btn-secondary { background: #e1dfdd; color: #333; }
-        .btn-secondary:hover { background: #c8c6c4; }
-        .hidden { display: none; }
-        input, select { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        .error-msg { color: red; font-size: 12px; margin-top: -5px; margin-bottom: 10px; display: block; }
-        a { color: #0078D7; text-decoration: none; }
+        .switch-link { margin-top: 15px; display: block; color: #666; text-decoration: none; font-size: 14px; }
+        
+        /* SAUGUMO KROVIMOSI EKRANAS */
+        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .spinner { border: 5px solid #f3f3f3; border-top: 5px solid #0078D7; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading-text { font-size: 18px; font-weight: bold; color: #333; max-width: 450px; line-height: 1.5; }
     </style>
 </head>
 <body>
 
-    <div class="container" id="main-menu">
-        <img src="logo.png" alt="Logo" class="logo">
-        <div id="loading-ip">Tikrinamas regionas...</div>
-        <div id="auth-buttons" class="hidden">
-            <button class="btn" onclick="showSection('signup-section')">Aš čia naujokas (Registruotis)</button>
-            <button class="btn btn-secondary" onclick="showSection('login-section')">Turiu paskyrą (Prisijungti)</button>
-        </div>
+    <div id="security-loader" class="loading-overlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Mes teikiame pirmenybę saugumui, o ne greičiui. Prašome palaukti, kol sinchronizuojame savo serverius...</div>
     </div>
 
-    <div class="container hidden" id="signup-section">
-        <h2>Registracija</h2>
-        <input type="text" id="reg-name" placeholder="Pilnas vardas" required>
-        <input type="email" id="reg-email" placeholder="El. paštas" required>
-        <input type="password" id="reg-pass" placeholder="Slaptažodis (min 8 simboliai)" onkeyup="checkPassword()" required>
-        <span id="pass-feedback" class="error-msg"></span>
-        <input type="password" id="reg-pass2" placeholder="Pakartokite slaptažodį" required>
-        <select id="reg-role">
-            <option value="Teacher">Mokytojas (Teacher)</option>
-            <option value="Engineer">Inžinierius (Engineer)</option>
-            <option value="Hobbyist">Mėgėjas (Hobbyist)</option>
-            <option value="Other">Kita (Other)</option>
-        </select>
-        <div style="text-align: left; font-size: 12px; margin-bottom: 10px;">
-            <input type="checkbox" id="reg-terms" required style="width: auto;"> Registruodamiesi sutinkate su mūsų <a href="policy.txt" target="_blank">Naudojimo sąlygomis ir Privatumo politika</a>.<br><br>
-            <input type="radio" name="cookies" value="all" checked style="width: auto;"> Visi slapukai
-            <input type="radio" name="cookies" value="necessary" style="width: auto;"> Tik būtini slapukai
-        </div>
-        <button class="btn" onclick="submitSignup()">Sukurti paskyrą</button>
-        <button class="btn btn-secondary" onclick="showSection('main-menu')">Atgal</button>
-    </div>
-
-    <div class="container hidden" id="login-section">
+    <div class="box" id="login-box">
         <h2>Prisijungti</h2>
-        <input type="email" id="log-email" placeholder="El. paštas" required>
-        <input type="password" id="log-pass" placeholder="Slaptažodis" required>
-        <button class="btn" onclick="submitLogin()">Prisijungti</button>
-        <button class="btn btn-secondary" onclick="showSection('main-menu')">Atgal</button>
+        <input type="email" id="login-email" placeholder="El. paštas">
+        <input type="password" id="login-pass" placeholder="Slaptažodis">
+        <button class="btn" onclick="login()">Prisijungti</button>
+        <a href="#" class="switch-link" onclick="toggleForm('register-box')">Neturite paskyros? Registruotis</a>
+    </div>
+
+    <div class="box" id="register-box" style="display:none;">
+        <h2>Registracija</h2>
+        <input type="text" id="reg-name" placeholder="Vardas Pavardė">
+        <input type="email" id="reg-email" placeholder="El. paštas">
+        <input type="password" id="reg-pass" placeholder="Slaptažodis">
+        <button class="btn" onclick="signup()">Registruotis</button>
+        <a href="#" class="switch-link" onclick="toggleForm('login-box')">Jau turite paskyrą? Prisijungti</a>
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwM5V48Z1c7goUQ-3JLKA2yRU1BbQHgOBQOl1Xaw8o3KBRLzFM8FVAYKetok50mXKXZ/exec"; // Paste your GAS Web App URL here
-        let userIP = "0.0.0.0";
-        let userBrowser = navigator.userAgent;
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwM5V48Z1c7goUQ-3JLKA2yRU1BbQHgOBQOl1Xaw8o3KBRLzFM8FVAYKetok50mXKXZ/exec"; 
 
-        window.onload = function() {
-            fetch('https://ipapi.co/json/')
-                .then(response => response.json())
-                .then(data => {
-                    userIP = data.ip;
-                    if (data.country_code === 'LT') {
-                        document.getElementById('loading-ip').classList.add('hidden');
-                        document.getElementById('auth-buttons').classList.remove('hidden');
-                    } else {
-                        showError("010");
-                        document.getElementById('loading-ip').innerText = "Prieiga negalima iš jūsų regiono.";
-                    }
-                })
-                .catch(err => {
-                    showError("0010");
-                    document.getElementById('loading-ip').innerText = "Nepavyko patikrinti regiono.";
-                });
-        };
-
-        function showSection(id) {
-            document.getElementById('main-menu').classList.add('hidden');
-            document.getElementById('signup-section').classList.add('hidden');
-            document.getElementById('login-section').classList.add('hidden');
-            document.getElementById(id).classList.remove('hidden');
+        function toggleForm(id) {
+            document.getElementById('login-box').style.display = id === 'login-box' ? 'block' : 'none';
+            document.getElementById('register-box').style.display = id === 'register-box' ? 'block' : 'none';
         }
 
-        function checkPassword() {
-            const pass = document.getElementById('reg-pass').value;
-            const feedback = document.getElementById('pass-feedback');
-            feedback.innerText = pass.length < 8 ? "Slaptažodis turi būti bent 8 simbolių." : "";
+        function showLoader() { document.getElementById('security-loader').style.display = 'flex'; }
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; window.location.href = "index.html"; function hideLoader() { document.getElementById('security-loader').style.display = 'none'; }
+
+        function login() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            if(!email || !pass) { alert("Užpildykite visus laukus"); return; }
+
+            showLoader();
+            fetch(GAS_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "login", email: email, password: pass, ip: "127.0.0.1" }) // Realioje aplinkoje IP renkamas dinamiškai
+            }).then(r => r.json()).then(data => {
+                hideLoader();
+                if (data.success) {
+                    document.cookie = `token=${data.token}; path=/; max-age=86400;`;
+                    window.location.href = "dashboard.html";
+                } else {
+                    if(data.error === "403_BANNED") alert("Paskyra užblokuota dėl taisyklių pažeidimo.");
+                    else alert("Neteisingas el. paštas arba slaptažodis.");
+                }
+            }).catch(() => { hideLoader(); alert("Serverio sinchronizacijos klaida."); });
         }
 
-        function showError(code) {
-            alert(`Klaida ${code}: Prašome susisiekti su palaikymo komanda praxifold@gmail.com`);
-        }
-
-        function submitSignup() {
+        function signup() {
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-email').value;
             const pass = document.getElementById('reg-pass').value;
-            const pass2 = document.getElementById('reg-pass2').value;
-            const role = document.getElementById('reg-role').value;
-            const terms = document.getElementById('reg-terms').checked;
-            const cookies = document.querySelector('input[name="cookies"]:checked').value;
+            if(!name || !email || !pass) { alert("Užpildykite visus laukus"); return; }
 
-            if (pass !== pass2 || pass.length < 8) return alert("Slaptažodžiai nesutampa arba yra per trumpi.");
-            if (!terms) return alert("Privalote sutikti su sąlygomis.");
-
-            const payload = {
-                action: "signup", name: name, email: email, password: pass, role: role,
-                ip: userIP, browser: userBrowser, cookies: cookies
-            };
-
-            fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) })
-                .then(res => res.json()).then(data => {
-                    if (data.success) {
-                        document.cookie = `token=${data.token}; path=/; max-age=600`; 
-                        window.location.href = "dashboard.html"; 
-                    } else {
-                        showError(data.error);
-                    }
-                }).catch(e => showError("060"));
-        }
-
-        function submitLogin() {
-            const email = document.getElementById('log-email').value;
-            const pass = document.getElementById('log-pass').value;
-
-            const payload = { action: "login", email: email, password: pass, ip: userIP };
-
-            fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) })
-                .then(res => res.json()).then(data => {
-                    if (data.success) {
-                        document.cookie = `token=${data.token}; path=/; max-age=600`;
-                        window.location.href = "dashboard.html";
-                    } else {
-                        showError(data.error);
-                    }
-                }).catch(e => showError("060"));
+            showLoader();
+            fetch(GAS_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "signup", name: name, email: email, password: pass, role: "user", ip: "127.0.0.1", cookies: "necessary", browser: navigator.userAgent })
+            }).then(r => r.json()).then(data => {
+                hideLoader();
+                if (data.success) {
+                    alert("Registracija sėkminga! Patikrinkite el. paštą ir prisijunkite.");
+                    toggleForm('login-box');
+                } else {
+                    alert("Toks el. paštas jau užregistruotas.");
+                }
+            }).catch(() => { hideLoader(); alert("Registracijos klaida."); });
         }
     </script>
 </body>
