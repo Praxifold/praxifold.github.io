@@ -17,15 +17,16 @@
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #0078D7; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        #geo-blocked { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:10000; flex-direction:column; align-items:center; justify-content:center; color:#333; }
+        /* Ribotos prieigos langas */
+        #geo-blocked { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:10000; flex-direction:column; align-items:center; justify-content:center; color:#333; font-family: sans-serif; }
         #geo-blocked h1 { color:#d9534f; margin-bottom:10px; }
     </style>
 </head>
 <body>
 
     <div id="geo-blocked">
-        <h1>Prieiga apribota (403 Forbidden)</h1>
-        <p>Apgailestaujame, tačiau ši svetainė prieinama tik vartotojams iš Lietuvos.</p>
+        <h1>Prieiga apribota</h1>
+        <p>Apgailestaujame, ši svetainė prieinama tik vartotojams iš Lietuvos teritorijos.</p>
     </div>
 
     <div id="loader" class="loading-overlay"><div class="spinner"></div></div>
@@ -49,13 +50,30 @@
 
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbxIanLSY9BjxClVElKByxN-itwcqkPq3EzqctZJ6zdYvXDarfYTvxsgEpbTafwr7y0t/exec"; 
-        
-        // Numatytasis IP, kad sistema nesulūžtų net jei išoriniai API neveikia
-        let realUserIp = "127.0.0.1"; 
 
+        // Vykdome geo-blokavimo patikrą pačioje pradžioje
         window.onload = function() {
-            getRealIpAndCheckGeo();
+            checkLocation();
         };
+
+        function checkLocation() {
+            showLoader();
+            // Naudojame visiškai nemokamą ir greitą API vietai patikrinti
+            fetch('https://freeipapi.com/api/json')
+            .then(res => res.json())
+            .then(data => {
+                hideLoader();
+                // Jei šalis ne Lietuva (LT), visiškai sustabdome svetainę ir parodome block ekraną
+                if (data.countryCode !== "LT") {
+                    document.getElementById('geo-blocked').style.display = 'flex';
+                }
+            })
+            .catch(() => {
+                // Jei API dėl AdBlock nepasiekiamas, leidžiame testuoti, kad nesulūžtų demo versija
+                hideLoader();
+                console.log("Geo patikra praleista saugumo testavimui.");
+            });
+        }
 
         function toggleForm(id) {
             document.getElementById('login-box').style.display = id === 'login-box' ? 'block' : 'none';
@@ -65,45 +83,6 @@
         function showLoader() { document.getElementById('loader').style.display = 'flex'; }
         function hideLoader() { document.getElementById('loader').style.display = 'none'; }
 
-        // Patikimas IP gavimas su atsarginiu planu (Fallback)
-        function getRealIpAndCheckGeo() {
-            showLoader();
-            
-            // 1. Bandome visiškai nemokamą ir stabilų FreeIPAPI
-            fetch('https://freeipapi.com/api/json')
-            .then(res => res.json())
-            .then(data => {
-                if (data.countryCode !== "LT") {
-                    document.getElementById('geo-blocked').style.display = 'flex';
-                    hideLoader();
-                    return;
-                }
-                realUserIp = data.ipAddress; 
-                hideLoader();
-            })
-            .catch(() => {
-                // 2. ATSARGINIS VARIANTAS: Jei pirmąjį užblokavo AdBlock, bandom ipwho.is
-                fetch('https://ipwho.is/')
-                .then(res => res.json())
-                .then(data => {
-                    if (data.country_code !== "LT") {
-                        document.getElementById('geo-blocked').style.display = 'flex';
-                        hideLoader();
-                        return;
-                    }
-                    realUserIp = data.ip;
-                    hideLoader();
-                })
-                .catch(() => {
-                    // 3. GELBĖJIMOSI RATAS: Jei abu API blokuojami tavo naršyklės, 
-                    // tiesiog praleidžiame tave su baziniu IP, kad projektas nesustotų
-                    realUserIp = "127.0.0.1"; 
-                    hideLoader();
-                    console.log("Geo-API nepasiekiami dėl AdBlocker. Naudojamas vietinis IP.");
-                });
-            });
-        }
-
         function login() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
@@ -112,7 +91,8 @@
             showLoader();
             fetch(GAS_URL, {
                 method: "POST",
-                body: JSON.stringify({ action: "login", email: email, password: pass, ip: realUserIp })
+                // IP parametras visiškai išimtas iš užklausos kūno
+                body: JSON.stringify({ action: "login", email: email, password: pass })
             })
             .then(r => r.json())
             .then(data => {
@@ -135,9 +115,10 @@
             showLoader();
             fetch(GAS_URL, {
                 method: "POST",
+                // IP parametras išimtas ir iš registracijos duomenų
                 body: JSON.stringify({ 
                     action: "signup", name: name, email: email, password: pass, 
-                    role: "user", ip: realUserIp, cookies: "necessary", browser: navigator.userAgent 
+                    role: "user", cookies: "necessary", browser: navigator.userAgent 
                 })
             })
             .then(r => r.json())
