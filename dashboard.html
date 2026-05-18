@@ -12,7 +12,7 @@
         .container { max-width: 900px; margin: 40px auto; padding: 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
         .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .card h3 { margin-top: 0; color: #0078D7; }
+        .card h3 { margin-top: 0; color: #0078D7; text-transform: capitalize; }
         .card .version { font-size: 12px; color: #888; margin-bottom: 15px; display: block; }
         .btn { background: #0078D7; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 14px; width: 100%; margin-top: 5px; }
         .btn:hover { background: #005a9e; }
@@ -24,12 +24,6 @@
         .setting-group { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         .info-text { font-size: 12px; color: #666; }
         .links-group a { display: block; margin: 5px 0; color: #0078D7; text-decoration: none; font-size: 14px; }
-        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: #0078D7; }
-        input:checked + .slider:before { transform: translateX(20px); }
     </style>
 </head>
 <body>
@@ -40,47 +34,45 @@
     </header>
 
     <div class="container">
-        <h2>Kategorijos: Failai</h2>
-        <div id="loading" style="text-align:center;">Kraunama...</div>
+        <h2>Įrankiai ir Failai</h2>
+        <div id="loading" style="text-align:center;">Kraunama sistema...</div>
         <div class="grid" id="file-grid"></div>
     </div>
 
     <div id="settings-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('settings-modal')">&times;</span>
-            <h2>Nustatymai</h2>
+            <h2>Vartotojo Nustatymai</h2>
             
             <div class="setting-group">
                 <strong>Paskyros ID:</strong> <span id="ui-support-id">...</span>
             </div>
 
             <div class="setting-group">
-                <strong>Prenumeratos būsena:</strong> <span id="ui-sub-status">...</span><br>
+                <strong>Prenumerata:</strong> <span id="ui-sub-status">...</span><br>
                 <span class="info-text" id="ui-sub-exp"></span><br><br>
-                <input type="text" id="promo-code" placeholder="Įveskite prenumeratos kodą">
+                <input type="text" id="promo-code" placeholder="Įveskite aktyvavimo kodą">
                 <button class="btn" onclick="activateCode()">Aktyvuoti</button>
-                <div id="promo-msg"></div>
             </div>
 
             <div class="setting-group">
-                <strong>Istorija:</strong> <br>
-                <span class="info-text">Atsisiųsti failai: <span id="ui-downloads">0</span>/5 (Free/Std limitas)</span><br>
-                <span class="info-text">Likusios peržiūros (Free): <span id="ui-previews">10</span></span>
+                <strong>Atsisiuntimų statistika:</strong> <br>
+                <span class="info-text">Atsisiųsta iš viso: <span id="ui-downloads">0</span> failų. (Limit: 5 bendriems/free vartotojams)</span><br>
+                <span class="info-text">Likusios peržiūros planui Free: <span id="ui-previews">10</span></span>
             </div>
 
             <div class="setting-group links-group">
-                <a href="policy.txt" target="_blank">📄 Skaityti Naudojimo Sąlygas</a>
+                <a href="policy.txt" target="_blank">📄 Skaityti Naudojimo Sąlygas (Terms & Conditions)</a>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header" target="_blank">🐞 Pranešti apie klaidą (Bug Report)</a>
             </div>
 
             <div class="setting-group">
                 <button class="btn" style="background:#d9534f;" onclick="document.getElementById('delete-box').style.display='block'">Ištrinti paskyrą</button>
                 <div id="delete-box" style="display:none; margin-top:10px;">
-                    <input type="email" id="del-email" placeholder="El. paštas">
-                    <input type="password" id="del-pass" placeholder="Slaptažodis">
-                    <input type="text" id="del-confirm" placeholder="i understand my data will not be recoerable after deletion" style="font-size:11px;">
-                    <button class="btn" style="background:#c9302c;" onclick="deleteAccount()">Patvirtinti ištrynimą</button>
-                    <div id="del-msg"></div>
+                    <input type="email" id="del-email" placeholder="Patvirtinkite el. paštą">
+                    <input type="password" id="del-pass" placeholder="Įveskite slaptažodį">
+                    <input type="text" id="del-confirm" placeholder="i understand my data will not be recoverable after deletion" style="font-size:10px;">
+                    <button class="btn" style="background:#c9302c;" onclick="deleteAccount()">Suplanuoti ištrynimą</button>
                 </div>
             </div>
 
@@ -91,26 +83,28 @@
     <div id="preview-modal" class="modal">
         <div class="modal-content" style="text-align: center;">
             <span class="close" onclick="closeModal('preview-modal')">&times;</span>
-            <h2>Peržiūra</h2>
-            <div class="info-text" style="margin-bottom: 15px; color:red; font-weight:bold;">
-                Failo slaptažodis: <span id="preview-pass" style="font-size: 16px;">Kraunama...</span>
+            <h2>Įrankio Peržiūros Slaptažodis</h2>
+            <div style="background:#fff3cd; padding:15px; border-radius:6px; margin:15px 0;">
+                <code id="preview-pass" style="font-size: 18px; font-weight:bold; color:#856404;">Kraunama...</code>
             </div>
-            <p>Saugokite šį slaptažodį. Jis reikalingas atidaryti failui.</p>
+            <p class="info-text">Naudokite šį slaptažodį, kad atrakintumėte pasirodžiusį įrankio kodą.</p>
         </div>
     </div>
 
     <div id="download-modal" class="modal">
         <div class="modal-content" style="text-align: center;">
-            <h2>Atsisiunčiama...</h2>
-            <div class="info-text" style="margin-bottom: 15px; color:red; font-weight:bold;">
-                Prisiminkite šį slaptažodį: <span id="dl-pass" style="font-size: 16px;">Kraunama...</span>
+            <h2>Atsisiuntimas Pradėtas!</h2>
+            <p>Jūsų failo atrakinimo slaptažodis:</p>
+            <div style="background:#d4edda; padding:15px; border-radius:6px; margin:15px 0;">
+                <code id="dl-pass" style="font-size: 20px; font-weight:bold; color:#155724;">Kraunama...</code>
             </div>
-            <p>Prašome palaukti. Langas užsidarys po <span id="timer" style="font-weight:bold; font-size: 20px;">25</span> s.</p>
+            <p>Šis saugumo langas užsidarys po <span id="timer" style="font-weight:bold; font-size: 18px; color:#0078D7;">25</span> sekundžių.</p>
         </div>
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwM5V48Z1c7goUQ-3JLKA2yRU1BbQHgOBQOl1Xaw8o3KBRLzFM8FVAYKetok50mXKXZ/exec"; 
+        // PASTABA: Įklijuokite savo gautą iš jūsų Google Apps Script "Web App URL" nuorodą žemiau:
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxJqt2W5Ai3HE5jhydZvKxy6F4lLaMdhegBn_fmt6SMiGDNArF5dHnokVoyrnv0hC_c/exec"; 
         let currentUser = null;
 
         window.onload = function() {
@@ -136,11 +130,11 @@
                     renderFiles(data.files);
                     document.getElementById('loading').style.display = 'none';
                 } else {
-                    if (data.error === "403_BANNED") alert("Jūsų paskyra užblokuota. Patikrinkite el. paštą.");
-                    else alert("Klaida. Prašome prisijungti iš naujo.");
+                    if (data.error === "403_BANNED") alert("Paskyra užblokuota dėl automatizacijos taisyklių pažeidimo.");
+                    else alert("Sesija pasibaigė.");
                     logout();
                 }
-            }).catch(e => { alert("Ryšio klaida."); logout(); });
+            }).catch(e => { alert("Klaida jungiantis prie serverio."); logout(); });
         }
 
         function updateUI() {
@@ -160,38 +154,39 @@
             grid.innerHTML = '';
 
             files.forEach(f => {
-                // Paslėpti failus, jei vartotojas Free ir jau atsisiuntė failą (Cookie / History)
-                const isDownloaded = currentUser.history && currentUser.history[f.name] !== undefined;
-                if (currentUser.subType === 'free' && isDownloaded) return; // Praleisti atvaizdavimą
+                // Jei prenumerata pasibaigė (Free) ir vartotojas jau yra gavęs failo pass, paslepiame failą visiškai iš svetainės
+                const hasDownloadedBefore = currentUser.history && currentUser.history[f.name] !== undefined;
+                if (currentUser.subType === 'free' && hasDownloadedBefore) return;
 
                 const card = document.createElement('div');
                 card.className = 'card';
-                // Pašaliname .html galūnę
-                const displayName = f.name.replace(/\.html$/i, '');
-                card.innerHTML = `<h3>${displayName}</h3><span class="version">V ${f.version}</span>`;
+                
+                // Pašalina (.html) galūnę tik atvaizdavimo tikslais UI lange
+                const cleanName = f.name.replace(/\.html$/i, '');
+                card.innerHTML = `<h3>${cleanName}</h3><span class="version">Versija: V${f.version}</span>`;
 
                 const sub = currentUser.subType;
                 const manualAllow = currentUser.allowedDownloads === "yes";
                 const manualDeny = currentUser.allowedDownloads === "no";
                 const devRestrict = f.devRestricted === "yes";
 
-                // Preview mygtukas
+                // Preview Button
                 const btnPrev = document.createElement('button');
                 btnPrev.className = 'btn btn-secondary';
-                btnPrev.innerText = 'Peržiūra';
+                btnPrev.innerText = 'Peržiūrėti įrankį';
                 btnPrev.onclick = () => requestAccess(f.name, 'preview');
                 card.appendChild(btnPrev);
 
-                // Download mygtukas (Logika: Max 5 atsisiuntimai Free ir Standartui)
+                // Download Button Allocation Rules
                 let canDownload = (sub === "pro" || (currentUser.totalDownloads < 5 && !manualDeny) || manualAllow) && !devRestrict;
 
                 if (canDownload) {
                     const btnDl = document.createElement('button');
                     btnDl.className = 'btn';
-                    btnDl.innerText = 'Atsisiųsti';
+                    btnDl.innerText = 'Atsisiųsti įrankį';
                     btnDl.onclick = () => requestAccess(f.name, 'download');
                     card.appendChild(btnDl);
-                } else if (devRestrict) {
+                } else if (devRestrict || manualDeny) {
                     const btnRestricted = document.createElement('button');
                     btnRestricted.className = 'btn btn-secondary';
                     btnRestricted.innerText = 'Apribota Kūrėjo';
@@ -204,10 +199,10 @@
 
         function requestAccess(fileName, type) {
             if (type === 'preview') {
-                document.getElementById('preview-pass').innerText = "Kraunama...";
+                document.getElementById('preview-pass').innerText = "Generuojama prieiga...";
                 openModal('preview-modal');
             } else {
-                document.getElementById('dl-pass').innerText = "Kraunama...";
+                document.getElementById('dl-pass').innerText = "Generuojamas slaptažodis...";
                 openModal('download-modal');
             }
 
@@ -220,16 +215,30 @@
                         document.getElementById('preview-pass').innerText = data.password;
                         currentUser.previewsLeft--;
                         updateUI();
+                        // Saugiai atidaro koduotą failą tiesiai iš jūsų naujo /tools/ aplanko kitoje kortelėje
+                        window.open(`tools/${fileName}`, '_blank');
                     } else {
                         document.getElementById('dl-pass').innerText = data.password;
                         startDownloadTimer();
                         currentUser.totalDownloads++;
                         updateUI();
+
+                        // Programiškai priverčia atsisiųsti failą iš /tools/ aplanko
+                        const dlLink = document.createElement('a');
+                        dlLink.href = `tools/${fileName}`;
+                        dlLink.download = fileName;
+                        document.body.appendChild(dlLink);
+                        dlLink.click();
+                        document.body.removeChild(dlLink);
                     }
                 } else {
                     closeModal(type === 'preview' ? 'preview-modal' : 'download-modal');
-                    if(data.error === "403_BANNED") { alert("Aptikta neįprasta veikla. Paskyra blokuojama."); logout(); }
-                    else { alert(`Klaida: Limitas pasiektas arba prieiga draudžiama. (${data.error})`); }
+                    if(data.error === "403_BANNED") { 
+                        alert("Sistema užfiksavo kenksmingus veiksmus arba automatizacijos įrankius. Paskyra blokuojama."); 
+                        logout(); 
+                    } else { 
+                        alert(`Prieiga atmesta. Pasiektas plano limitas arba atsisiuntimas užblokuotas.`); 
+                    }
                 }
             });
         }
@@ -245,8 +254,7 @@
                 if (timeLeft <= 0) {
                     clearInterval(countdown);
                     closeModal('download-modal');
-                    // Perkrauti, kad pasislėptų failas jei sub === free
-                    window.location.reload(); 
+                    window.location.reload(); // Perkrauna puslapį, kad iškart paslėptų failą jei planas yra free
                 }
             }, 1000);
         }
@@ -255,17 +263,20 @@
             const code = document.getElementById('promo-code').value;
             fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: "activateCode", token: currentUser.token, code: code })
             }).then(r => r.json()).then(data => {
-                if (data.success) { alert("Sėkminga!"); window.location.reload(); } 
-                else alert("Klaida. Kodas neteisingas.");
+                if (data.success) { alert("Kodas aktyvuotas sėkmingai!"); window.location.reload(); } 
+                else alert("Kodas neteisingas arba jau panaudotas.");
             });
         }
 
         function deleteAccount() {
             const email = document.getElementById('del-email').value;
             const confirm = document.getElementById('del-confirm').value;
-            fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: "deleteAccount", token: currentUser.token, email: email, confirmation: confirm })
+            if(confirm !== "i understand my data will not be recoverable after deletion") {
+                alert("Neteisingai suvesta patvirtinimo frazė."); return;
+            }
+            fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: "deleteAccount", token: currentUser.token, email: email })
             }).then(r => r.json()).then(data => {
-                if (data.success) { alert("Suplanuota. Patikrinkite el. paštą."); logout(); }
+                if (data.success) { alert("Ištrynimas sėkmingai užregistruotas. Patikrinkite el. paštą."); logout(); }
             });
         }
 
