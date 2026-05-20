@@ -5,20 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Praxifold - Prisijungimas</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 350px; text-align: center; }
-        h2 { color: #0078D7; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .btn { background: #0078D7; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .box { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); width: 100%; max-width: 400px; }
+        h2 { color: #0078D7; margin-bottom: 20px; text-align: center; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; font-family: inherit; }
+        input:focus, select:focus { outline: none; border-color: #0078D7; }
+        .btn { background: #0078D7; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; margin-top: 8px; transition: background 0.2s; }
         .btn:hover { background: #005a9e; }
-        .switch-link { margin-top: 15px; display: block; color: #666; text-decoration: none; font-size: 14px; }
-        
-        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+        .switch-link { margin-top: 12px; display: block; color: #666; text-decoration: none; font-size: 14px; text-align: center; cursor: pointer; }
+        .switch-link:hover { color: #0078D7; }
+        #role-other-wrap { display: none; }
+
+        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #0078D7; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        #geo-blocked { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:10000; flex-direction:column; align-items:center; justify-content:center; color:#333; font-family: sans-serif; }
+        #geo-blocked { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:10000; flex-direction:column; align-items:center; justify-content:center; color:#333; font-family: sans-serif; text-align:center; padding:20px; }
         #geo-blocked h1 { color:#d9534f; margin-bottom:10px; }
+
+        .cookie-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:5000; align-items:center; justify-content:center; padding:20px; }
+        .cookie-box { background:white; padding:30px; border-radius:10px; max-width:420px; width:100%; }
+        .cookie-box h3 { color:#0078D7; margin-bottom:10px; }
+        .cookie-box p { font-size:13px; color:#555; margin-bottom:18px; line-height:1.6; }
+        .cookie-btns { display:flex; gap:10px; }
+        .cookie-btns button { flex:1; padding:11px; border:none; border-radius:5px; cursor:pointer; font-weight:bold; font-size:14px; transition: opacity 0.2s; }
+        .cookie-btns button:hover { opacity: 0.85; }
+        .btn-all { background:#0078D7; color:white; }
+        .btn-necessary { background:#e1dfdd; color:#333; }
     </style>
 </head>
 <body>
@@ -30,12 +44,24 @@
 
     <div id="loader" class="loading-overlay"><div class="spinner"></div></div>
 
+    <div class="cookie-overlay" id="cookie-overlay">
+        <div class="cookie-box">
+            <h3>🍪 Slapukų Sutikimas</h3>
+            <p>Naudojame slapukus svetainės veikimui užtikrinti. Galite leisti visus slapukus arba tik būtinus sistemos veikimui.</p>
+            <div class="cookie-btns">
+                <button class="btn-all" onclick="proceedSignup('all')">Leisti visus</button>
+                <button class="btn-necessary" onclick="proceedSignup('necessary')">Tik būtini</button>
+            </div>
+        </div>
+    </div>
+
     <div class="box" id="login-box">
         <h2>Prisijungti</h2>
         <input type="email" id="login-email" placeholder="El. paštas">
         <input type="password" id="login-pass" placeholder="Slaptažodis">
         <button class="btn" onclick="login()">Prisijungti</button>
-        <a href="#" class="switch-link" onclick="toggleForm('register-box')">Neturite paskyros? Registruotis</a>
+        <a class="switch-link" onclick="toggleForm('register-box')">Neturite paskyros? Registruotis</a>
+        <a class="switch-link" onclick="toggleForm('reset-box')" style="font-size:13px; margin-top:6px;">Pamiršote slaptažodį?</a>
     </div>
 
     <div class="box" id="register-box" style="display:none;">
@@ -43,58 +69,121 @@
         <input type="text" id="reg-name" placeholder="Vardas Pavardė">
         <input type="email" id="reg-email" placeholder="El. paštas">
         <input type="password" id="reg-pass" placeholder="Slaptažodis">
-        <button class="btn" onclick="signup()">Registruotis</button>
-        <a href="#" class="switch-link" onclick="toggleForm('login-box')">Jau turite paskyrą? Prisijungti</a>
+        <select id="reg-role" onchange="handleRoleChange()">
+            <option value="">-- Pasirinkite rolę --</option>
+            <option value="engineer">Inžinierius</option>
+            <option value="teacher">Mokytojas</option>
+            <option value="hobbyist">Mėgėjas</option>
+            <option value="other">Kita</option>
+        </select>
+        <div id="role-other-wrap">
+            <input type="text" id="reg-role-other" placeholder="Nurodykite savo rolę">
+        </div>
+        <button class="btn" onclick="showCookieConsent()">Registruotis</button>
+        <a class="switch-link" onclick="toggleForm('login-box')">Jau turite paskyrą? Prisijungti</a>
+    </div>
+
+    <div class="box" id="reset-box" style="display:none;">
+        <h2>Slaptažodžio Keitimas</h2>
+        <div id="reset-step1">
+            <p style="font-size:13px; color:#666; margin-bottom:14px; line-height:1.5;">
+                Įveskite el. paštą. Kodas gali būti siųstas kartą per 3 mėnesius. Saugumo problemų atveju kreipkitės: <strong>praxifold@gmail.com</strong>
+            </p>
+            <input type="email" id="reset-email" placeholder="El. paštas">
+            <button class="btn" onclick="requestReset()">Gauti kodą</button>
+        </div>
+        <div id="reset-step2" style="display:none;">
+            <p style="font-size:13px; color:#666; margin-bottom:14px;">Įveskite 6 skaitmenų kodą iš el. pašto ir naują slaptažodį.</p>
+            <input type="text" id="reset-code" placeholder="6 skaitmenų kodas" maxlength="6">
+            <input type="password" id="reset-new-pass" placeholder="Naujas slaptažodis">
+            <button class="btn" onclick="confirmReset()">Pakeisti slaptažodį</button>
+        </div>
+        <a class="switch-link" onclick="toggleForm('login-box')" style="margin-top:12px;">← Grįžti į prisijungimą</a>
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxIanLSY9BjxClVElKByxN-itwcqkPq3EzqctZJ6zdYvXDarfYTvxsgEpbTafwr7y0t/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxIanLSY9BjxClVElKByxN-itwcqkPq3EzqctZJ6zdYvXDarfYTvxsgEpbTafwr7y0t/exec";
+        let pendingSignup = null;
 
-        window.onload = function() {
-            checkLocation();
-        };
+        window.onload = function() { checkLocation(); };
 
         function checkLocation() {
-            // ŠI DALIS TAUPOSA LIMITUS: Jei naršyklė jau žino, kad esi LT – antrąkart API nebekviečia
             const cachedGeo = localStorage.getItem("praxifold_geo");
-            if (cachedGeo === "verified_lt") return; 
+            if (cachedGeo === "verified_lt") return;
             if (cachedGeo === "blocked") { document.getElementById('geo-blocked').style.display = 'flex'; return; }
-
             showLoader();
             fetch('https://freeipapi.com/api/json')
-            .then(res => res.json())
-            .then(data => {
-                hideLoader();
-                if (data.countryCode !== "LT") {
-                    localStorage.setItem("praxifold_geo", "blocked");
-                    document.getElementById('geo-blocked').style.display = 'flex';
-                } else {
-                    localStorage.setItem("praxifold_geo", "verified_lt");
-                }
-            })
-            .catch(() => {
-                hideLoader();
-                console.log("Geo patikros API klaida (praleidžiama testavimui)");
-            });
+                .then(res => res.json())
+                .then(data => {
+                    hideLoader();
+                    if (data.countryCode !== "LT") {
+                        localStorage.setItem("praxifold_geo", "blocked");
+                        document.getElementById('geo-blocked').style.display = 'flex';
+                    } else {
+                        localStorage.setItem("praxifold_geo", "verified_lt");
+                    }
+                }).catch(() => hideLoader());
         }
 
         function toggleForm(id) {
-            document.getElementById('login-box').style.display = id === 'login-box' ? 'block' : 'none';
-            document.getElementById('register-box').style.display = id === 'register-box' ? 'block' : 'none';
+            ['login-box','register-box','reset-box'].forEach(b =>
+                document.getElementById(b).style.display = b === id ? 'block' : 'none'
+            );
+            document.getElementById('reset-step1').style.display = 'block';
+            document.getElementById('reset-step2').style.display = 'none';
+        }
+
+        function handleRoleChange() {
+            document.getElementById('role-other-wrap').style.display =
+                document.getElementById('reg-role').value === 'other' ? 'block' : 'none';
         }
 
         function showLoader() { document.getElementById('loader').style.display = 'flex'; }
         function hideLoader() { document.getElementById('loader').style.display = 'none'; }
 
         function login() {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-pass').value;
-            if(!email || !pass) { alert("Užpildykite visus laukus"); return; }
+            const email = document.getElementById('login-email').value.trim();
+            const pass  = document.getElementById('login-pass').value;
+            if (!email || !pass) { alert("Užpildykite visus laukus"); return; }
+            showLoader();
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"login", email, password:pass }) })
+                .then(r => r.json())
+                .then(data => {
+                    hideLoader();
+                    if (data.success) {
+                        document.cookie = `token=${data.token}; path=/; max-age=86400;`;
+                        window.location.href = "dashboard.html";
+                    } else {
+                        const msgs = {
+                            PASKYRA_SUPLANUOTA_TRYNIMUI: "Ši paskyra suplanuota ištrynimui. Kreipkitės: praxifold@gmail.com",
+                            UŽBLOKUOTA: "Paskyra užblokuota. Kreipkitės: praxifold@gmail.com",
+                            NETEISINGAS_SLAPTAŽODIS: "Neteisingas slaptažodis.",
+                            VARTOTOJAS_NERASTAS: "Vartotojas su šiuo el. paštu nerastas."
+                        };
+                        alert(msgs[data.error] || "Klaida: " + data.error);
+                    }
+                }).catch(() => { hideLoader(); alert("Klaida jungiantis prie serverio."); });
+        }
 
+        function showCookieConsent() {
+            const name      = document.getElementById('reg-name').value.trim();
+            const email     = document.getElementById('reg-email').value.trim();
+            const pass      = document.getElementById('reg-pass').value;
+            const roleVal   = document.getElementById('reg-role').value;
+            const roleOther = document.getElementById('reg-role-other').value.trim();
+            if (!name || !email || !pass || !roleVal) { alert("Užpildykite visus laukus"); return; }
+            if (roleVal === 'other' && !roleOther) { alert("Nurodykite savo rolę"); return; }
+            pendingSignup = { name, email, pass, role: roleVal === 'other' ? `other:${roleOther}` : roleVal, browser: navigator.userAgent };
+            document.getElementById('cookie-overlay').style.display = 'flex';
+        }
+
+        function proceedSignup(cookieChoice) {
+            document.getElementById('cookie-overlay').style.display = 'none';
+            if (!pendingSignup) return;
             showLoader();
             fetch(GAS_URL, {
                 method: "POST",
-                body: JSON.stringify({ action: "login", email: email, password: pass })
+                body: JSON.stringify({ action:"signup", ...pendingSignup, cookies: cookieChoice })
             })
             .then(r => r.json())
             .then(data => {
@@ -103,40 +192,50 @@
                     document.cookie = `token=${data.token}; path=/; max-age=86400;`;
                     window.location.href = "dashboard.html";
                 } else {
-                    // SUTAIKYTA KLAIDA: Jei paskyros būsena suplanuota ištrynimui
-                    if (data.error === "PASKYRA_SUPLANUOTA_TRYNIMUI") {
-                        alert("Contact support if you wish to cancel deletion");
-                    } else {
-                        alert("Klaida: " + data.error);
-                    }
-                }
-            }).catch(() => { hideLoader(); alert("Klaida jungiantis prie serverio."); });
-        }
-
-        function signup() {
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            const pass = document.getElementById('reg-pass').value;
-            if(!name || !email || !pass) { alert("Užpildykite visus laukus"); return; }
-
-            showLoader();
-            fetch(GAS_URL, {
-                method: "POST",
-                body: JSON.stringify({ 
-                    action: "signup", name: name, email: email, password: pass, 
-                    role: "user", cookies: "necessary", browser: navigator.userAgent 
-                })
-            })
-            .then(r => r.json())
-            .then(data => {
-                hideLoader();
-                if (data.success) {
-                    alert("Registracija sėkminga! Galite prisijungti.");
-                    toggleForm('login-box');
-                } else {
-                    alert("Klaida: " + data.error);
+                    alert(data.error === "EL_PASTAS_JAU_EGZISTUOJA" ? "Šis el. paštas jau užregistruotas." : "Klaida: " + data.error);
                 }
             }).catch(() => { hideLoader(); alert("Registracijos klaida."); });
+        }
+
+        function requestReset() {
+            const email = document.getElementById('reset-email').value.trim();
+            if (!email) { alert("Įveskite el. paštą"); return; }
+            showLoader();
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"requestPasswordReset", email }) })
+                .then(r => r.json())
+                .then(data => {
+                    hideLoader();
+                    if (data.success) {
+                        document.getElementById('reset-step1').style.display = 'none';
+                        document.getElementById('reset-step2').style.display = 'block';
+                        alert("Kodas išsiųstas į jūsų el. paštą.");
+                    } else {
+                        if (data.error === "RESET_PER_ANKSTI") {
+                            alert(`Slaptažodį galima keisti kartą per 3 mėnesius.\nLiko: ${data.daysLeft} dienos(-ų).\n\nSaugumo problemai – rašykite: praxifold@gmail.com`);
+                        } else {
+                            alert(data.error === "VARTOTOJAS_NERASTAS" ? "El. paštas nerastas." : "Klaida: " + data.error);
+                        }
+                    }
+                }).catch(() => { hideLoader(); alert("Klaida."); });
+        }
+
+        function confirmReset() {
+            const email   = document.getElementById('reset-email').value.trim();
+            const code    = document.getElementById('reset-code').value.trim();
+            const newPass = document.getElementById('reset-new-pass').value;
+            if (!code || !newPass) { alert("Užpildykite visus laukus"); return; }
+            showLoader();
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"confirmPasswordReset", email, code, newPassword: newPass }) })
+                .then(r => r.json())
+                .then(data => {
+                    hideLoader();
+                    if (data.success) {
+                        alert("Slaptažodis sėkmingai pakeistas! Galite prisijungti.");
+                        toggleForm('login-box');
+                    } else {
+                        alert(data.error === "NETEISINGAS_KODAS" ? "Neteisingas arba pasibaigęs kodas." : "Klaida: " + data.error);
+                    }
+                }).catch(() => { hideLoader(); alert("Klaida."); });
         }
     </script>
 </body>
