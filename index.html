@@ -16,14 +16,11 @@
         .switch-link { margin-top: 12px; display: block; color: #666; text-decoration: none; font-size: 14px; text-align: center; cursor: pointer; }
         .switch-link:hover { color: #0078D7; }
         #role-other-wrap { display: none; }
-
         .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #0078D7; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         #geo-blocked { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:10000; flex-direction:column; align-items:center; justify-content:center; color:#333; font-family: sans-serif; text-align:center; padding:20px; }
         #geo-blocked h1 { color:#d9534f; margin-bottom:10px; }
-
         .cookie-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:5000; align-items:center; justify-content:center; padding:20px; }
         .cookie-box { background:white; padding:30px; border-radius:10px; max-width:420px; width:100%; }
         .cookie-box h3 { color:#0078D7; margin-bottom:10px; }
@@ -36,14 +33,11 @@
     </style>
 </head>
 <body>
-
     <div id="geo-blocked">
         <h1>UŽBLOKUOTA</h1>
         <p>Apgailestaujame, ši svetainė prieinama tik vartotojams iš Lietuvos teritorijos.</p>
     </div>
-
     <div id="loader" class="loading-overlay"><div class="spinner"></div></div>
-
     <div class="cookie-overlay" id="cookie-overlay">
         <div class="cookie-box">
             <h3>🍪 Slapukų Sutikimas</h3>
@@ -54,7 +48,6 @@
             </div>
         </div>
     </div>
-
     <div class="box" id="login-box">
         <h2>Prisijungti</h2>
         <input type="email" id="login-email" placeholder="El. paštas">
@@ -63,7 +56,6 @@
         <a class="switch-link" onclick="toggleForm('register-box')">Neturite paskyros? Registruotis</a>
         <a class="switch-link" onclick="toggleForm('reset-box')" style="font-size:13px; margin-top:6px;">Pamiršote slaptažodį?</a>
     </div>
-
     <div class="box" id="register-box" style="display:none;">
         <h2>Registracija</h2>
         <input type="text" id="reg-name" placeholder="Vardas Pavardė">
@@ -82,7 +74,6 @@
         <button class="btn" onclick="showCookieConsent()">Registruotis</button>
         <a class="switch-link" onclick="toggleForm('login-box')">Jau turite paskyrą? Prisijungti</a>
     </div>
-
     <div class="box" id="reset-box" style="display:none;">
         <h2>Slaptažodžio Keitimas</h2>
         <div id="reset-step1">
@@ -100,7 +91,6 @@
         </div>
         <a class="switch-link" onclick="toggleForm('login-box')" style="margin-top:12px;">← Grįžti į prisijungimą</a>
     </div>
-
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbxIanLSY9BjxClVElKByxN-itwcqkPq3EzqctZJ6zdYvXDarfYTvxsgEpbTafwr7y0t/exec";
         let pendingSignup = null;
@@ -143,7 +133,7 @@
 
         function login() {
             const email = document.getElementById('login-email').value.trim();
-            const pass  = document.getElementById('login-pass').value;
+            const pass = document.getElementById('login-pass').value;
             if (!email || !pass) { alert("Užpildykite visus laukus"); return; }
             showLoader();
             fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"login", email, password:pass }) })
@@ -166,13 +156,14 @@
         }
 
         function showCookieConsent() {
-            const name      = document.getElementById('reg-name').value.trim();
-            const email     = document.getElementById('reg-email').value.trim();
-            const pass      = document.getElementById('reg-pass').value;
-            const roleVal   = document.getElementById('reg-role').value;
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const pass = document.getElementById('reg-pass').value;
+            const roleVal = document.getElementById('reg-role').value;
             const roleOther = document.getElementById('reg-role-other').value.trim();
             if (!name || !email || !pass || !roleVal) { alert("Užpildykite visus laukus"); return; }
             if (roleVal === 'other' && !roleOther) { alert("Nurodykite savo rolę"); return; }
+
             pendingSignup = { name, email, pass, role: roleVal === 'other' ? `other:${roleOther}` : roleVal, browser: navigator.userAgent };
             document.getElementById('cookie-overlay').style.display = 'flex';
         }
@@ -220,8 +211,8 @@
         }
 
         function confirmReset() {
-            const email   = document.getElementById('reset-email').value.trim();
-            const code    = document.getElementById('reset-code').value.trim();
+            const email = document.getElementById('reset-email').value.trim();
+            const code = document.getElementById('reset-code').value.trim();
             const newPass = document.getElementById('reset-new-pass').value;
             if (!code || !newPass) { alert("Užpildykite visus laukus"); return; }
             showLoader();
