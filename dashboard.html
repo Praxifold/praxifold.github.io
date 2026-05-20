@@ -7,20 +7,7 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; color: #333; }
-
-        header {
-            background: #fff;
-            padding: 12px 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+        header { background: #fff; padding: 12px 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; position: sticky; top: 0; z-index: 100; }
         .logo { font-weight: bold; font-size: 22px; color: #0078D7; }
         .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .quota-badges { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -30,7 +17,6 @@
         .badge.unlimited { background: #e6f4ea; border-color: #81c784; color: #2e7d32; }
         .settings-btn { background: #e1dfdd; border: none; padding: 9px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; white-space: nowrap; }
         .settings-btn:hover { background: #ccc; }
-
         .container { max-width: 960px; margin: 30px auto; padding: 0 16px 40px; }
         .page-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; color: #333; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
@@ -41,7 +27,6 @@
         .btn:hover { background: #005a9e; }
         .btn-secondary { background: #e1dfdd; color: #333; }
         .btn-secondary:hover { background: #ccc; }
-
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; padding: 16px; }
         .modal-content { background: white; padding: 28px; border-radius: 12px; width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto; }
         .close { float: right; cursor: pointer; font-size: 22px; font-weight: bold; line-height: 1; color: #555; }
@@ -51,31 +36,22 @@
         .info-text { font-size: 12px; color: #666; line-height: 1.5; }
         .links-group a { display: block; margin: 6px 0; color: #0078D7; text-decoration: none; font-size: 14px; }
         .links-group a:hover { text-decoration: underline; }
-
         .pass-display { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 16px; margin: 14px 0; text-align: center; }
         .pass-display code { font-size: 22px; font-weight: bold; color: #856404; letter-spacing: 2px; display: block; margin-bottom: 8px; }
         .pass-display.dl-style { background: #d4edda; border-color: #81c784; }
         .pass-display.dl-style code { color: #155724; }
-
         .copy-btn { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 12px; color: #555; transition: all 0.2s; }
         .copy-btn:hover { background: #f0f0f0; border-color: #0078D7; color: #0078D7; }
         .copy-btn.copied { background: #e6f4ea; border-color: #81c784; color: #2e7d32; }
-
         .countdown-bar { height: 4px; background: #e0e0e0; border-radius: 2px; margin: 10px 0; overflow: hidden; }
         .countdown-fill { height: 100%; background: #0078D7; border-radius: 2px; transition: width 1s linear; }
         .timer-text { font-size: 14px; color: #555; margin: 8px 0; }
         .timer-num { font-size: 18px; font-weight: bold; color: #0078D7; }
-
-        @media (max-width: 600px) {
-            header { padding: 10px 14px; }
-            .container { margin: 16px auto; }
-            .modal-content { padding: 20px; }
-            .pass-display code { font-size: 18px; }
-        }
+        .ad-banner { margin: 20px auto; max-width: 960px; text-align: center; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: none; }
+        .ad-video { width: 100%; max-width: 620px; border-radius: 6px; }
     </style>
 </head>
 <body>
-
     <header>
         <div class="logo">Praxifold</div>
         <div class="header-right">
@@ -83,6 +59,12 @@
             <button class="settings-btn" onclick="openModal('settings-modal')">⚙ Nustatymai</button>
         </div>
     </header>
+
+    <div id="ad-banner" class="ad-banner">
+        <video class="ad-video" id="ad-video" autoplay loop muted playsinline>
+            <source src="ad.mp4" type="video/mp4">
+        </video>
+    </div>
 
     <div class="container">
         <div class="page-title">Įrankiai ir Failai</div>
@@ -95,11 +77,9 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal('settings-modal')">&times;</span>
             <h2 style="margin-bottom:18px;">Vartotojo Nustatymai</h2>
-
             <div class="setting-group">
                 <strong>Paskyros ID:</strong> <span id="ui-support-id" style="font-size:13px; color:#555;">...</span>
             </div>
-
             <div class="setting-group">
                 <strong>Prenumeratos planas:</strong>
                 <span id="ui-sub-status" style="font-weight:bold; color:#0078D7;">...</span><br>
@@ -107,20 +87,17 @@
                 <input type="text" id="promo-code" placeholder="Įveskite aktyvavimo kodą (skiria didž./mažąsias)">
                 <button class="btn" onclick="activateCode()">Aktyvuoti</button>
             </div>
-
             <div class="setting-group">
                 <strong>Statistika:</strong><br>
                 <span class="info-text">Iš viso atsisiųsta: <strong id="ui-downloads">0</strong> failų.</span><br>
                 <span class="info-text">Likusios peržiūros: <strong id="ui-previews">—</strong></span><br>
                 <span class="info-text">Likusių atsisiuntimų: <strong id="ui-dl-left">—</strong></span>
             </div>
-
             <div class="setting-group links-group">
                 <a href="policy.txt" target="_blank">📄 Naudojimo Sąlygos</a>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header" target="_blank">🐞 Pranešti apie klaidą</a>
                 <a id="dev-program-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdzr9FxqRQxTCJlrZNqduMdkkM25wSYsbncvCX-Hbpr_BWckg/viewform?usp=header" target="_blank" style="display:none;">🛠 Prisijungti prie Kūrėjų Programos</a>
             </div>
-
             <div class="setting-group">
                 <button class="btn" style="background:#d9534f;" onclick="document.getElementById('delete-box').style.display='block'">Ištrinti paskyrą</button>
                 <div id="delete-box" style="display:none; margin-top:10px;">
@@ -129,7 +106,6 @@
                     <button class="btn" style="background:#c9302c;" onclick="deleteAccount()">Suplanuoti ištrynimą</button>
                 </div>
             </div>
-
             <button class="btn btn-secondary" style="margin-top:6px;" onclick="logout()">Atsijungti</button>
         </div>
     </div>
@@ -185,43 +161,55 @@
         }
 
         function fetchUserData(token) {
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"getUserData", token }) })
-                .then(r => r.json()).then(data => {
-                    if (data.success) {
-                        currentUser = data.user;
-                        currentUser.token = token;
-                        updateUI();
-                        renderFiles(data.files);
-                        document.getElementById('loading').style.display = 'none';
-                    } else {
-                        alert("Klaida: " + data.error);
-                        logout();
-                    }
-                }).catch(() => logout());
+            showLoader();
+            fetch(GAS_URL, { 
+                method:"POST", 
+                body: JSON.stringify({ action:"getUserData", token }) 
+            })
+            .then(r => r.json())
+            .then(data => {
+                hideLoader();
+                if (data.success) {
+                    currentUser = data.user;
+                    currentUser.token = token;
+                    updateUI();
+                    renderFiles(data.files);
+                    document.getElementById('loading').style.display = 'none';
+                } else {
+                    alert("Klaida: " + data.error);
+                    logout();
+                }
+            }).catch(() => { 
+                hideLoader(); 
+                document.getElementById('loading').innerText = "Klaida kraunant. Perkraukite puslapį."; 
+            });
         }
+
+        function showLoader() { document.getElementById('loading').style.display = 'block'; }
+        function hideLoader() { document.getElementById('loading').style.display = 'none'; }
 
         function updateUI() {
             const u = currentUser;
             document.getElementById('ui-support-id').innerText = u.supportId;
             document.getElementById('ui-sub-status').innerText = u.subType.toUpperCase();
-            document.getElementById('ui-downloads').innerText  = u.totalDownloads;
-            if (u.subExpDate) {
-                document.getElementById('ui-sub-exp').innerText = "Galioja iki: " + new Date(u.subExpDate).toLocaleDateString('lt-LT');
-            }
-            if (u.subType !== 'free') {
-                document.getElementById('dev-program-link').style.display = 'block';
-            }
+            document.getElementById('ui-downloads').innerText = u.totalDownloads;
+            if (u.subExpDate) document.getElementById('ui-sub-exp').innerText = "Galioja iki: " + new Date(u.subExpDate).toLocaleDateString('lt-LT');
+
+            if (u.subType !== 'free') document.getElementById('dev-program-link').style.display = 'block';
+
             const prevEl = document.getElementById('ui-previews');
-            const dlEl   = document.getElementById('ui-dl-left');
+            const dlEl = document.getElementById('ui-dl-left');
+
             if (u.subType === 'free') {
                 prevEl.innerText = u.previewsLeft + " / 5";
-                dlEl.innerText   = u.downloadsLeft + " / 10";
+                dlEl.innerText = u.downloadsLeft + " / 10";
+                document.getElementById('ad-banner').style.display = 'block';
             } else if (u.subType === 'standard') {
                 prevEl.innerText = "Neribota";
-                dlEl.innerText   = "Negalima";
+                dlEl.innerText = "Negalima";
             } else if (u.subType === 'pro') {
                 prevEl.innerText = "Neribota";
-                dlEl.innerText   = "Neribota";
+                dlEl.innerText = "Neribota";
             }
             renderQuotaBadges(u);
         }
@@ -240,9 +228,7 @@
                 container.appendChild(makeBadge(`👁 Peržiūros: ${pc}`, pc > 2 ? '' : pc > 0 ? 'warn' : 'danger'));
                 const dc = u.downloadsLeft;
                 container.appendChild(makeBadge(`⬇ Atsisiuntimai: ${dc}`, dc > 2 ? '' : dc > 0 ? 'warn' : 'danger'));
-                if (pc <= 2 || dc <= 2) {
-                    container.appendChild(makeBadge('📧 praxifold@gmail.com', 'warn'));
-                }
+                if (pc <= 2 || dc <= 2) container.appendChild(makeBadge('📧 praxifold@gmail.com', 'warn'));
             } else if (u.subType === 'standard') {
                 container.appendChild(makeBadge('👁 Peržiūros: ∞', 'unlimited'));
                 container.appendChild(makeBadge('⬇ Atsisiuntimai: —', ''));
@@ -263,16 +249,19 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `<h3>${f.name}</h3><span class="version">Versija: V${f.version}</span>`;
+                
                 const btnPrev = document.createElement('button');
                 btnPrev.className = 'btn btn-secondary';
                 btnPrev.innerText = 'Peržiūrėti';
                 btnPrev.onclick = () => requestAccess(f.name, 'preview');
                 card.appendChild(btnPrev);
+
                 const btnDl = document.createElement('button');
                 btnDl.className = 'btn';
                 btnDl.innerText = 'Atsisiųsti';
                 btnDl.onclick = () => requestAccess(f.name, 'download');
                 card.appendChild(btnDl);
+
                 grid.appendChild(card);
             });
         }
@@ -372,13 +361,6 @@
                 btn.innerText = '✓ Nukopijuota';
                 btn.classList.add('copied');
                 setTimeout(() => { btn.innerText = '📋 Kopijuoti'; btn.classList.remove('copied'); }, 2000);
-            }).catch(() => {
-                const el = document.createElement('textarea');
-                el.value = text;
-                document.body.appendChild(el);
-                el.select();
-                document.execCommand('copy');
-                document.body.removeChild(el);
             });
         }
 
@@ -387,12 +369,12 @@
             fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"activateCode", token: currentUser.token, code }) })
                 .then(r => r.json()).then(data => {
                     if (data.success) { alert("Kodas aktyvuotas!"); window.location.reload(); }
-                    else alert("Kodas neteisingas arba jau panaudotas. (Kodai skiria didžiąsias/mažąsias raides)");
+                    else alert("Kodas neteisingas arba jau panaudotas.");
                 });
         }
 
         function deleteAccount() {
-            const email   = document.getElementById('del-email').value;
+            const email = document.getElementById('del-email').value;
             const confirm = document.getElementById('del-confirm').value;
             if (confirm !== "suprantu, kad mano duomenys bus ištrinti") { alert("Neteisinga patvirtinimo frazė."); return; }
             fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"deleteAccount", token: currentUser.token, email }) })
@@ -402,8 +384,9 @@
                 });
         }
 
-        function openModal(id)  { document.getElementById(id).style.display = 'flex'; }
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
         function logout() {
             document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             window.location.href = "index.html";
