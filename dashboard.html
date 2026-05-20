@@ -5,67 +5,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Praxifold - Valdymo Panelė</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; margin: 0; color: #333; }
-        header { background: #fff; padding: 15px 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: bold; font-size: 24px; color: #0078D7; }
-        .settings-btn { background: #e1dfdd; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .container { max-width: 900px; margin: 40px auto; padding: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .card h3 { margin-top: 0; color: #0078D7; text-transform: capitalize; }
-        .card .version { font-size: 12px; color: #888; margin-bottom: 15px; display: block; }
-        .btn { background: #0078D7; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 14px; width: 100%; margin-top: 5px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; color: #333; }
+
+        header {
+            background: #fff;
+            padding: 12px 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo { font-weight: bold; font-size: 22px; color: #0078D7; }
+        .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .quota-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+        .badge { background: #f0f7ff; border: 1px solid #c0d8f0; color: #0078D7; border-radius: 20px; padding: 5px 12px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+        .badge.warn { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .badge.danger { background: #fde8e8; border-color: #f44; color: #c00; }
+        .badge.unlimited { background: #e6f4ea; border-color: #81c784; color: #2e7d32; }
+        .settings-btn { background: #e1dfdd; border: none; padding: 9px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; white-space: nowrap; }
+        .settings-btn:hover { background: #ccc; }
+
+        .container { max-width: 960px; margin: 30px auto; padding: 0 16px 40px; }
+        .page-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; color: #333; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .card h3 { margin-top: 0; color: #0078D7; text-transform: capitalize; font-size: 16px; }
+        .card .version { font-size: 12px; color: #888; margin-bottom: 14px; display: block; }
+        .btn { background: #0078D7; color: white; border: none; padding: 9px 12px; border-radius: 5px; cursor: pointer; font-size: 14px; width: 100%; margin-top: 6px; transition: background 0.2s; }
         .btn:hover { background: #005a9e; }
         .btn-secondary { background: #e1dfdd; color: #333; }
-        
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 400px; max-height: 85vh; overflow-y: auto; }
-        .close { float: right; cursor: pointer; font-size: 20px; font-weight: bold; }
-        input { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        .setting-group { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-        .info-text { font-size: 12px; color: #666; }
-        .links-group a { display: block; margin: 5px 0; color: #0078D7; text-decoration: none; font-size: 14px; }
+        .btn-secondary:hover { background: #ccc; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; padding: 16px; }
+        .modal-content { background: white; padding: 28px; border-radius: 12px; width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto; }
+        .close { float: right; cursor: pointer; font-size: 22px; font-weight: bold; line-height: 1; color: #555; }
+        .close:hover { color: #000; }
+        input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: inherit; }
+        .setting-group { margin-bottom: 18px; border-bottom: 1px solid #eee; padding-bottom: 14px; }
+        .info-text { font-size: 12px; color: #666; line-height: 1.5; }
+        .links-group a { display: block; margin: 6px 0; color: #0078D7; text-decoration: none; font-size: 14px; }
         .links-group a:hover { text-decoration: underline; }
+
+        .pass-display { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 16px; margin: 14px 0; text-align: center; }
+        .pass-display code { font-size: 22px; font-weight: bold; color: #856404; letter-spacing: 2px; display: block; margin-bottom: 8px; }
+        .pass-display.dl-style { background: #d4edda; border-color: #81c784; }
+        .pass-display.dl-style code { color: #155724; }
+
+        .copy-btn { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 12px; color: #555; transition: all 0.2s; }
+        .copy-btn:hover { background: #f0f0f0; border-color: #0078D7; color: #0078D7; }
+        .copy-btn.copied { background: #e6f4ea; border-color: #81c784; color: #2e7d32; }
+
+        .countdown-bar { height: 4px; background: #e0e0e0; border-radius: 2px; margin: 10px 0; overflow: hidden; }
+        .countdown-fill { height: 100%; background: #0078D7; border-radius: 2px; transition: width 1s linear; }
+        .timer-text { font-size: 14px; color: #555; margin: 8px 0; }
+        .timer-num { font-size: 18px; font-weight: bold; color: #0078D7; }
+
+        @media (max-width: 600px) {
+            header { padding: 10px 14px; }
+            .container { margin: 16px auto; }
+            .modal-content { padding: 20px; }
+            .pass-display code { font-size: 18px; }
+        }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">Praxifold</div>
-        <button class="settings-btn" onclick="openModal('settings-modal')">⚙ Nustatymai</button>
+        <div class="header-right">
+            <div class="quota-badges" id="quota-badges"></div>
+            <button class="settings-btn" onclick="openModal('settings-modal')">⚙ Nustatymai</button>
+        </div>
     </header>
 
     <div class="container">
-        <h2>Įrankiai ir Failai</h2>
-        <div id="loading" style="text-align:center;">Kraunama sistema...</div>
+        <div class="page-title">Įrankiai ir Failai</div>
+        <div id="loading" style="text-align:center; color:#888; padding:40px 0;">Kraunama sistema...</div>
         <div class="grid" id="file-grid"></div>
     </div>
 
+    <!-- SETTINGS MODAL -->
     <div id="settings-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('settings-modal')">&times;</span>
-            <h2>Vartotojo Nustatymai</h2>
-            
+            <h2 style="margin-bottom:18px;">Vartotojo Nustatymai</h2>
+
             <div class="setting-group">
-                <strong>Paskyros ID:</strong> <span id="ui-support-id">...</span>
+                <strong>Paskyros ID:</strong> <span id="ui-support-id" style="font-size:13px; color:#555;">...</span>
             </div>
 
             <div class="setting-group">
-                <strong>Prenumeratos planas:</strong> <span id="ui-sub-status" style="font-weight: bold; color: #0078D7;">...</span><br>
+                <strong>Prenumeratos planas:</strong>
+                <span id="ui-sub-status" style="font-weight:bold; color:#0078D7;">...</span><br>
                 <span class="info-text" id="ui-sub-exp"></span><br><br>
-                <input type="text" id="promo-code" placeholder="Įveskite aktyvavimo kodą">
+                <input type="text" id="promo-code" placeholder="Įveskite aktyvavimo kodą (skiria didž./mažąsias)">
                 <button class="btn" onclick="activateCode()">Aktyvuoti</button>
             </div>
 
             <div class="setting-group">
-                <strong>Atsisiuntimų statistika:</strong> <br>
-                <span class="info-text">Iš viso atsisiųsta: <span id="ui-downloads">0</span> failų.</span><br>
-                <span class="info-text">Likusios nemokamos peržiūros: <span id="ui-previews">10</span></span>
+                <strong>Statistika:</strong><br>
+                <span class="info-text">Iš viso atsisiųsta: <strong id="ui-downloads">0</strong> failų.</span><br>
+                <span class="info-text">Likusios peržiūros: <strong id="ui-previews">—</strong></span><br>
+                <span class="info-text">Likusių atsisiuntimų: <strong id="ui-dl-left">—</strong></span>
             </div>
 
             <div class="setting-group links-group">
-                <a href="policy.txt" target="_blank">📄 Skaityti Naudojimo Sąlygas (Terms & Conditions)</a>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header" target="_blank">🐞 Pranešti apie klaidą (Bug Report)</a>
+                <a href="policy.txt" target="_blank">📄 Naudojimo Sąlygos</a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header" target="_blank">🐞 Pranešti apie klaidą</a>
+                <a id="dev-program-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdzr9FxqRQxTCJlrZNqduMdkkM25wSYsbncvCX-Hbpr_BWckg/viewform?usp=header" target="_blank" style="display:none;">🛠 Prisijungti prie Kūrėjų Programos</a>
             </div>
 
             <div class="setting-group">
@@ -77,35 +130,47 @@
                 </div>
             </div>
 
-            <button class="btn btn-secondary" style="margin-top:15px;" onclick="logout()">Atsijungti</button>
+            <button class="btn btn-secondary" style="margin-top:6px;" onclick="logout()">Atsijungti</button>
         </div>
     </div>
 
+    <!-- PREVIEW MODAL -->
     <div id="preview-modal" class="modal">
-        <div class="modal-content" style="text-align: center;">
-            <span class="close" onclick="closeModal('preview-modal')">&times;</span>
-            <h2>Įrankio Peržiūros Slaptažodis</h2>
-            <div style="background:#fff3cd; padding:15px; border-radius:6px; margin:15px 0;">
-                <code id="preview-pass" style="font-size: 18px; font-weight:bold; color:#856404;">Kraunama...</code>
+        <div class="modal-content" style="text-align:center;">
+            <span class="close" id="preview-close" onclick="closeModal('preview-modal')" style="display:none;">&times;</span>
+            <h2 style="margin-bottom:4px;">Įrankio Peržiūros Slaptažodis</h2>
+            <p class="info-text" style="margin-bottom:4px;">Naudokite šį slaptažodį atidarius įrankio puslapį.</p>
+            <div class="pass-display">
+                <code id="preview-pass">Gaunamas kodas...</code>
+                <button class="copy-btn" id="preview-copy-btn" onclick="copyPass('preview-pass','preview-copy-btn')" style="display:none;">📋 Kopijuoti</button>
             </div>
-            <p class="info-text">Naudokite šį slaptažodį, kad atrakintumėte pasirodžiusį įrankio puslapį.</p>
+            <div id="preview-redirect-area" style="display:none;">
+                <div class="countdown-bar"><div class="countdown-fill" id="preview-bar" style="width:100%;"></div></div>
+                <p class="timer-text">Automatinis peradresavimas po <span class="timer-num" id="preview-timer">5</span> sek.</p>
+                <button class="btn" onclick="doPreviewRedirect()" style="margin-top:6px;">Atidaryti dabar →</button>
+            </div>
         </div>
     </div>
 
+    <!-- DOWNLOAD MODAL -->
     <div id="download-modal" class="modal">
-        <div class="modal-content" style="text-align: center;">
-            <h2>Atsisiuntimas Pradėtas!</h2>
-            <p>Jūsų failo atrakinimo slaptažodis:</p>
-            <div style="background:#d4edda; padding:15px; border-radius:6px; margin:15px 0;">
-                <code id="dl-pass" style="font-size: 20px; font-weight:bold; color:#155724;">Kraunama...</code>
+        <div class="modal-content" style="text-align:center;">
+            <span class="close" id="dl-close-btn" onclick="closeModal('download-modal')" style="display:none;">&times;</span>
+            <h2 style="margin-bottom:4px;">Atsisiuntimas Pradėtas!</h2>
+            <p class="info-text" style="margin-bottom:4px;">Failo atrakinimo slaptažodis:</p>
+            <div class="pass-display dl-style">
+                <code id="dl-pass">Gaunamas kodas...</code>
+                <button class="copy-btn" id="dl-copy-btn" onclick="copyPass('dl-pass','dl-copy-btn')" style="display:none;">📋 Kopijuoti</button>
             </div>
-            <p>Šis saugumo langas automatiškai užsidarys po <span id="timer" style="font-weight:bold; font-size: 18px; color:#0078D7;">25</span> sekundžių.</p>
+            <p class="timer-text">Šis langas užsidarys po <span class="timer-num" id="timer">25</span> sek.</p>
         </div>
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycby34gszuZOpcs8q29HcKmJmgFEY6iw70-ei2KEVTHHgT9pcsftjdpO5RRTURrk8ka1Z/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycby34gszuZOpcs8q29HcKmJmgFEY6iw70-ei2KEVTHHgT9pcsftjdpO5RRTURrk8ka1Z/exec";
         let currentUser = null;
+        let previewUrl = null;
+        let previewAutoTimer = null;
 
         window.onload = function() {
             const token = getCookie("token");
@@ -114,150 +179,234 @@
         };
 
         function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
+            const v = `; ${document.cookie}`;
+            const p = v.split(`; ${name}=`);
+            if (p.length === 2) return p.pop().split(';').shift();
         }
 
         function fetchUserData(token) {
-            fetch(GAS_URL, {
-                method: "POST", body: JSON.stringify({ action: "getUserData", token: token })
-            }).then(r => r.json()).then(data => {
-                if (data.success) {
-                    currentUser = data.user;
-                    currentUser.token = token; 
-                    updateUI();
-                    renderFiles(data.files);
-                    document.getElementById('loading').style.display = 'none';
-                } else {
-                    alert("Klaida: " + data.error);
-                    logout();
-                }
-            }).catch(e => { logout(); });
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"getUserData", token }) })
+                .then(r => r.json()).then(data => {
+                    if (data.success) {
+                        currentUser = data.user;
+                        currentUser.token = token;
+                        updateUI();
+                        renderFiles(data.files);
+                        document.getElementById('loading').style.display = 'none';
+                    } else {
+                        alert("Klaida: " + data.error);
+                        logout();
+                    }
+                }).catch(() => logout());
         }
 
         function updateUI() {
-            document.getElementById('ui-support-id').innerText = currentUser.supportId;
-            document.getElementById('ui-sub-status').innerText = currentUser.subType.toUpperCase();
-            document.getElementById('ui-downloads').innerText = currentUser.totalDownloads;
-            document.getElementById('ui-previews').innerText = currentUser.previewsLeft;
-            
-            if(currentUser.subExpDate) {
-                const date = new Date(currentUser.subExpDate).toLocaleDateString('lt-LT');
-                document.getElementById('ui-sub-exp').innerText = `Galioja iki: ${date}`;
+            const u = currentUser;
+            document.getElementById('ui-support-id').innerText = u.supportId;
+            document.getElementById('ui-sub-status').innerText = u.subType.toUpperCase();
+            document.getElementById('ui-downloads').innerText  = u.totalDownloads;
+            if (u.subExpDate) {
+                document.getElementById('ui-sub-exp').innerText = "Galioja iki: " + new Date(u.subExpDate).toLocaleDateString('lt-LT');
+            }
+            if (u.subType !== 'free') {
+                document.getElementById('dev-program-link').style.display = 'block';
+            }
+            const prevEl = document.getElementById('ui-previews');
+            const dlEl   = document.getElementById('ui-dl-left');
+            if (u.subType === 'free') {
+                prevEl.innerText = u.previewsLeft + " / 5";
+                dlEl.innerText   = u.downloadsLeft + " / 10";
+            } else if (u.subType === 'standard') {
+                prevEl.innerText = "Neribota";
+                dlEl.innerText   = "Negalima";
+            } else if (u.subType === 'pro') {
+                prevEl.innerText = "Neribota";
+                dlEl.innerText   = "Neribota";
+            }
+            renderQuotaBadges(u);
+        }
+
+        function renderQuotaBadges(u) {
+            const container = document.getElementById('quota-badges');
+            container.innerHTML = '';
+            function makeBadge(text, cls) {
+                const b = document.createElement('span');
+                b.className = 'badge' + (cls ? ' ' + cls : '');
+                b.innerText = text;
+                return b;
+            }
+            if (u.subType === 'free') {
+                const pc = u.previewsLeft;
+                container.appendChild(makeBadge(`👁 Peržiūros: ${pc}`, pc > 2 ? '' : pc > 0 ? 'warn' : 'danger'));
+                const dc = u.downloadsLeft;
+                container.appendChild(makeBadge(`⬇ Atsisiuntimai: ${dc}`, dc > 2 ? '' : dc > 0 ? 'warn' : 'danger'));
+                if (pc <= 2 || dc <= 2) {
+                    container.appendChild(makeBadge('📧 praxifold@gmail.com', 'warn'));
+                }
+            } else if (u.subType === 'standard') {
+                container.appendChild(makeBadge('👁 Peržiūros: ∞', 'unlimited'));
+                container.appendChild(makeBadge('⬇ Atsisiuntimai: —', ''));
+            } else if (u.subType === 'pro') {
+                container.appendChild(makeBadge('👁 Peržiūros: ∞', 'unlimited'));
+                container.appendChild(makeBadge('⬇ Atsisiuntimai: ∞', 'unlimited'));
             }
         }
 
         function renderFiles(files) {
             const grid = document.getElementById('file-grid');
             grid.innerHTML = '';
-
-            if(!files || files.length === 0) {
-                grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#888;">Šiuo metu aktyvių failų sistemoje nėra.</p>';
+            if (!files || files.length === 0) {
+                grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888; padding:40px 0;">Šiuo metu aktyvių failų sistemoje nėra.</p>';
                 return;
             }
-
             files.forEach(f => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `<h3>${f.name}</h3><span class="version">Versija: V${f.version}</span>`;
-
                 const btnPrev = document.createElement('button');
                 btnPrev.className = 'btn btn-secondary';
                 btnPrev.innerText = 'Peržiūrėti';
                 btnPrev.onclick = () => requestAccess(f.name, 'preview');
                 card.appendChild(btnPrev);
-
                 const btnDl = document.createElement('button');
                 btnDl.className = 'btn';
-                btnDl.innerText = 'Atsisiusti';
+                btnDl.innerText = 'Atsisiųsti';
                 btnDl.onclick = () => requestAccess(f.name, 'download');
                 card.appendChild(btnDl);
-
                 grid.appendChild(card);
             });
         }
 
         function requestAccess(fileName, type) {
             if (type === 'preview') {
-                document.getElementById('preview-pass').innerText = "Generuojama prieiga...";
+                document.getElementById('preview-pass').innerText = "Gaunamas kodas...";
+                document.getElementById('preview-copy-btn').style.display = 'none';
+                document.getElementById('preview-redirect-area').style.display = 'none';
+                document.getElementById('preview-close').style.display = 'none';
+                previewUrl = null;
+                if (previewAutoTimer) clearInterval(previewAutoTimer);
                 openModal('preview-modal');
             } else {
-                document.getElementById('dl-pass').innerText = "Generuojamas slaptažodis...";
+                document.getElementById('dl-pass').innerText = "Gaunamas kodas...";
+                document.getElementById('dl-copy-btn').style.display = 'none';
+                document.getElementById('dl-close-btn').style.display = 'none';
                 openModal('download-modal');
             }
 
             fetch(GAS_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "requestAccess", token: currentUser.token, fileName: fileName, type: type })
+                method:"POST",
+                body: JSON.stringify({ action:"requestAccess", token: currentUser.token, fileName, type })
             }).then(r => r.json()).then(data => {
                 if (data.success) {
-                    const gitHubPath = `tools/${fileName}.html`;
-
+                    const filePath = `tools/${fileName}.html`;
                     if (type === 'preview') {
                         document.getElementById('preview-pass').innerText = data.password;
-                        window.open(gitHubPath, '_blank');
+                        document.getElementById('preview-copy-btn').style.display = 'inline-block';
+                        previewUrl = filePath;
+                        document.getElementById('preview-redirect-area').style.display = 'block';
+                        let secs = 5;
+                        document.getElementById('preview-timer').innerText = secs;
+                        document.getElementById('preview-bar').style.width = '100%';
+                        previewAutoTimer = setInterval(() => {
+                            secs--;
+                            document.getElementById('preview-timer').innerText = secs;
+                            document.getElementById('preview-bar').style.width = ((secs / 5) * 100) + '%';
+                            if (secs <= 0) { clearInterval(previewAutoTimer); doPreviewRedirect(); }
+                        }, 1000);
+                        if (currentUser.subType === 'free') {
+                            currentUser.previewsLeft = Math.max(0, (currentUser.previewsLeft || 0) - 1);
+                            renderQuotaBadges(currentUser);
+                        }
                     } else {
                         document.getElementById('dl-pass').innerText = data.password;
+                        document.getElementById('dl-copy-btn').style.display = 'inline-block';
                         startDownloadTimer();
-
                         const dlLink = document.createElement('a');
-                        dlLink.href = gitHubPath;
+                        dlLink.href = filePath;
                         dlLink.download = `${fileName}.html`;
                         document.body.appendChild(dlLink);
                         dlLink.click();
                         document.body.removeChild(dlLink);
+                        if (currentUser.subType === 'free') {
+                            currentUser.downloadsLeft = Math.max(0, (currentUser.downloadsLeft || 0) - 1);
+                            currentUser.totalDownloads = (currentUser.totalDownloads || 0) + 1;
+                            renderQuotaBadges(currentUser);
+                        }
                     }
                 } else {
                     closeModal(type === 'preview' ? 'preview-modal' : 'download-modal');
-                    alert(`Prieiga atmesta: ${data.error}`);
+                    if (data.error === "LIMITAS_PASIEKTAS") {
+                        alert("Limitas pasiektas. Prenumeratos kodui gauti kreipkitės: praxifold@gmail.com");
+                    } else if (data.error === "APRIBOTA") {
+                        alert("Šis veiksmas apribotas jūsų plano. Kreipkitės: praxifold@gmail.com");
+                    } else {
+                        alert("Prieiga atmesta: " + data.error);
+                    }
                 }
             });
+        }
+
+        function doPreviewRedirect() {
+            if (previewAutoTimer) clearInterval(previewAutoTimer);
+            document.getElementById('preview-redirect-area').style.display = 'none';
+            document.getElementById('preview-close').style.display = 'block';
+            if (previewUrl) window.open(previewUrl, '_blank');
         }
 
         function startDownloadTimer() {
             let timeLeft = 25;
             const timerEl = document.getElementById('timer');
             timerEl.innerText = timeLeft;
-
             const countdown = setInterval(() => {
                 timeLeft--;
                 timerEl.innerText = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(countdown);
-                    closeModal('download-modal');
-                    window.location.reload(); 
-                }
+                if (timeLeft === 17) { document.getElementById('dl-close-btn').style.display = 'block'; }
+                if (timeLeft <= 0) { clearInterval(countdown); closeModal('download-modal'); window.location.reload(); }
             }, 1000);
+        }
+
+        function copyPass(codeId, btnId) {
+            const text = document.getElementById(codeId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById(btnId);
+                btn.innerText = '✓ Nukopijuota';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.innerText = '📋 Kopijuoti'; btn.classList.remove('copied'); }, 2000);
+            }).catch(() => {
+                const el = document.createElement('textarea');
+                el.value = text;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+            });
         }
 
         function activateCode() {
             const code = document.getElementById('promo-code').value;
-            fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: "activateCode", token: currentUser.token, code: code })
-            }).then(r => r.json()).then(data => {
-                if (data.success) { alert("Kodas aktyvuotas!"); window.location.reload(); } 
-                else alert("Kodas neteisingas arba jau panaudotas.");
-            });
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"activateCode", token: currentUser.token, code }) })
+                .then(r => r.json()).then(data => {
+                    if (data.success) { alert("Kodas aktyvuotas!"); window.location.reload(); }
+                    else alert("Kodas neteisingas arba jau panaudotas. (Kodai skiria didžiąsias/mažąsias raides)");
+                });
         }
 
         function deleteAccount() {
-            const email = document.getElementById('del-email').value;
+            const email   = document.getElementById('del-email').value;
             const confirm = document.getElementById('del-confirm').value;
-            if(confirm !== "suprantu, kad mano duomenys bus ištrinti") {
-                alert("Neteisinga patvirtinimo frazė."); return;
-            }
-            fetch(GAS_URL, { method: "POST", body: JSON.stringify({ action: "deleteAccount", token: currentUser.token, email: email })
-            }).then(r => r.json()).then(data => {
-                if (data.success) { alert("Ištrynimas sėkmingai suplanuotas."); logout(); }
-                else { alert("Klaida: " + data.error); }
-            });
+            if (confirm !== "suprantu, kad mano duomenys bus ištrinti") { alert("Neteisinga patvirtinimo frazė."); return; }
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"deleteAccount", token: currentUser.token, email }) })
+                .then(r => r.json()).then(data => {
+                    if (data.success) { alert("Ištrynimas sėkmingai suplanuotas."); logout(); }
+                    else alert("Klaida: " + data.error);
+                });
         }
 
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function openModal(id)  { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function logout() { 
-            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; 
-            window.location.href = "index.html"; 
+        function logout() {
+            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            window.location.href = "index.html";
         }
     </script>
 </body>
