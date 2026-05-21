@@ -1,60 +1,285 @@
-1. PRIVATUMO POLITIKA
+PRAXIFOLD NAUDOJIMO SĄLYGOS IR PRIVATUMO POLITIKA
 
-Ši privatumo politika apibrėžia, kokie asmens duomenys yra renkami ir kaip jie yra naudojami šioje svetainėje.
+1. Įžanga
 
-Svetainė renka šiuos duomenis: vardą, el. pašto adresą, slaptažodį (saugoma užšifruota forma), vartotojo identifikacinį numerį (support ID), paskutinio prisijungimo laiką, nesėkmingų prisijungimų skaičių, paskyros būseną, panaudotą aktyvavimo kodą, likusių paspaudimų skaičių, paskyros sukūrimo datą, prenumeratos galiojimo laiką ir vartotojo rolę.
+Sveiki atvykę į Praxifold.
 
-Duomenys renkami siekiant:
+Praxifold yra Lietuvos internetinė platforma, suteikianti prieigą prie užšifruotų HTML pagrindu veikiančių įrankių ir failų mokytojams, mėgėjams, inžinieriams, programuotojams ir kitiems naudotojams. Failai gali būti peržiūrimi naršyklėje arba atsisiunčiami priklausomai nuo paskyros leidimų ir prenumeratos būsenos.
 
-užtikrinti vartotojų autentifikaciją,
-valdyti paskyras,
-užtikrinti sistemos saugumą,
-teikti paslaugas (vaizdo turinio prieigą),
-administruoti prenumeratas.
+Kurdami paskyrą, naudodamiesi platforma, atsisiųsdami failus, peržiūrėdami turinį ar teikdami paraišką kūrėjų programai, jūs sutinkate su šiomis Naudojimo sąlygomis ir Privatumo politika.
 
-Duomenys saugomi naudojant trečiųjų šalių paslaugas, tokias kaip Google (Google Sheets) ir svetainės talpinimo platformą GitHub (GitHub Pages). Todėl taip pat taikomos šių paslaugų teikėjų privatumo politikos.
+Jeigu nesutinkate su šiomis sąlygomis, naudotis Praxifold negalite.
 
-Duomenys saugomi tol, kol vartotojo paskyra yra aktyvi arba tiek, kiek būtina paslaugų teikimui.
+Minimalus amžius naudojimuisi platforma: 16 metų.
 
-Vartotojai turi teisę:
+Kontaktinis el. paštas:
+praxifold@gmail.com
 
-susipažinti su savo duomenimis,
-reikalauti juos ištaisyti ar ištrinti,
-apriboti duomenų tvarkymą.
-2. DUOMENŲ TVARKYMO POLITIKA
+--------------------------------------------------
 
-Duomenų tvarkymo politika nustato, kaip surinkti duomenys yra saugomi, apsaugomi ir valdomi.
+2. Paskyros reikalavimai
 
-Visi duomenys yra saugomi privačioje duomenų saugykloje (Google Sheets), prie kurios prieiga yra ribojama ir suteikiama tik autorizuotiems asmenims.
+Naudotojai yra atsakingi už:
+- savo prisijungimo duomenų saugumą;
+- teisingos registracijos informacijos pateikimą;
+- savo el. pašto paskyros apsaugą;
+- platformos saugumo taisyklių laikymąsi.
 
-Taikomos šios saugumo priemonės:
+Praxifold gali saugoti:
+- paskyros vardą;
+- el. pašto adresą;
+- slaptažodį maišos (hash) ir „salt“ forma;
+- naršyklės ir įrenginio informaciją;
+- paskyros rolę;
+- paskyros sukūrimo datą;
+- paskutinio prisijungimo datą;
+- neteisingų prisijungimų skaičių;
+- sesijos ir saugumo slapukus;
+- failų atsisiuntimo ir peržiūros informaciją.
 
-slaptažodžių šifravimas,
-prieigos kontrolė,
-prisijungimų stebėjimas (įskaitant nesėkmingus bandymus),
-paskyros būsenos valdymas.
+Slaptažodžiai nėra saugomi paprastu tekstu.
 
-Duomenys nėra perduodami tretiesiems asmenims, išskyrus atvejus, kai tai būtina techniniam paslaugos veikimui (pvz., naudojant Google ar GitHub infrastruktūrą).
+--------------------------------------------------
 
-Duomenys gali būti saugomi tol, kol paskyra yra aktyvi, o pasibaigus jos galiojimui – pašalinami per pagrįstą laikotarpį.
+3. Saugumas ir platformos apsauga
 
-3. NAUDOJIMO SĄLYGOS
+Praxifold naudoja įvairias apsaugos sistemas:
+- HTTPS šifruotus ryšius;
+- periodiškai keičiamus sesijos žetonus;
+- laikinus funkcijų apribojimus;
+- automatinį įtartinos veiklos aptikimą;
+- rankinę moderaciją;
+- DI (AI) pagalbinę saugumo analizę;
+- prisijungimų stebėjimą;
+- įtartino elgesio analizę.
 
-Naudodamiesi šia svetaine, vartotojai sutinka su šiomis sąlygomis.
+Naudotojams draudžiama:
+- bandyti apeiti šifravimą;
+- bandyti iššifruoti failus;
+- analizuoti apsaugotą svetainės logiką;
+- naudoti „developer tools“ siekiant atkurti sistemos veikimą;
+- automatizuoti atsisiuntimus;
+- vykdyti „scraping“ veiklą;
+- tikrinti paslėptas API sistemas be leidimo;
+- atlikti kenksmingus veiksmus prieš platformos infrastruktūrą.
 
-Svetainė skirta mokiniams ir mokytojams, taip pat gali būti prieinama viešai, tačiau naudojama edukaciniais tikslais, įskaitant veiklą su Junior Achievement organizacija.
+Bandymas pažeisti sistemos saugumą gali lemti:
+- laikinas funkcijų blokacijas;
+- nuolatinį paskyros užblokavimą;
+- atsisiuntimų apribojimą;
+- prieigos panaikinimą;
+- apeliacijos teisės praradimą.
 
-Vartotojas įsipareigoja:
+--------------------------------------------------
 
-pateikti teisingą informaciją registracijos metu,
-saugoti savo prisijungimo duomenis,
-nenaudoti svetainės neteisėtiems veiksmams,
-nebandyti apeiti sistemos apribojimų (pvz., paspaudimų limitų ar prenumeratos ribojimų).
+4. Failai ir šifravimas
 
-Administracija pasilieka teisę:
+Dauguma Praxifold failų yra užšifruojami prieš juos publikuojant.
 
-sustabdyti arba panaikinti paskyras,
-apriboti prieigą prie sistemos,
-keisti funkcionalumą be išankstinio įspėjimo.
+Failai yra tikrinami rankiniu būdu ir gali būti papildomai analizuojami naudojant DI sistemas siekiant aptikti:
+- kenkėjišką programinę įrangą;
+- neleistinus API kvietimus;
+- pavojingus scenarijus;
+- nesaugų veikimą.
 
-Svetainė pateikiama „tokia, kokia yra“, ir jos kūrėjai neprisiima atsakomybės už galimus veikimo sutrikimus ar duomenų praradimą.
+Apsaugoti failai yra sukurti taip, kad naudotojas negalėtų matyti originalaus šaltinio kodo.
+
+Atsisiųstuose failuose gali būti:
+- saugumo metaduomenys;
+- prenumeratos tikrinimo sistemos;
+- galiojimo laiko apribojimai;
+- atnaujinimų tikrinimo mechanizmai.
+
+Praxifold pasilieka teisę išjungti pasenusias arba nesaugias failų versijas saugumo tikslais. Tokie apribojimai dažniausiai nebus trumpesni nei 3 mėnesiai nuo failo išleidimo.
+
+--------------------------------------------------
+
+5. Prenumeratos
+
+Praxifold suteikia:
+- ribotą nemokamą prieigą;
+- Standard prenumeratą;
+- Pro prenumeratą.
+
+Prenumeratos yra administruojamos tiesiogiai per Praxifold.
+
+Pasibaigus prenumeratai:
+- gali būti panaikinta failų peržiūra;
+- nebegausite failų atnaujinimų;
+- bus pašalintos premium funkcijos;
+- naršyklėje saugomi apsaugoti failai gali tapti nepasiekiami.
+
+Naudotojai paprastai gali pasilikti failus, atsisiųstus aktyvios prenumeratos metu, išskyrus atvejus, kai:
+- failas kelia saugumo riziką;
+- pažeidžia platformos taisykles;
+- reikalingas papildomas apsaugos apribojimas.
+
+--------------------------------------------------
+
+6. Kūrėjų programa
+
+Patvirtinti kūrėjai gali kurti įrankius Praxifold platformai.
+
+Kūrėjų pateiktas turinys:
+- turi atitikti saugumo taisykles;
+- gali būti tikrinamas moderatorių ir DI sistemų;
+- gali būti užšifruotas prieš paskelbimą.
+
+Pateikdami turinį Praxifold platformai, kūrėjai suteikia Praxifold teisę:
+- modifikuoti;
+- platinti;
+- šifruoti;
+- talpinti;
+- komerciškai naudoti;
+- pakartotinai publikuoti pateiktą turinį.
+
+Kūrėjų vardai gali būti nurodomi:
+- kreditų skiltyje;
+- padėkų sąrašuose;
+- „Special Thanks“ skiltyse.
+
+Praxifold neprivalo priimti visų pateiktų projektų.
+
+--------------------------------------------------
+
+7. Slapukai ir sesijos duomenys
+
+Praxifold naudoja slapukus ir sesijų sistemas:
+- autentifikacijai;
+- saugumo tikrinimui;
+- prenumeratos patvirtinimui;
+- atsisiuntimų apsaugai;
+- duomenų sinchronizacijai;
+- sukčiavimo prevencijai.
+
+Slapukai nėra naudojami:
+- trečiųjų šalių reklamoms;
+- naudotojų duomenų pardavimui;
+- DI modelių mokymui;
+- personalizuotai reklamai.
+
+Nemokamos paskyros naudotojai gali matyti vidines Praxifold reklamas apie Praxifold produktus ar paslaugas.
+
+--------------------------------------------------
+
+8. El. laiškai ir pranešimai
+
+Praxifold gali siųsti el. laiškus dėl:
+- paskyros patvirtinimo;
+- saugumo pranešimų;
+- slaptažodžio atkūrimo;
+- prisijungimų informavimo;
+- pranešimų apie sistemą;
+- paskyros ištrynimo.
+
+Slaptažodžio atkūrimui gali būti reikalingas:
+- 6 skaitmenų kodas;
+- prieiga prie registruoto el. pašto.
+
+Paprastai slaptažodį galima keisti kartą per 3 mėnesius.
+
+--------------------------------------------------
+
+9. Paskyros ištrynimas ir duomenų saugojimas
+
+Naudotojai gali pateikti paskyros ištrynimo prašymą platformoje.
+
+Po prašymo:
+- slapukai yra pašalinami, išskyrus būtinus ištrynimo procesui;
+- paskyra pažymima ištrynimui;
+- galutinį pašalinimą atlieka Praxifold personalas.
+
+Neaktyvios arba ištrinamos paskyros dažniausiai pašalinamos per 1 mėnesį.
+
+Užblokuotų naudotojų duomenys gali būti saugomi iki:
+- apeliacijos proceso pabaigos;
+- paskyros atblokavimo;
+- galutinio paskyros pašalinimo.
+
+Kai kurios trečiųjų šalių sistemos, tokios kaip Google, gali taikyti savo duomenų saugojimo taisykles.
+
+--------------------------------------------------
+
+10. Naudotojų teisės
+
+Naudotojai gali:
+- prašyti paskyros ištrynimo;
+- prašyti slaptažodžio atkūrimo;
+- susisiekti dėl saugomų duomenų;
+- pateikti apeliaciją dėl paskyros apribojimų.
+
+Užklausos siunčiamos:
+praxifold@gmail.com
+
+--------------------------------------------------
+
+11. Leidžiamas naudojimas
+
+Draudžiama naudoti Praxifold:
+- neteisėtai veiklai;
+- kenkėjiškų programų platinimui;
+- duomenų vagystėms;
+- phishing veiklai;
+- automatiniam duomenų rinkimui;
+- autorinių teisių pažeidimams;
+- sistemos trikdymui;
+- priekabiavimui;
+- saugumo atakoms.
+
+Pažeidus taisykles paskyra gali būti nedelsiant apribota arba užblokuota.
+
+--------------------------------------------------
+
+12. Intelektinė nuosavybė
+
+Visa Praxifold platformos logika, šifravimo sistemos, dizainas, apsaugos mechanizmai ir platformos sprendimai priklauso Praxifold, jei nenurodyta kitaip.
+
+Naudotojams draudžiama:
+- kopijuoti apsaugotas sistemas;
+- platinti užšifruotus komponentus;
+- šalinti apsaugos mechanizmus;
+- pateikti Praxifold sistemų kaip savo.
+
+--------------------------------------------------
+
+13. Atsakomybės ribojimas
+
+Praxifold platforma pateikiama „tokia, kokia yra“.
+
+Nors naudojamos pagrįstos saugumo priemonės, Praxifold negarantuoja:
+- nepertraukiamo veikimo;
+- visiško suderinamumo;
+- absoliutaus saugumo;
+- trečiųjų šalių paslaugų veikimo.
+
+Naudotojai patys atsako už savo įrenginių saugumą ir atsisiųstų failų naudojimą.
+
+--------------------------------------------------
+
+14. Taikoma teisė
+
+Šios taisyklės aiškinamos pagal Lietuvos Respublikos ir taikomus Europos Sąjungos teisės aktus.
+
+--------------------------------------------------
+
+15. Sąlygų keitimas
+
+Praxifold gali bet kada atnaujinti šias taisykles dėl:
+- saugumo;
+- teisinių reikalavimų;
+- platformos atnaujinimų;
+- funkcionalumo pakeitimų.
+
+Tolimesnis naudojimasis platforma reiškia atnaujintų taisyklių priėmimą.
+
+--------------------------------------------------
+
+16. Kontaktai
+
+El. paštas:
+praxifold@gmail.com
+
+Platforma:
+Praxifold
+
+--------------------------------------------------
