@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klasės Sodinimo Planas - Profesionalus Įrankis</title>
+    <style>
+        /* --- MODERNUS UI DIZAINAS (SaaS Stilius) --- */
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-sidebar: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --border-color: #e2e8f0;
+            --grid-bg: #ffffff;
+            --grid-line: #cbd5e1;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --radius: 12px;
+            
+            /* Mokinių tipų spalvos */
+            --color-boy: #3b82f6;
+            --color-girl: #ec4899;
+            --color-glasses: #10b981;
+            --color-problem: #f97316;
+            --color-special: #8b5cf6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-sidebar: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #60a5fa;
+            --border-color: #334155;
+            --grid-bg: #1e293b;
+            --grid-line: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* --- LAYOUT --- */
+        #sidebar {
+            width: 380px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            z-index: 10;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        #main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* --- TOP BAR --- */
+        .topbar {
+            height: 60px;
+            background-color: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            gap: 10px;
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        /* --- SKIRTUKAI (TABS) --- */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-sidebar);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            border-bottom-color: var(--accent);
+            color: var(--accent);
+        }
+        .tab-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* --- ELEMENTŲ PANELĖ --- */
+        .element-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .el-btn {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px 8px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .el-btn:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* --- MOKINIŲ SISTEMA & FORMA --- */
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-muted);
+        }
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-main);
+            border-radius: 6px;
+            outline: none;
+        }
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--accent-hover); }
+        .btn-danger { background: #ef4444; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-secondary { background: var(--border-color); color: var(--text-main); }
+        .btn-secondary:hover { filter: brightness(0.9); }
+        
+        .student-list {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-sidebar);
+            font-size: 13px;
+        }
+        .student-tag {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        /* --- STATISTIKA --- */
+        .stats-panel {
+            background: var(--bg-primary);
+            padding: 12px;
+            border-radius: var(--radius);
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        /* --- REDAGAVIMO ZONA --- */
+        #canvas-container {
+            flex-grow: 1;
+            position: relative;
+            overflow: auto;
+            background-color: var(--bg-primary);
+            cursor: grab;
+        }
+        #canvas-container:active { cursor: grabbing; }
+
+        #canvas {
+            width: 2000px;
+            height: 1500px;
+            background-color: var(--grid-bg);
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 20px 20px;
+            position: relative;
+            transform-origin: 0 0;
+            transition: transform 0.05s ease-out;
+        }
+
+        /* Lenta priekyje */
+        .classroom-board {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 20px;
+            background: #334155;
+            border: 3px solid #64748b;
+            border-radius: 4px;
+            color: white;
+            text-align: center;
+            font-size: 12px;
+            line-height: 14px;
+            font-weight: bold;
+            box-shadow: var(--shadow);
+            z-index: 5;
+        }
+
+        /* --- KLASĖS OBJEKTAI --- */
+        .furniture {
+            position: absolute;
+            background: #ffffff;
+            border: 2px solid #475569;
+            border-radius: 6px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: move;
+            touch-action: none;
+            z-index: 2;
+            transition: box-shadow 0.2s;
+            padding: 2px;
+        }
+        .furniture.selected {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);
+            z-index: 4;
+        }
+        
+        /* Objektų tipų specifinis dizainas */
+        .furniture[data-type="teacher"] { background: #fef08a; border-color: #ca8a04; }
+        .furniture[data-type="cabinet"] { background: #fed7aa; border-color: #ea580c; }
+        .furniture[data-type="door"] { background: #f1f5f9; border-color: #64748b; border-bottom: 6px solid #1e293b; min-height: 15px; }
+        .furniture[data-type="window"] { background: #e0f2fe; border-color: #38bdf8; border-style: double; min-height: 15px; }
+        
+        /* Suolai ir vietos */
+        .desk-slots {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            gap: 4px;
+            padding: 2px;
+        }
+        .seat-slot {
+            flex: 1;
+            background: rgba(0,0,0,0.05);
+            border: 1px dashed #94a3b8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            padding: 2px;
+        }
+        
+        /* Mokinių kortelės ant suolų */
+        .student-badge {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            color: white;
+            padding: 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 3px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+            word-break: break-word;
+        }
+
+        /* Valdymo rankenėlės pasirinktam objektui */
+        .transform-controls {
+            display: none;
+            position: absolute;
+            top: -38px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            padding: 4px 8px;
+            border-radius: 20px;
+            gap: 6px;
+            z-index: 100;
+        }
+        .furniture.selected .transform-controls { display: flex; }
+        .ctrl-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .ctrl-btn:hover { background: rgba(255,255,255,0.2); }
+
+        /* --- MINI MAP --- */
+        #minimap {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 160px;
+            height: 120px;
+            background: rgba(255,255,255,0.85);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            z-index: 8;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        [data-theme="dark"] #minimap { background: rgba(30,41,59,0.85); }
+        .minimap-viewport {
+            position: absolute;
+            border: 1px solid var(--accent);
+            background: rgba(37, 99, 235, 0.15);
+        }
+
+        /* --- VALDIKLIAI --- */
+        .floating-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 8px;
+            z-index: 8;
+            background: var(--bg-sidebar);
+            padding: 6px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+        }
+        .round-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--bg-sidebar);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .round-btn:hover { background: var(--bg-primary); color: var(--accent); }
+
+        .menu-toggle { display: none; }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            #sidebar {
+                width: 100%;
+                height: 50%;
+                position: absolute;
+                bottom: 0; left: 0;
+                transform: translateY(100%);
+            }
+            #sidebar.open { transform: translateY(0); }
+            .menu-toggle {
+                display: block;
+                position: absolute;
+                top: 70px; right: 20px;
+                z-index: 99;
+            }
+            #canvas-container { height: 50%; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside id="sidebar">
+        <div style="padding: 15px; border-bottom: 1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+            <h2 style="font-size: 18px; font-weight:700; color:var(--accent);">Klasės Planuotojas</h2>
+            <button class="btn btn-secondary" id="theme-btn" title="Keisti temą">🌙</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('objects-tab')">Baldai</button>
+            <button class="tab-btn" onclick="switchTab('students-tab')">Mokiniai</button>
+            <button class="tab-btn" onclick="switchTab('data-tab')">Valdymas</button>
+        </div>
+
+        <div id="objects-tab" class="tab-content active">
+            <h3 style="font-size:14px; margin-bottom:10px;">Pridėti baldus ar elementus</h3>
+            <div class="element-grid">
+                <button class="el-btn" onclick="createFurniture('desk-1')">🪑 <span>1-vietis suolas</span></button>
+                <button class="el-btn" onclick="createFurniture('desk-2')">👥 <span>2-vietis suolas</span></button>
+                <button class="el-btn" onclick="createFurniture('desk-3')">🧑‍🤝‍🧑 <span>3-vietis suolas</span></button>
+                <button class="el-btn" onclick="createFurniture('teacher')">💼 <span>Mokytojo stalas</span></button>
+                <button class="el-btn" onclick="createFurniture('cabinet')">🗄️ <span>Spinta</span></button>
+                <button class="el-btn" onclick="createFurniture('door')">🚪 <span>Durys (Laisvos)</span></button>
+                <button class="el-btn" onclick="createFurniture('window')">🪟 <span>Langas (Laisvas)</span></button>
+            </div>
+            
+            <div style="margin-top:15px; padding:10px; background:rgba(37,99,235,0.08); border-radius:6px;">
+                <h4 style="font-size:13px; margin-bottom:6px;">Suolų išdėstymo atmintis</h4>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                    <button class="btn" style="font-size:12px; padding:6px;" onclick="saveLayoutTemplate()">💾 Atsiminti planą</button>
+                    <button class="btn btn-secondary" style="font-size:12px; padding:6px;" onclick="loadLayoutTemplate()">🔄 Atkurti planą</button>
+                </div>
+            </div>
+
+            <div class="stats-panel">
+                <h4>Klasės Statistika</h4>
+                <div class="stats-row" style="margin-top:8px;"><span>Sėdimų vietų iš viso:</span><b id="stat-total-seats">0</b></div>
+                <div class="stats-row"><span>Sodintų mokinių:</span><b id="stat-seated">0</b></div>
+                <div class="stats-row"><span>Laisvų vietų:</span><b id="stat-free-seats">0</b></div>
+            </div>
+        </div>
+
+        <div id="students-tab" class="tab-content">
+            <div style="background:var(--bg-primary); padding:10px; border-radius:6px; border:1px solid var(--border-color); margin-bottom:15px;">
+                <h4 style="font-size:13px; margin-bottom:8px; color:var(--accent);">⚡ Greitas įvedimas kableliais</h4>
+                <div class="form-group">
+                    <label>Suveskite vardus (atskirkite kableliais):</label>
+                    <textarea id="stud-mass-names" rows="3" placeholder="Jonas, Rasa, Paulius, Mantas, Elena..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Priskirti savybes šiai grupei:</label>
+                    <select id="stud-mass-gender">
+                        <option value="MIXED">Įvairūs (Pagal nutylėjimą - Berniukai)</option>
+                        <option value="M">Visi berniukai</option>
+                        <option value="F">Visos mergaitės</option>
+                    </select>
+                </div>
+                <div class="checkbox-group" style="margin-bottom:10px;">
+                    <label class="checkbox-label"><input type="checkbox" id="stud-mass-glasses"> 👓 Akiniai</label>
+                    <label class="checkbox-label"><input type="checkbox" id="stud-mass-problem"> ⚠️ Probleminiai</label>
+                </div>
+                <button class="btn" type="button" style="width:100%; font-size:13px;" onclick="addMassStudents()">➕ Įtraukti visus į sąrašą</button>
+            </div>
+
+            <hr style="border:0; border-top:1px solid var(--border-color); margin:15px 0;">
+
+            <form id="student-form" onsubmit="addSingleStudent(event)">
+                <h4 style="font-size:13px; margin-bottom:8px;">Pridėti po vieną mokinį</h4>
+                <div class="form-group">
+                    <label>Vardas, Pavardė</label>
+                    <input type="text" id="stud-name" placeholder="pvz. Jonas Jonaitis">
+                </div>
+                <div class="form-group">
+                    <label>Lytis</label>
+                    <select id="stud-gender">
+                        <option value="M">Berniukas</option>
+                        <option value="F">Mergaitė</option>
+                    </select>
+                </div>
+                <div class="checkbox-group">
+                    <label class="checkbox-label"><input type="checkbox" id="stud-glasses"> 👓 Akiniai / Priekis</label>
+                    <label class="checkbox-label"><input type="checkbox" id="stud-hyper"> ⚡ Hiperaktyvus</label>
+                    <label class="checkbox-label"><input type="checkbox" id="stud-problem"> ⚠️ Probleminis</label>
+                    <label class="checkbox-label"><input type="checkbox" id="stud-special"> 🟣 Spec. poreikiai</label>
+                </div>
+                <button type="submit" class="btn btn-secondary" style="width:100%; margin-top:12px;">Pridėti vieną</button>
+            </form>
+
+            <h3 style="font-size:14px; margin:15px 0 5px 0;">Sąrašas (<span id="stud-count">0</span>)</h3>
+            <div class="student-list" id="student-list-container"></div>
+        </div>
+
+        <div id="data-tab" class="tab-content">
+            <h3 style="font-size:14px; margin-bottom:10px;">Automatinis paskirstymas</h3>
+            <button class="btn" style="width:100%; margin-bottom:12px; background:#10b981; font-size:15px; padding:12px;" onclick="autoSeatStudents()">⚡ Automatiškai susodinti</button>
+            <button class="btn btn-secondary" style="width:100%; margin-bottom:20px;" onclick="clearSeating()">Iškelti visus iš suolų</button>
+
+            <h3 style="font-size:14px; margin-bottom:10px;">Eksportavimas</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:15px;">
+                <button class="btn btn-secondary" onclick="window.print()">🖨️ Spausdinti / PDF</button>
+                <button class="btn btn-secondary" onclick="exportJSON()">💾 JSON failas</button>
+            </div>
+
+            <h3 style="font-size:14px; margin-bottom:10px;">Importas (TXT / CSV)</h3>
+            <div class="form-group">
+                <input type="file" id="import-file" accept=".txt,.csv" onchange="importData(event)" style="display:none;">
+                <button class="btn btn-secondary" style="width:100%;" onclick="document.getElementById('import-file').click()">📂 Pasirinkti failą</button>
+            </div>
+            
+            <button class="btn btn-danger" style="width:100%; margin-top:30px;" onclick="resetProject()">⚠️ Išvalyti viską iš naujo</button>
+        </div>
+    </aside>
+
+    <main id="main-content">
+        <div class="topbar">
+            <div class="topbar-actions">
+                <button class="btn btn-secondary" onclick="undo()" title="Atšaukti (Ctrl+Z)">↩️</button>
+                <button class="btn btn-secondary" onclick="redo()" title="Grąžinti (Ctrl+Y)">↪️</button>
+                <span style="color: var(--text-muted); font-size: 13px;" id="autosave-status">Autosave: Įjungtas</span>
+            </div>
+            <div class="topbar-actions">
+                <button class="btn" onclick="saveToLocalStorage()">Išsaugoti</button>
+                <button class="btn btn-secondary" onclick="toggleFullScreen()">🖵 Pilnas ekranas</button>
+            </div>
+        </div>
+
+        <div class="floating-controls">
+            <button class="round-btn" onclick="zoom(0.1)">+</button>
+            <button class="round-btn" id="zoom-factor">100%</button>
+            <button class="round-btn" onclick="zoom(-0.1)">-</button>
+            <button class="round-btn" onclick="resetZoom()">🎯</button>
+        </div>
+
+        <button class="btn menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">📋 Meniu</button>
+
+        <div id="canvas-container">
+            <div id="canvas">
+                <div class="classroom-board">LENTA / PRIEKIS</div>
+            </div>
+        </div>
+
+        <div id="minimap">
+            <div class="minimap-viewport" id="minimap-view"></div>
+        </div>
+    </main>
+
+    <script>
+        let state = {
+            furniture: [],
+            students: [],
+            zoom: 1.0,
+            theme: 'light',
+            selectedId: null
+        };
+
+        let historyStack = [];
+        let undoStack = [];
+
+        function saveHistory() {
+            historyStack.push(JSON.stringify({ furniture: state.furniture, students: state.students }));
+            if (historyStack.length > 30) historyStack.shift();
+            undoStack = [];
+        }
+
+        function undo() {
+            if (historyStack.length < 1) return;
+            undoStack.push(JSON.stringify({ furniture: state.furniture, students: state.students }));
+            let prev = JSON.parse(historyStack.pop());
+            state.furniture = prev.furniture;
+            state.students = prev.students;
+            renderAll();
+            saveToLocalStorage(false);
+        }
+
+        function redo() {
+            if (undoStack.length < 1) return;
+            historyStack.push(JSON.stringify({ furniture: state.furniture, students: state.students }));
+            let next = JSON.parse(undoStack.pop());
+            state.furniture = next.furniture;
+            state.students = next.students;
+            renderAll();
+            saveToLocalStorage(false);
+        }
+
+        const canvas = document.getElementById('canvas');
+        const canvasContainer = document.getElementById('canvas-container');
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+            initPanAndZoom();
+            initKeyboardShortcuts();
+            updateStats();
+            setInterval(updateMinimap, 1000);
+        });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // --- BALDŲ KONFIGŪRACIJA ---
+        const furnitureTemplates = {
+            'desk-1': { w: 60, h: 50, type: 'desk', seats: 1, name: '1-vietis suolas' },
+            'desk-2': { w: 120, h: 50, type: 'desk', seats: 2, name: '2-vietis suolas' },
+            'desk-3': { w: 180, h: 50, type: 'desk', seats: 3, name: '3-vietis suolas' },
+            'teacher': { w: 100, h: 60, type: 'teacher', seats: 0, name: 'Mokytojo stalas' },
+            'cabinet': { w: 90, h: 40, type: 'cabinet', seats: 0, name: 'Spinta' },
+            'door': { w: 80, h: 20, type: 'door', seats: 0, name: '🚪 Durys' },
+            'window': { w: 100, h: 20, type: 'window', seats: 0, name: '🪟 Langas' }
+        };
+
+        function createFurniture(templateKey) {
+            saveHistory();
+            const t = furnitureTemplates[templateKey];
+            const id = 'f_' + Date.now() + Math.random().toString(36).substr(2, 4);
+            
+            const x = Math.round((canvasContainer.scrollLeft + canvasContainer.clientWidth / 2 - t.w / 2) / 20) * 20;
+            const y = Math.round((canvasContainer.scrollTop + canvasContainer.clientHeight / 2 - t.h / 2) / 20) * 20;
+
+            const newItem = {
+                id: id, type: t.type, template: templateKey, name: t.name,
+                x: x, y: y, w: t.w, h: t.h, r: 0, seats: t.seats,
+                assignedStudents: Array(t.seats).fill(null)
+            };
+
+            state.furniture.push(newItem);
+            renderFurnitureItem(newItem);
+            selectFurniture(id);
+            updateStats();
+            autoSave();
+        }
+
+        function renderFurnitureItem(item) {
+            const el = document.createElement('div');
+            el.className = 'furniture';
+            el.id = item.id;
+            el.setAttribute('data-type', item.type);
+            
+            el.style.width = item.w + 'px';
+            el.style.height = item.h + 'px';
+            el.style.left = item.x + 'px';
+            el.style.top = item.y + 'px';
+            el.style.transform = `rotate(${item.r}deg)`;
+
+            let html = `
+                <div class="transform-controls">
+                    <button class="ctrl-btn" onclick="rotateFurniture('${item.id}', event)">🔄</button>
+                    <button class="ctrl-btn" onclick="duplicateFurniture('${item.id}', event)">📋</button>
+                    <button class="ctrl-btn" onclick="deleteFurniture('${item.id}', event)" style="color:#ef4444;">❌</button>
+                </div>
+            `;
+
+            if (item.seats > 0) {
+                html += `<div class="desk-slots">`;
+                for (let i = 0; i < item.seats; i++) {
+                    const studId = item.assignedStudents[i];
+                    let badgeHtml = '';
+                    if (studId) {
+                        const s = state.students.find(st => st.id === studId);
+                        if (s) {
+                            let color = 'var(--color-boy)';
+                            if (s.gender === 'F') color = 'var(--color-girl)';
+                            if (s.glasses) color = 'var(--color-glasses)';
+                            if (s.problem) color = 'var(--color-problem)';
+                            if (s.special) color = 'var(--color-special)';
+                            badgeHtml = `<div class="student-badge" style="background:${color}" onclick="unseatStudent('${item.id}', ${i}, event)">${s.name}</div>`;
+                        }
+                    }
+                    html += `<div class="seat-slot" data-slot="${i}">${badgeHtml ? badgeHtml : 'Vieta'}</div>`;
+                }
+                html += `</div>`;
+            } else {
+                html += `<span style="font-size:11px; font-weight:600; text-align:center; width:100%; pointer-events:none;">${item.name}</span>`;
+            }
+
+            el.innerHTML = html;
+            initDragEvents(el);
+            canvas.appendChild(el);
+        }
+
+        function renderAll() {
+            document.querySelectorAll('.furniture').forEach(el => el.remove());
+            state.furniture.forEach(item => renderFurnitureItem(item));
+            renderStudentList();
+            updateStats();
+        }
+
+        // --- DRAG & DROP SU POINTER EVENTS ---
+        let dragItem = null;
+        let startX, startY, itemX, itemY;
+
+        function initDragEvents(el) {
+            el.addEventListener('pointerdown', (e) => {
+                if (e.target.closest('.transform-controls') || e.target.closest('.student-badge')) return;
+                dragItem = el;
+                selectFurniture(el.id);
+                e.stopPropagation();
+                
+                const item = state.furniture.find(f => f.id === el.id);
+                startX = e.clientX;
+                startY = e.clientY;
+                itemX = item.x;
+                itemY = item.y;
+                
+                el.setPointerCapture(e.pointerId);
+            });
+
+            el.addEventListener('pointermove', (e) => {
+                if (dragItem !== el) return;
+                const dx = (e.clientX - startX) / state.zoom;
+                const dy = (e.clientY - startY) / state.zoom;
+                
+                const item = state.furniture.find(f => f.id === el.id);
+                let newX = Math.round((itemX + dx) / 20) * 20;
+                let newY = Math.round((itemY + dy) / 20) * 20;
+                
+                newX = Math.max(0, Math.min(newX, 2000 - item.w));
+                newY = Math.max(0, Math.min(newY, 1500 - item.h));
+
+                item.x = newX;
+                item.y = newY;
+                el.style.left = newX + 'px';
+                el.style.top = newY + 'px';
+            });
+
+            el.addEventListener('pointerup', (e) => {
+                if (dragItem === el) {
+                    saveHistory();
+                    dragItem = null;
+                    el.releasePointerCapture(e.pointerId);
+                    autoSave();
+                    updateMinimap();
+                }
+            });
+        }
+
+        function selectFurniture(id) {
+            state.selectedId = id;
+            document.querySelectorAll('.furniture').forEach(el => el.classList.remove('selected'));
+            const activeEl = document.getElementById(id);
+            if (activeEl) activeEl.classList.add('selected');
+        }
+
+        function rotateFurniture(id, e) {
+            e.stopPropagation();
+            saveHistory();
+            const item = state.furniture.find(f => f.id === id);
+            item.r = (item.r + 90) % 360;
+            
+            let temp = item.w;
+            item.w = item.h;
+            item.h = temp;
+            
+            renderFurnitureItem(item);
+            selectFurniture(id);
+            autoSave();
+        }
+
+        function duplicateFurniture(id, e) {
+            e.stopPropagation();
+            saveHistory();
+            const original = state.furniture.find(f => f.id === id);
+            const clone = JSON.parse(JSON.stringify(original));
+            clone.id = 'f_' + Date.now() + Math.random().toString(36).substr(2, 4);
+            clone.x += 40; clone.y += 40;
+            state.furniture.push(clone);
+            renderFurnitureItem(clone);
+            selectFurniture(clone.id);
+            updateStats();
+            autoSave();
+        }
+
+        function deleteFurniture(id, e) {
+            e.stopPropagation();
+            saveHistory();
+            state.furniture = state.furniture.filter(f => f.id !== id);
+            document.getElementById(id).remove();
+            updateStats();
+            autoSave();
+        }
+
+        // --- MOKINIŲ ĮVEDIMAS (MASINIS IR VIENETINIS) ---
+        function addMassStudents() {
+            const massInput = document.getElementById('stud-mass-names').value;
+            if (!massInput.trim()) return;
+
+            saveHistory();
+            const names = massInput.split(',').map(n => n.trim()).filter(n => n.length > 0);
+            const genderSetting = document.getElementById('stud-mass-gender').value;
+            const glasses = document.getElementById('stud-mass-glasses').checked;
+            const problem = document.getElementById('stud-mass-problem').checked;
+
+            names.forEach(name => {
+                let finalGender = 'M';
+                if (genderSetting === 'MIXED') {
+                    // Paprasta taisyklė lietuviškiems vardams nustatyti lytį pagal galūnę (pavyzdinė palengvinanti funkcija)
+                    if (name.endsWith('a') || name.endsWith('ė')) finalGender = 'F';
+                } else {
+                    finalGender = genderSetting;
+                }
+
+                state.students.push({
+                    id: 's_' + Date.now() + Math.random().toString(36).substr(2, 5),
+                    name, gender: finalGender, glasses, problem,
+                    hyper: false, special: false, avoid: [], isSeated: false
+                });
+            });
+
+            document.getElementById('stud-mass-names').value = '';
+            renderStudentList();
+            updateStats();
+            autoSave();
+        }
+
+        function addSingleStudent(e) {
+            e.preventDefault();
+            const name = document.getElementById('stud-name').value.trim();
+            if (!name) return;
+
+            saveHistory();
+            state.students.push({
+                id: 's_' + Date.now() + Math.random().toString(36).substr(2, 5),
+                name,
+                gender: document.getElementById('stud-gender').value,
+                glasses: document.getElementById('stud-glasses').checked,
+                hyper: document.getElementById('stud-hyper').checked,
+                problem: document.getElementById('stud-problem').checked,
+                special: document.getElementById('stud-special').checked,
+                avoid: [], isSeated: false
+            });
+
+            document.getElementById('student-form').reset();
+            renderStudentList();
+            updateStats();
+            autoSave();
+        }
+
+        function deleteStudent(id) {
+            saveHistory();
+            state.furniture.forEach(f => {
+                f.assignedStudents = f.assignedStudents.map(sId => sId === id ? null : sId);
+            });
+            state.students = state.students.filter(s => s.id !== id);
+            renderAll();
+            autoSave();
+        }
+
+        function renderStudentList() {
+            const container = document.getElementById('student-list-container');
+            container.innerHTML = '';
+            
+            state.students.forEach(s => {
+                const item = document.createElement('div');
+                item.className = 'student-item';
+                
+                let color = 'var(--color-boy)';
+                if (s.gender === 'F') color = 'var(--color-girl)';
+                if (s.glasses) color = 'var(--color-glasses)';
+                if (s.problem) color = 'var(--color-problem)';
+                if (s.special) color = 'var(--color-special)';
+
+                item.innerHTML = `
+                    <div>
+                        <span class="student-tag" style="background:${color}"></span>
+                        <span style="${s.isSeated ? 'text-decoration:line-through; opacity:0.6;' : ''}">
+                            ${s.name} ${s.glasses ? '👓' : ''} ${s.problem ? '⚠️' : ''}
+                        </span>
+                    </div>
+                    <button class="ctrl-btn" onclick="deleteStudent('${s.id}')" style="color:#ef4444">❌</button>
+                `;
+                container.appendChild(item);
+            });
+            document.getElementById('stud-count').innerText = state.students.length;
+        }
+
+        function unseatStudent(deskId, slotIndex, event) {
+            event.stopPropagation();
+            saveHistory();
+            const desk = state.furniture.find(f => f.id === deskId);
+            const studentId = desk.assignedStudents[slotIndex];
+            
+            if (studentId) {
+                const s = state.students.find(st => st.id === studentId);
+                if (s) s.isSeated = false;
+                desk.assignedStudents[slotIndex] = null;
+            }
+            renderAll();
+            autoSave();
+        }
+
+        function clearSeating() {
+            saveHistory();
+            state.furniture.forEach(f => f.assignedStudents.fill(null));
+            state.students.forEach(s => s.isSeated = false);
+            renderAll();
+            autoSave();
+        }
+
+        // --- ŠABLONŲ ATSIMINIMO FUNKCIJA (SUOLŲ DĖSTYMAS) ---
+        function saveLayoutTemplate() {
+            // Išsaugo tik baldus be susodintų mokinių, kad būtų galima naudoti kaip tuščią rėmą
+            const cleanFurniture = state.furniture.map(f => ({
+                id: f.id, type: f.type, template: f.template, name: f.name,
+                x: f.x, y: f.y, w: f.w, h: f.h, r: f.r, seats: f.seats,
+                assignedStudents: Array(f.seats).fill(null)
+            }));
+            localStorage.setItem('classroom_layout_template', JSON.stringify(cleanFurniture));
+            alert("Suolų išdėstymo struktūra sėkmingai įsiminta!");
+        }
+
+        function loadLayoutTemplate() {
+            const raw = localStorage.getItem('classroom_layout_template');
+            if (!raw) {
+                alert("Nėra išsaugoto plano šablono. Pirmiausia paspauskite 'Atsiminti planą'.");
+                return;
+            }
+            saveHistory();
+            state.furniture = JSON.parse(raw);
+            state.students.forEach(s => s.isSeated = false); // Iškeliame mokinius, nes suolai persidėsto
+            renderAll();
+            autoSave();
+        }
+
+        // --- AUTOMATINIS SUSODINIMAS ---
+        function autoSeatStudents() {
+            saveHistory();
+            clearSeating();
+
+            let individualSeats = [];
+            state.furniture.forEach(f => {
+                if (f.seats > 0) {
+                    for (let i = 0; i < f.seats; i++) {
+                        individualSeats.push({ deskId: f.id, slot: i, x: f.x + (i * 30), y: f.y });
+                    }
+                }
+            });
+
+            if (individualSeats.length < state.students.length) {
+                alert("Sėdimų vietų klasėje yra mažiau negu suvesta mokinių!");
+                return;
+            }
+
+            individualSeats.sort((a, b) => a.y - b.y);
+
+            let glassesStudents = state.students.filter(s => s.glasses).sort(() => Math.random() - 0.5);
+            let remainingStudents = state.students.filter(s => !s.glasses).sort(() => Math.random() - 0.5);
+            let orderedStudents = [...glassesStudents, ...remainingStudents];
+
+            for (let student of orderedStudents) {
+                let bestSeatIndex = -1;
+
+                for (let i = 0; i < individualSeats.length; i++) {
+                    let potentialSeat = individualSeats[i];
+                    let desk = state.furniture.find(f => f.id === potentialSeat.deskId);
+                    let hasConflict = false;
+
+                    for (let sId of desk.assignedStudents) {
+                        if (sId) {
+                            let neighbor = state.students.find(st => st.id === sId);
+                            if (student.problem && neighbor.problem) hasConflict = true;
+                            if (student.hyper && neighbor.hyper) hasConflict = true;
+                        }
+                    }
+
+                    if (!hasConflict) {
+                        bestSeatIndex = i;
+                        break;
+                    }
+                }
+
+                if (bestSeatIndex === -1 && individualSeats.length > 0) bestSeatIndex = 0;
+
+                if (bestSeatIndex !== -1) {
+                    let seat = individualSeats.splice(bestSeatIndex, 1)[0];
+                    let desk = state.furniture.find(f => f.id === seat.deskId);
+                    desk.assignedStudents[seat.slot] = student.id;
+                    student.isSeated = true;
+                }
+            }
+
+            renderAll();
+            autoSave();
+        }
+
+        // --- NAVIGACIJA, ZOOM IR KITI NUSTATYMAI ---
+        function initPanAndZoom() {
+            canvasContainer.addEventListener('wheel', (e) => {
+                if (e.ctrlKey) {
+                    e.preventDefault();
+                    zoom(e.deltaY < 0 ? 0.05 : -0.05);
+                }
+            });
+
+            let isPanning = false;
+            let startContainerX, startContainerY, startScrollLeft, startScrollTop;
+
+            canvasContainer.addEventListener('mousedown', (e) => {
+                if (e.target === canvasContainer || e.target === canvas) {
+                    isPanning = true;
+                    startContainerX = e.clientX; startY = e.clientY;
+                    startScrollLeft = canvasContainer.scrollLeft;
+                    startScrollTop = canvasContainer.scrollTop;
+                }
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isPanning) return;
+                canvasContainer.scrollLeft = startScrollLeft - (e.clientX - startContainerX);
+                canvasContainer.scrollTop = startScrollTop - (e.clientY - startY);
+                updateMinimap();
+            });
+
+            window.addEventListener('mouseup', () => { isPanning = false; });
+            canvasContainer.addEventListener('scroll', updateMinimap);
+        }
+
+        function zoom(amount) {
+            state.zoom = Math.max(0.4, Math.min(2.0, state.zoom + amount));
+            canvas.style.transform = `scale(${state.zoom})`;
+            document.getElementById('zoom-factor').innerText = Math.round(state.zoom * 100) + '%';
+            updateMinimap();
+        }
+
+        function resetZoom() {
+            state.zoom = 1.0;
+            canvas.style.transform = `scale(1)`;
+            document.getElementById('zoom-factor').innerText = '100%';
+            updateMinimap();
+        }
+
+        function updateMinimap() {
+            const view = document.getElementById('minimap-view');
+            const ratioX = 160 / 2000;
+            const ratioY = 120 / 1500;
+            view.style.width = (canvasContainer.clientWidth / state.zoom) * ratioX + 'px';
+            view.style.height = (canvasContainer.clientHeight / state.zoom) * ratioY + 'px';
+            view.style.left = (canvasContainer.scrollLeft / state.zoom) * ratioX + 'px';
+            view.style.top = (canvasContainer.scrollTop / state.zoom) * ratioY + 'px';
+        }
+
+        function updateStats() {
+            let totalSeats = 0;
+            let seatedCount = 0;
+            state.furniture.forEach(f => { totalSeats += (f.seats || 0); });
+            state.students.forEach(s => { if (s.isSeated) seatedCount++; });
+            document.getElementById('stat-total-seats').innerText = totalSeats;
+            document.getElementById('stat-seated').innerText = seatedCount;
+            document.getElementById('stat-free-seats').innerText = Math.max(0, totalSeats - seatedCount);
+        }
+
+        function autoSave() { saveToLocalStorage(false); }
+
+        function saveToLocalStorage(showNotify = true) {
+            localStorage.setItem('classroom_planner_state', JSON.stringify({
+                furniture: state.furniture, students: state.students, theme: state.theme
+            }));
+            if (showNotify) {
+                const status = document.getElementById('autosave-status');
+                status.innerText = "Išsaugota!";
+                setTimeout(() => { status.innerText = "Autosave: Įjungtas"; }, 1500);
+            }
+        }
+
+        function loadFromLocalStorage() {
+            const raw = localStorage.getItem('classroom_planner_state');
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                state.furniture = parsed.furniture || [];
+                state.students = parsed.students || [];
+                state.theme = parsed.theme || 'light';
+                setTheme(state.theme);
+                renderAll();
+            }
+        }
+
+        function exportJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "klases_planas.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const lines = e.target.result.split('\n');
+                saveHistory();
+                lines.forEach(line => {
+                    const parts = line.split(',');
+                    const name = parts[0]?.trim();
+                    if (name) {
+                        state.students.push({
+                            id: 's_' + Date.now() + Math.random().toString(36).substr(2, 5),
+                            name, gender: 'M', glasses: false, hyper: false, problem: false, special: false, avoid: [], isSeated: false
+                        });
+                    }
+                });
+                renderStudentList(); updateStats(); autoSave();
+            };
+            reader.readAsText(file);
+        }
+
+        function resetProject() {
+            if (confirm("Išvalyti viską?")) {
+                localStorage.removeItem('classroom_planner_state');
+                state.furniture = []; state.students = [];
+                renderAll();
+            }
+        }
+
+        const themeBtn = document.getElementById('theme-btn');
+        themeBtn.addEventListener('click', () => {
+            setTheme(state.theme === 'light' ? 'dark' : 'light');
+            autoSave();
+        });
+
+        function setTheme(theme) {
+            state.theme = theme;
+            document.documentElement.setAttribute('data-theme', theme);
+            themeBtn.innerText = theme === 'light' ? '🌙' : '☀️';
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        function initKeyboardShortcuts() {
+            window.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.key.toLowerCase() === 'z') { e.preventDefault(); undo(); }
+                if (e.ctrlKey && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); }
+                if (e.key === 'Delete' && state.selectedId) deleteFurniture(state.selectedId, e);
+            });
+        }
+    </script>
+</body>
+</html>
