@@ -15,10 +15,15 @@
         .badge.warn { background: #fff3cd; border-color: #ffc107; color: #856404; }
         .badge.danger { background: #fde8e8; border-color: #f44; color: #c00; }
         .badge.unlimited { background: #e6f4ea; border-color: #81c784; color: #2e7d32; }
+        .badge.restricted { background: #fde8e8; border-color: #e53935; color: #b71c1c; }
         .settings-btn { background: #e1dfdd; border: none; padding: 9px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; white-space: nowrap; }
         .settings-btn:hover { background: #ccc; }
         .container { max-width: 960px; margin: 30px auto; padding: 0 16px 40px; }
-        .page-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; color: #333; }
+        .page-title { font-size: 20px; font-weight: 700; margin-bottom: 14px; color: #333; }
+        .search-wrap { margin-bottom: 18px; position: relative; }
+        .search-wrap input { width: 100%; padding: 11px 16px 11px 40px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; font-family: inherit; background: #fff; }
+        .search-wrap input:focus { outline: none; border-color: #0078D7; }
+        .search-wrap::before { content: "🔍"; position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; pointer-events: none; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
         .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
         .card h3 { margin-top: 0; color: #0078D7; text-transform: capitalize; font-size: 16px; }
@@ -31,7 +36,8 @@
         .modal-content { background: white; padding: 28px; border-radius: 12px; width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto; }
         .close { float: right; cursor: pointer; font-size: 22px; font-weight: bold; line-height: 1; color: #555; }
         .close:hover { color: #000; }
-        input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: inherit; }
+        input[type=text], input[type=email], input[type=password] { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: inherit; }
+        select.setting-select { width: 100%; padding: 9px 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: inherit; }
         .setting-group { margin-bottom: 18px; border-bottom: 1px solid #eee; padding-bottom: 14px; }
         .info-text { font-size: 12px; color: #666; line-height: 1.5; }
         .links-group a { display: block; margin: 6px 0; color: #0078D7; text-decoration: none; font-size: 14px; }
@@ -49,6 +55,11 @@
         .timer-num { font-size: 18px; font-weight: bold; color: #0078D7; }
         .ad-banner { margin: 20px auto; max-width: 960px; text-align: center; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: none; }
         .ad-video { width: 100%; max-width: 620px; border-radius: 6px; }
+        .update-item { padding: 10px 0; border-bottom: 1px solid #eee; }
+        .update-item:last-child { border-bottom: none; }
+        .update-item strong { color: #0078D7; }
+        .update-item .ver-info { font-size: 12px; color: #888; margin-top: 3px; }
+        .no-results { text-align: center; color: #888; padding: 40px 0; grid-column: 1/-1; }
     </style>
 </head>
 <body>
@@ -61,13 +72,16 @@
     </header>
 
     <div id="ad-banner" class="ad-banner">
-        <video class="ad-video" id="ad-video" autoplay loop muted playsinline>
+        <video class="ad-video" id="ad-video" autoplay muted playsinline>
             <source src="ad.mp4" type="video/mp4">
         </video>
     </div>
 
     <div class="container">
         <div class="page-title">Įrankiai ir Failai</div>
+        <div class="search-wrap">
+            <input type="text" id="search-bar" placeholder="Ieškoti failų..." oninput="filterFiles()">
+        </div>
         <div id="loading" style="text-align:center; color:#888; padding:40px 0;">Kraunama sistema...</div>
         <div class="grid" id="file-grid"></div>
     </div>
@@ -92,6 +106,14 @@
                 <span class="info-text">Iš viso atsisiųsta: <strong id="ui-downloads">0</strong> failų.</span><br>
                 <span class="info-text">Likusios peržiūros: <strong id="ui-previews">—</strong></span><br>
                 <span class="info-text">Likusių atsisiuntimų: <strong id="ui-dl-left">—</strong></span>
+            </div>
+            <div class="setting-group">
+                <strong>Saugumo pranešimų dažnumas:</strong>
+                <select class="setting-select" id="security-freq-select" onchange="updateSecurityFrequency()">
+                    <option value="5">Kas 5 prisijungimai</option>
+                    <option value="10">Kas 10 prisijungimų</option>
+                </select>
+                <span class="info-text">El. pašto saugumo įspėjimas siunčiamas kas N prisijungimų.</span>
             </div>
             <div class="setting-group links-group">
                 <a href="policy.txt" target="_blank">📄 Naudojimo Sąlygos</a>
@@ -142,13 +164,57 @@
         </div>
     </div>
 
+    <!-- UPDATE NOTIFICATION MODAL -->
+    <div id="update-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('update-modal')">&times;</span>
+            <h2 style="margin-bottom:10px;">⚠️ Failų Atnaujinimai</h2>
+            <p style="font-size:13px; color:#666; margin-bottom:14px;">Šie jūsų atsisiųsti failai turi 2+ naujesnę versiją. Rekomenduojame atsiųsti naujausią versiją:</p>
+            <div id="update-list"></div>
+            <button class="btn" style="margin-top:16px;" onclick="closeModal('update-modal')">Supratau</button>
+        </div>
+    </div>
+
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbyk3BrtOIz8lgZssuDBRID4_04rnEQ4MaS-_NkddjTSLVNV9eHEwVwqtO9X9KpuLZQ/exec";
+        const GAS_URL    = "https://script.google.com/macros/s/AKfycbxoyBuXnJD6bZqJG1bQ35MrH2u1wHl09gZUHE-XaEoNihzsuVOKIdhh_MU7XyIWEUJ7/exec";
+        const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         let currentUser = null;
-        let previewUrl = null;
+        let previewUrl  = null;
         let previewAutoTimer = null;
 
+        // ── Ad: hide after 2 plays (free accounts only) ──
+        let adPlayCount = 0;
+        function initAdCounter() {
+            const vid = document.getElementById('ad-video');
+            if (!vid) return;
+            vid.addEventListener('ended', function() {
+                adPlayCount++;
+                if (adPlayCount < 2) { vid.play(); }
+                else { document.getElementById('ad-banner').style.display = 'none'; }
+            });
+        }
+
+        // ── Dev tools detection (desktop, size-based) ──
+        let devToolsReported = false;
+        function checkDevTools() {
+            if (devToolsReported || !currentUser) return;
+            if (window.innerWidth <= 768) return;
+            if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) {
+                devToolsReported = true;
+                fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"reportDevTools", token: currentUser.token }) })
+                    .then(r => r.json()).then(data => {
+                        if (data && data.error === "UŽBLOKUOTA") {
+                            alert("Paskyra užblokuota dėl taisyklių pažeidimo.\nApskundimo forma:\n" + APPEAL_URL + "\n\nPateikite max 1 apskundimą per savaitę.");
+                            logout();
+                        }
+                    }).catch(() => {});
+            }
+        }
+        setInterval(checkDevTools, 2000);
+        window.addEventListener('resize', checkDevTools);
+
         window.onload = function() {
+            initAdCounter();
             const token = getCookie("token");
             if (!token) { window.location.href = "index.html"; return; }
             fetchUserData(token);
@@ -162,10 +228,7 @@
 
         function fetchUserData(token) {
             showLoader();
-            fetch(GAS_URL, { 
-                method:"POST", 
-                body: JSON.stringify({ action:"getUserData", token }) 
-            })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"getUserData", token }) })
             .then(r => r.json())
             .then(data => {
                 hideLoader();
@@ -175,13 +238,20 @@
                     updateUI();
                     renderFiles(data.files);
                     document.getElementById('loading').style.display = 'none';
+                    if (data.updatesNeeded && data.updatesNeeded.length > 0) {
+                        showUpdateModal(data.updatesNeeded);
+                    }
                 } else {
-                    alert("Klaida: " + data.error);
+                    if (data.error === "UŽBLOKUOTA") {
+                        alert("Paskyra užblokuota.\nKreipkitės: praxifold@gmail.com\n\nApskundimo forma:\n" + APPEAL_URL + "\n\nPateikite max 1 apskundimą per savaitę.");
+                    } else {
+                        alert("Klaida: " + data.error);
+                    }
                     logout();
                 }
-            }).catch(() => { 
-                hideLoader(); 
-                document.getElementById('loading').innerText = "Klaida kraunant. Perkraukite puslapį."; 
+            }).catch(() => {
+                hideLoader();
+                document.getElementById('loading').innerText = "Klaida kraunant. Perkraukite puslapį.";
             });
         }
 
@@ -194,22 +264,25 @@
             document.getElementById('ui-sub-status').innerText = u.subType.toUpperCase();
             document.getElementById('ui-downloads').innerText = u.totalDownloads;
             if (u.subExpDate) document.getElementById('ui-sub-exp').innerText = "Galioja iki: " + new Date(u.subExpDate).toLocaleDateString('lt-LT');
-
             if (u.subType !== 'free') document.getElementById('dev-program-link').style.display = 'block';
 
+            // Security freq selector
+            const freqSel = document.getElementById('security-freq-select');
+            if (freqSel) freqSel.value = u.securityAlertFreq || 5;
+
             const prevEl = document.getElementById('ui-previews');
-            const dlEl = document.getElementById('ui-dl-left');
+            const dlEl   = document.getElementById('ui-dl-left');
 
             if (u.subType === 'free') {
-                prevEl.innerText = u.previewsLeft + " / 5";
-                dlEl.innerText = u.downloadsLeft + " / 10";
+                prevEl.innerText = (u.previewRestricted ? "⚠ Apribota" : u.previewsLeft + " / 5");
+                dlEl.innerText   = (u.downloadRestricted ? "⚠ Apribota" : u.downloadsLeft + " / 10");
                 document.getElementById('ad-banner').style.display = 'block';
             } else if (u.subType === 'standard') {
-                prevEl.innerText = "Neribota";
-                dlEl.innerText = "Negalima";
+                prevEl.innerText = u.previewRestricted ? "⚠ Apribota" : "Neribota";
+                dlEl.innerText   = "Negalima";
             } else if (u.subType === 'pro') {
-                prevEl.innerText = "Neribota";
-                dlEl.innerText = "Neribota";
+                prevEl.innerText = u.previewRestricted ? "⚠ Apribota" : "Neribota";
+                dlEl.innerText   = u.downloadRestricted ? "⚠ Apribota" : "Neribota";
             }
             renderQuotaBadges(u);
         }
@@ -223,18 +296,26 @@
                 b.innerText = text;
                 return b;
             }
+            if (u.downloadRestricted) container.appendChild(makeBadge('⬇ Atsisiuntimai: apribota', 'restricted'));
+            if (u.previewRestricted)  container.appendChild(makeBadge('👁 Peržiūros: apribota', 'restricted'));
+
             if (u.subType === 'free') {
-                const pc = u.previewsLeft;
-                container.appendChild(makeBadge(`👁 Peržiūros: ${pc}`, pc > 2 ? '' : pc > 0 ? 'warn' : 'danger'));
-                const dc = u.downloadsLeft;
-                container.appendChild(makeBadge(`⬇ Atsisiuntimai: ${dc}`, dc > 2 ? '' : dc > 0 ? 'warn' : 'danger'));
-                if (pc <= 2 || dc <= 2) container.appendChild(makeBadge('📧 praxifold@gmail.com', 'warn'));
+                if (!u.downloadRestricted) {
+                    const dc = u.downloadsLeft;
+                    container.appendChild(makeBadge(`⬇ Atsisiuntimai: ${dc}`, dc > 2 ? '' : dc > 0 ? 'warn' : 'danger'));
+                }
+                if (!u.previewRestricted) {
+                    const pc = u.previewsLeft;
+                    container.appendChild(makeBadge(`👁 Peržiūros: ${pc}`, pc > 2 ? '' : pc > 0 ? 'warn' : 'danger'));
+                }
+                if (u.previewsLeft <= 2 || u.downloadsLeft <= 2)
+                    container.appendChild(makeBadge('📧 praxifold@gmail.com', 'warn'));
             } else if (u.subType === 'standard') {
-                container.appendChild(makeBadge('👁 Peržiūros: ∞', 'unlimited'));
+                if (!u.previewRestricted) container.appendChild(makeBadge('👁 Peržiūros: ∞', 'unlimited'));
                 container.appendChild(makeBadge('⬇ Atsisiuntimai: —', ''));
             } else if (u.subType === 'pro') {
-                container.appendChild(makeBadge('👁 Peržiūros: ∞', 'unlimited'));
-                container.appendChild(makeBadge('⬇ Atsisiuntimai: ∞', 'unlimited'));
+                if (!u.previewRestricted)  container.appendChild(makeBadge('👁 Peržiūros: ∞', 'unlimited'));
+                if (!u.downloadRestricted) container.appendChild(makeBadge('⬇ Atsisiuntimai: ∞', 'unlimited'));
             }
         }
 
@@ -242,14 +323,15 @@
             const grid = document.getElementById('file-grid');
             grid.innerHTML = '';
             if (!files || files.length === 0) {
-                grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888; padding:40px 0;">Šiuo metu aktyvių failų sistemoje nėra.</p>';
+                grid.innerHTML = '<p class="no-results">Šiuo metu aktyvių failų sistemoje nėra.</p>';
                 return;
             }
             files.forEach(f => {
                 const card = document.createElement('div');
                 card.className = 'card';
+                card.dataset.name = f.name.toLowerCase();
                 card.innerHTML = `<h3>${f.name}</h3><span class="version">Versija: V${f.version}</span>`;
-                
+
                 const btnPrev = document.createElement('button');
                 btnPrev.className = 'btn btn-secondary';
                 btnPrev.innerText = 'Peržiūrėti';
@@ -264,6 +346,38 @@
 
                 grid.appendChild(card);
             });
+        }
+
+        function filterFiles() {
+            const q     = document.getElementById('search-bar').value.toLowerCase().trim();
+            const cards = document.getElementById('file-grid').querySelectorAll('.card');
+            let visible = 0;
+            cards.forEach(card => {
+                const match = card.dataset.name.includes(q);
+                card.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            // Show "no results" if needed
+            let noRes = document.getElementById('no-search-results');
+            if (!noRes) {
+                noRes = document.createElement('p');
+                noRes.id = 'no-search-results';
+                noRes.className = 'no-results';
+                noRes.innerText = 'Failų nerasta pagal paiešką.';
+                document.getElementById('file-grid').appendChild(noRes);
+            }
+            noRes.style.display = (visible === 0 && q.length > 0) ? 'block' : 'none';
+        }
+
+        function showUpdateModal(updates) {
+            const list = document.getElementById('update-list');
+            list.innerHTML = updates.map(u =>
+                `<div class="update-item">
+                    <strong>${u.name}</strong>
+                    <div class="ver-info">Jūsų versija: V${u.downloaded} → Naujausia: V${u.version}</div>
+                </div>`
+            ).join('');
+            openModal('update-modal');
         }
 
         function requestAccess(fileName, type) {
@@ -317,22 +431,52 @@
                         dlLink.click();
                         document.body.removeChild(dlLink);
                         if (currentUser.subType === 'free') {
-                            currentUser.downloadsLeft = Math.max(0, (currentUser.downloadsLeft || 0) - 1);
+                            currentUser.downloadsLeft  = Math.max(0, (currentUser.downloadsLeft || 0) - 1);
                             currentUser.totalDownloads = (currentUser.totalDownloads || 0) + 1;
                             renderQuotaBadges(currentUser);
                         }
                     }
                 } else {
                     closeModal(type === 'preview' ? 'preview-modal' : 'download-modal');
-                    if (data.error === "LIMITAS_PASIEKTAS") {
-                        alert("Limitas pasiektas. Prenumeratos kodui gauti kreipkitės: praxifold@gmail.com");
-                    } else if (data.error === "APRIBOTA") {
-                        alert("Šis veiksmas apribotas jūsų plano. Kreipkitės: praxifold@gmail.com");
-                    } else {
-                        alert("Prieiga atmesta: " + data.error);
-                    }
+                    handleAccessError(data, type);
                 }
             });
+        }
+
+        function handleAccessError(data, type) {
+            const appealNote = `\n\nApskundimo forma:\n${APPEAL_URL}\n\nPateikite max 1 apskundimą per savaitę.`;
+            switch (data.error) {
+                case "UŽBLOKUOTA":
+                    alert("Paskyra užblokuota. Kreipkitės: praxifold@gmail.com" + appealNote);
+                    logout();
+                    break;
+                case "ATISIUNTIMAS_APRIBOTAS":
+                    alert("Jūsų atsisiuntimų prieiga laikinai apribota." + appealNote);
+                    currentUser.downloadRestricted = true;
+                    renderQuotaBadges(currentUser);
+                    break;
+                case "ATISIUNTIMAS_APRIBOTAS_LAIKINAI":
+                    alert("Užfiksuotas pažeidimas. Atsisiuntimai apriboti 7 dienoms." + appealNote);
+                    currentUser.downloadRestricted = true;
+                    renderQuotaBadges(currentUser);
+                    break;
+                case "PEREZIURA_APRIBOTA":
+                    alert(`Peržiūra apribota. Palaukite ${data.waitSeconds || '?'} sekundžių prieš kitą peržiūrą.`);
+                    break;
+                case "PEREZIURA_APRIBOTA_LAIKINAI":
+                    alert("Užfiksuotas pažeidimas. Taikoma 5 min. pauzė tarp peržiūrų 7 dienoms." + appealNote);
+                    currentUser.previewRestricted = true;
+                    renderQuotaBadges(currentUser);
+                    break;
+                case "LIMITAS_PASIEKTAS":
+                    alert("Limitas pasiektas. Prenumeratos kodui gauti kreipkitės: praxifold@gmail.com");
+                    break;
+                case "APRIBOTA":
+                    alert("Šis veiksmas apribotas jūsų plano. Kreipkitės: praxifold@gmail.com");
+                    break;
+                default:
+                    alert("Prieiga atmesta: " + data.error);
+            }
         }
 
         function doPreviewRedirect() {
@@ -349,14 +493,13 @@
             const countdown = setInterval(() => {
                 timeLeft--;
                 timerEl.innerText = timeLeft;
-                if (timeLeft === 17) { document.getElementById('dl-close-btn').style.display = 'block'; }
+                if (timeLeft === 17) document.getElementById('dl-close-btn').style.display = 'block';
                 if (timeLeft <= 0) { clearInterval(countdown); closeModal('download-modal'); window.location.reload(); }
             }, 1000);
         }
 
         function copyPass(codeId, btnId) {
-            const text = document.getElementById(codeId).innerText;
-            navigator.clipboard.writeText(text).then(() => {
+            navigator.clipboard.writeText(document.getElementById(codeId).innerText).then(() => {
                 const btn = document.getElementById(btnId);
                 btn.innerText = '✓ Nukopijuota';
                 btn.classList.add('copied');
@@ -373,8 +516,14 @@
                 });
         }
 
+        function updateSecurityFrequency() {
+            const freq = parseInt(document.getElementById('security-freq-select').value);
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"updateSettings", token: currentUser.token, securityAlertFreq: freq }) })
+                .catch(() => {});
+        }
+
         function deleteAccount() {
-            const email = document.getElementById('del-email').value;
+            const email   = document.getElementById('del-email').value;
             const confirm = document.getElementById('del-confirm').value;
             if (confirm !== "suprantu, kad mano duomenys bus ištrinti") { alert("Neteisinga patvirtinimo frazė."); return; }
             fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"deleteAccount", token: currentUser.token, email }) })
@@ -384,7 +533,7 @@
                 });
         }
 
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function openModal(id)  { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         function logout() {
