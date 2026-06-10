@@ -30,6 +30,12 @@
         .cookie-btns button:hover { opacity: 0.85; }
         .btn-all { background:#0078D7; color:white; }
         .btn-necessary { background:#e1dfdd; color:#333; }
+        .brand-logo { text-align:center; font-size:26px; font-weight:bold; color:#0078D7; letter-spacing:1px; margin-bottom:6px; }
+        .pass-msg { font-size:12px; display:block; min-height:16px; margin-top:3px; margin-bottom:2px; }
+        .pass-confirm-wrap { position:relative; margin:8px 0 0 0; }
+        .pass-confirm-wrap input { margin:0; width:100%; padding-right:44px; }
+        .pass-confirm-wrap .eye-btn { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:16px; color:#999; line-height:1; padding:2px 4px; }
+        .pass-confirm-wrap .eye-btn:hover { color:#555; }
     </style>
 </head>
 <body>
@@ -48,7 +54,9 @@
             </div>
         </div>
     </div>
+
     <div class="box" id="login-box">
+        <div class="brand-logo">Praxifold</div>
         <h2>Prisijungti</h2>
         <input type="email" id="login-email" placeholder="El. paštas">
         <input type="password" id="login-pass" placeholder="Slaptažodis">
@@ -56,11 +64,19 @@
         <a class="switch-link" onclick="toggleForm('register-box')">Neturite paskyros? Registruotis</a>
         <a class="switch-link" onclick="toggleForm('reset-box')" style="font-size:13px; margin-top:6px;">Pamiršote slaptažodį?</a>
     </div>
+
     <div class="box" id="register-box" style="display:none;">
+        <div class="brand-logo">Praxifold</div>
         <h2>Registracija</h2>
         <input type="text" id="reg-name" placeholder="Vardas Pavardė">
         <input type="email" id="reg-email" placeholder="El. paštas">
-        <input type="password" id="reg-pass" placeholder="Slaptažodis">
+        <input type="password" id="reg-pass" placeholder="Slaptažodis" maxlength="24">
+        <span id="pass-strength-msg" class="pass-msg"></span>
+        <div class="pass-confirm-wrap">
+            <input type="password" id="reg-pass-confirm" placeholder="Pakartokite slaptažodį" maxlength="24">
+            <button type="button" id="toggle-confirm-btn" class="eye-btn" onclick="toggleConfirmPass()">👁</button>
+        </div>
+        <span id="pass-match-msg" class="pass-msg"></span>
         <select id="reg-role" onchange="handleRoleChange()">
             <option value="">-- Pasirinkite rolę --</option>
             <option value="engineer">Inžinierius</option>
@@ -74,6 +90,7 @@
         <button class="btn" onclick="showCookieConsent()">Registruotis</button>
         <a class="switch-link" onclick="toggleForm('login-box')">Jau turite paskyrą? Prisijungti</a>
     </div>
+
     <div class="box" id="reset-box" style="display:none;">
         <h2>Slaptažodžio Keitimas</h2>
         <div id="reset-step1">
@@ -91,12 +108,45 @@
         </div>
         <a class="switch-link" onclick="toggleForm('login-box')" style="margin-top:12px;">← Grįžti į prisijungimą</a>
     </div>
+
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbxoyBuXnJD6bZqJG1bQ35MrH2u1wHl09gZUHE-XaEoNihzsuVOKIdhh_MU7XyIWEUJ7/exec";
         const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         let pendingSignup = null;
 
-        window.onload = function() { checkLocation(); };
+        window.onload = function() {
+            checkLocation();
+            document.getElementById('reg-pass').addEventListener('input', function() {
+                checkPassStrength();
+                checkConfirmMatch();
+            });
+            document.getElementById('reg-pass-confirm').addEventListener('input', checkConfirmMatch);
+        };
+
+        function checkPassStrength() {
+            const val = document.getElementById('reg-pass').value;
+            const msg = document.getElementById('pass-strength-msg');
+            if (!val) { msg.innerText = ''; return; }
+            if (val.length < 8) { msg.innerText = '⚠ Per trumpas (min. 8 simboliai)'; msg.style.color = '#c00'; }
+            else if (val.length > 24) { msg.innerText = '⚠ Per ilgas (maks. 24 simboliai)'; msg.style.color = '#c00'; }
+            else { msg.innerText = '✓ Tinkamas slaptažodis'; msg.style.color = '#2e7d32'; }
+        }
+
+        function checkConfirmMatch() {
+            const pass = document.getElementById('reg-pass').value;
+            const conf = document.getElementById('reg-pass-confirm').value;
+            const msg  = document.getElementById('pass-match-msg');
+            if (!conf) { msg.innerText = ''; return; }
+            if (pass === conf) { msg.innerText = '✓ Slaptažodžiai sutampa'; msg.style.color = '#2e7d32'; }
+            else { msg.innerText = '✗ Slaptažodžiai nesutampa'; msg.style.color = '#c00'; }
+        }
+
+        function toggleConfirmPass() {
+            const input = document.getElementById('reg-pass-confirm');
+            const btn   = document.getElementById('toggle-confirm-btn');
+            if (input.type === 'password') { input.type = 'text'; btn.innerText = '🙈'; }
+            else { input.type = 'password'; btn.innerText = '👁'; }
+        }
 
         function checkLocation() {
             const cachedGeo = localStorage.getItem("praxifold_geo");
@@ -157,13 +207,16 @@
         }
 
         function showCookieConsent() {
-            const name     = document.getElementById('reg-name').value.trim();
-            const email    = document.getElementById('reg-email').value.trim();
-            const pass     = document.getElementById('reg-pass').value;
-            const roleVal  = document.getElementById('reg-role').value;
+            const name      = document.getElementById('reg-name').value.trim();
+            const email     = document.getElementById('reg-email').value.trim();
+            const pass      = document.getElementById('reg-pass').value;
+            const passConf  = document.getElementById('reg-pass-confirm').value;
+            const roleVal   = document.getElementById('reg-role').value;
             const roleOther = document.getElementById('reg-role-other').value.trim();
-            if (!name || !email || !pass || !roleVal) { alert("Užpildykite visus laukus"); return; }
+            if (!name || !email || !pass || !passConf || !roleVal) { alert("Užpildykite visus laukus"); return; }
             if (roleVal === 'other' && !roleOther) { alert("Nurodykite savo rolę"); return; }
+            if (pass.length < 8 || pass.length > 24) { alert("Slaptažodis turi būti 8–24 simbolių."); return; }
+            if (pass !== passConf) { alert("Slaptažodžiai nesutampa."); return; }
             pendingSignup = { name, email, pass, role: roleVal === 'other' ? `other:${roleOther}` : roleVal, browser: navigator.userAgent };
             document.getElementById('cookie-overlay').style.display = 'flex';
         }
