@@ -21,7 +21,7 @@
         .container { max-width: 960px; margin: 30px auto; padding: 0 16px 40px; }
         .page-title { font-size: 20px; font-weight: 700; margin-bottom: 14px; color: #333; }
         .search-wrap { margin-bottom: 18px; position: relative; }
-        .search-wrap input { width: 100%; padding: 11px 16px 11px 40px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; font-family: inherit; background: #fff; }
+        .search-wrap input { width: 100%; padding: 11px 16px 11px 46px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; font-family: inherit; background: #fff; }
         .search-wrap input:focus { outline: none; border-color: #0078D7; }
         .search-wrap::before { content: "🔍"; position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; pointer-events: none; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
@@ -296,26 +296,26 @@
                 b.innerText = text;
                 return b;
             }
-            if (u.downloadRestricted) container.appendChild(makeBadge('⬇ Atsisiuntimai: apribota', 'restricted'));
-            if (u.previewRestricted)  container.appendChild(makeBadge('👁 Peržiūros: apribota', 'restricted'));
+            if (u.downloadRestricted) container.appendChild(makeBadge('⬇ Atsisiuntimų liko: apribota', 'restricted'));
+            if (u.previewRestricted)  container.appendChild(makeBadge('👁 Peržiūrų liko: apribota', 'restricted'));
 
             if (u.subType === 'free') {
                 if (!u.downloadRestricted) {
                     const dc = u.downloadsLeft;
-                    container.appendChild(makeBadge(`⬇ Atsisiuntimai: ${dc}`, dc > 2 ? '' : dc > 0 ? 'warn' : 'danger'));
+                    container.appendChild(makeBadge(`⬇ Atsisiuntimų liko: ${dc}`, dc > 2 ? '' : dc > 0 ? 'warn' : 'danger'));
                 }
                 if (!u.previewRestricted) {
                     const pc = u.previewsLeft;
-                    container.appendChild(makeBadge(`👁 Peržiūros: ${pc}`, pc > 2 ? '' : pc > 0 ? 'warn' : 'danger'));
+                    container.appendChild(makeBadge(`👁 Peržiūrų liko: ${pc}`, pc > 2 ? '' : pc > 0 ? 'warn' : 'danger'));
                 }
                 if (u.previewsLeft <= 2 || u.downloadsLeft <= 2)
                     container.appendChild(makeBadge('📧 praxifold@gmail.com', 'warn'));
             } else if (u.subType === 'standard') {
-                if (!u.previewRestricted) container.appendChild(makeBadge('👁 Peržiūros: ∞', 'unlimited'));
-                container.appendChild(makeBadge('⬇ Atsisiuntimai: —', ''));
+                if (!u.previewRestricted) container.appendChild(makeBadge('👁 Peržiūrų liko: ∞', 'unlimited'));
+                container.appendChild(makeBadge('⬇ Atsisiuntimų liko: —', ''));
             } else if (u.subType === 'pro') {
-                if (!u.previewRestricted)  container.appendChild(makeBadge('👁 Peržiūros: ∞', 'unlimited'));
-                if (!u.downloadRestricted) container.appendChild(makeBadge('⬇ Atsisiuntimai: ∞', 'unlimited'));
+                if (!u.previewRestricted)  container.appendChild(makeBadge('👁 Peržiūrų liko: ∞', 'unlimited'));
+                if (!u.downloadRestricted) container.appendChild(makeBadge('⬇ Atsisiuntimų liko: ∞', 'unlimited'));
             }
         }
 
@@ -334,13 +334,13 @@
 
                 const btnPrev = document.createElement('button');
                 btnPrev.className = 'btn btn-secondary';
-                btnPrev.innerText = 'Peržiūrėti';
+                btnPrev.innerText = 'Peržiūrėti svetainėje';
                 btnPrev.onclick = () => requestAccess(f.name, 'preview');
                 card.appendChild(btnPrev);
 
                 const btnDl = document.createElement('button');
                 btnDl.className = 'btn';
-                btnDl.innerText = 'Atsisiųsti';
+                btnDl.innerText = 'Atsisiųsti į kompiuterį';
                 btnDl.onclick = () => requestAccess(f.name, 'download');
                 card.appendChild(btnDl);
 
@@ -357,7 +357,6 @@
                 card.style.display = match ? '' : 'none';
                 if (match) visible++;
             });
-            // Show "no results" if needed
             let noRes = document.getElementById('no-search-results');
             if (!noRes) {
                 noRes = document.createElement('p');
