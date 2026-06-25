@@ -21,13 +21,23 @@
         .container { max-width: 960px; margin: 30px auto; padding: 0 16px 40px; }
         .page-title { font-size: 20px; font-weight: 700; margin-bottom: 14px; color: #333; }
         .search-wrap { margin-bottom: 18px; position: relative; }
-        .search-wrap input { width: 100%; padding: 11px 16px 11px 46px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; font-family: inherit; background: #fff; }
+        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; pointer-events: none; line-height: 1; z-index: 1; }
+        .search-wrap input { width: 100%; padding: 11px 16px 11px 42px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; font-family: inherit; background: #fff; }
         .search-wrap input:focus { outline: none; border-color: #0078D7; }
-        .search-wrap::before { content: "🔍"; position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; pointer-events: none; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
         .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-        .card h3 { margin-top: 0; color: #0078D7; text-transform: capitalize; font-size: 16px; }
-        .card .version { font-size: 12px; color: #888; margin-bottom: 14px; display: block; }
+        .card-header { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 2px; }
+        .card-header h3 { margin-top: 0; color: #0078D7; text-transform: capitalize; font-size: 16px; flex: 1; }
+        .report-btn { background: none; border: none; cursor: pointer; font-size: 14px; padding: 1px 3px; opacity: 0.45; flex-shrink: 0; margin-top: 1px; line-height: 1; }
+        .report-btn:hover { opacity: 1; }
+        .card .version { font-size: 12px; color: #888; margin-bottom: 6px; display: block; }
+        .card .stage-line { margin-bottom: 10px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .stage-badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+        .stage-alpha { background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
+        .stage-beta { background: #e3f2fd; color: #0d47a1; border: 1px solid #90caf9; }
+        .stage-general { background: #f5f5f5; color: #555; border: 1px solid #ddd; }
+        .stage-stable { background: #e6f4ea; color: #2e7d32; border: 1px solid #81c784; }
+        .access-private { font-size: 11px; color: #e65100; font-weight: 600; }
         .btn { background: #0078D7; color: white; border: none; padding: 9px 12px; border-radius: 5px; cursor: pointer; font-size: 14px; width: 100%; margin-top: 6px; transition: background 0.2s; }
         .btn:hover { background: #005a9e; }
         .btn-secondary { background: #e1dfdd; color: #333; }
@@ -63,6 +73,9 @@
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .toggle-row { display: flex; align-items: center; gap: 8px; cursor: pointer; }
         .toggle-row input[type=checkbox] { width: auto; margin: 0; }
+        .request-tool-section { text-align: center; margin-top: 28px; padding: 16px 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); font-size: 14px; color: #555; }
+        .request-tool-section a { color: #0078D7; font-weight: 600; text-decoration: none; margin-left: 4px; }
+        .request-tool-section a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -83,10 +96,14 @@
     <div class="container">
         <div class="page-title">Įrankiai ir Failai</div>
         <div class="search-wrap">
+            <span class="search-icon">🔍</span>
             <input type="text" id="search-bar" placeholder="Ieškoti failų..." oninput="filterFiles()">
         </div>
         <div id="loading" style="text-align:center; color:#888; padding:40px 0;">Kraunama sistema...</div>
         <div class="grid" id="file-grid"></div>
+        <div class="request-tool-section">
+            Nerandate norimo įrankio? <a href="https://docs.google.com/forms/d/e/1FAIpQLScM5TQAPhEyBGnrxlaEPfljNJTeeBWAMpRgTohw-HAiEn6tDw/viewform?usp=header" target="_blank">Paprašykite čia →</a>
+        </div>
     </div>
 
     <!-- SETTINGS MODAL -->
@@ -95,7 +112,9 @@
             <span class="close" onclick="closeModal('settings-modal')">&times;</span>
             <h2 style="margin-bottom:18px;">Vartotojo Nustatymai</h2>
             <div class="setting-group">
-                <strong>Paskyros ID:</strong> <span id="ui-support-id" style="font-size:13px; color:#555;">...</span>
+                <strong>Paskyros ID:</strong>
+                <span id="ui-support-id" style="font-size:13px; color:#555;">...</span>
+                <button class="copy-btn" id="id-copy-btn" onclick="copyText(document.getElementById('ui-support-id').innerText,'id-copy-btn')" style="margin-left:8px; vertical-align:middle;">📋 Kopijuoti</button>
             </div>
             <div class="setting-group">
                 <strong>Prenumeratos planas:</strong>
@@ -185,17 +204,17 @@
         </div>
     </div>
 
-    <!-- Gyvo pokalbio (live chat) widget'as injektuojamas per loadLiveChatWidget() žemiau, tik PRO planui -->
-
     <script>
-        const GAS_URL    = "https://script.google.com/macros/s/AKfycbybxUfE5RIRNxDyY3v3aunmpL_jEloCclUHS08MabCupd-calE4pd0bW8xuhWSpZeXb/exec";
-        const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
+        const GAS_URL     = "https://script.google.com/macros/s/AKfycbybxUfE5RIRNxDyY3v3aunmpL_jEloCclUHS08MabCupd-calE4pd0bW8xuhWSpZeXb/exec";
+        const APPEAL_URL  = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
+        const REPORT_URL  = "https://docs.google.com/forms/d/e/1FAIpQLSeKlBK6UKrGVaRCakQQp9mZjHzIVMjx9ke1UfJr8X50F3v0bg/viewform?usp=header";
         let currentUser = null;
         let previewUrl  = null;
         let previewAutoTimer = null;
         let tokenRefreshInterval = null;
 
-        // ── Ad: hide after 2 plays (free accounts only) ──
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
         let adPlayCount = 0;
         function initAdCounter() {
             const vid = document.getElementById('ad-video');
@@ -207,7 +226,6 @@
             });
         }
 
-        // ── Dev tools detection (desktop, size-based) ──
         let devToolsReported = false;
         function checkDevTools() {
             if (devToolsReported || !currentUser) return;
@@ -283,11 +301,9 @@
             if (u.subExpDate) document.getElementById('ui-sub-exp').innerText = "Galioja iki: " + new Date(u.subExpDate).toLocaleDateString('lt-LT');
             if (u.subType !== 'free') document.getElementById('dev-program-link').style.display = 'block';
 
-            // Security freq selector
             const freqSel = document.getElementById('security-freq-select');
             if (freqSel) freqSel.value = u.securityAlertFreq || 5;
 
-            // Stay logged in toggle
             const stayToggle = document.getElementById('stay-logged-toggle');
             if (stayToggle) stayToggle.checked = !!u.stayLoggedIn;
 
@@ -341,6 +357,27 @@
             }
         }
 
+        function getStageClass(stage) {
+            if (stage === 'alpha') return 'stage-alpha';
+            if (stage.startsWith('beta')) return 'stage-beta';
+            if (stage === 'stable') return 'stage-stable';
+            return 'stage-general';
+        }
+
+        function getStageLabel(stage) {
+            const map = {
+                'alpha':  'Alfa',
+                'beta1':  'Beta 1',
+                'beta2':  'Beta 2',
+                'beta3':  'Beta 3',
+                'beta4':  'Beta 4',
+                'beta5':  'Beta 5',
+                'general':'Bendroji',
+                'stable': 'Stabili'
+            };
+            return map[stage] || stage;
+        }
+
         function renderFiles(files) {
             const grid = document.getElementById('file-grid');
             grid.innerHTML = '';
@@ -352,7 +389,45 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.dataset.name = f.name.toLowerCase();
-                card.innerHTML = `<h3>${f.name}</h3><span class="version">Versija: V${f.version}</span>`;
+
+                const header = document.createElement('div');
+                header.className = 'card-header';
+
+                const reportBtn = document.createElement('button');
+                reportBtn.className = 'report-btn';
+                reportBtn.title = 'Pranešti apie problemą';
+                reportBtn.innerHTML = '🚩';
+                reportBtn.onclick = () => window.open(REPORT_URL, '_blank');
+
+                const title = document.createElement('h3');
+                title.innerText = f.name;
+
+                header.appendChild(reportBtn);
+                header.appendChild(title);
+                card.appendChild(header);
+
+                const version = document.createElement('span');
+                version.className = 'version';
+                version.innerText = 'Versija: V' + f.version;
+                card.appendChild(version);
+
+                if (f.stage || f.access === 'private') {
+                    const stageLine = document.createElement('div');
+                    stageLine.className = 'stage-line';
+                    if (f.stage) {
+                        const stageBadge = document.createElement('span');
+                        stageBadge.className = 'stage-badge ' + getStageClass(f.stage);
+                        stageBadge.innerText = getStageLabel(f.stage);
+                        stageLine.appendChild(stageBadge);
+                    }
+                    if (f.access === 'private') {
+                        const privateBadge = document.createElement('span');
+                        privateBadge.className = 'access-private';
+                        privateBadge.innerText = '🔒 Privatu';
+                        stageLine.appendChild(privateBadge);
+                    }
+                    card.appendChild(stageLine);
+                }
 
                 const btnPrev = document.createElement('button');
                 btnPrev.className = 'btn btn-secondary';
@@ -471,6 +546,9 @@
                     alert("Paskyra užblokuota. Kreipkitės: praxifold@gmail.com" + appealNote);
                     logout();
                     break;
+                case "PRIEIGA_UZDRAUSTA":
+                    alert("Prieiga prie šio failo apribota jūsų paskyroje.");
+                    break;
                 case "ATISIUNTIMAS_APRIBOTAS":
                     alert("Jūsų atsisiuntimų prieiga laikinai apribota." + appealNote);
                     currentUser.downloadRestricted = true;
@@ -528,6 +606,15 @@
             });
         }
 
+        function copyText(text, btnId) {
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById(btnId);
+                btn.innerText = '✓ Nukopijuota';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.innerText = '📋 Kopijuoti'; btn.classList.remove('copied'); }, 2000);
+            });
+        }
+
         function activateCode() {
             const code = document.getElementById('promo-code').value;
             const btn  = document.getElementById('activate-code-btn');
@@ -555,7 +642,6 @@
                 .catch(() => {});
         }
 
-        // ── Stay logged in / token rotation ──
         function updateStayLoggedIn() {
             const on = document.getElementById('stay-logged-toggle').checked;
             fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"updateSettings", token: currentUser.token, stayLoggedIn: on }) })
@@ -575,7 +661,7 @@
         function startTokenRotation() {
             if (tokenRefreshInterval) clearInterval(tokenRefreshInterval);
             if (!currentUser || !currentUser.stayLoggedIn) return;
-            tokenRefreshInterval = setInterval(refreshToken, 10 * 60 * 1000); // kas 10 min.
+            tokenRefreshInterval = setInterval(refreshToken, 10 * 60 * 1000);
         }
 
         function refreshToken() {
@@ -601,11 +687,6 @@
                 });
         }
 
-        // ── Live chat widget (frontend-only, tik PRO planui) ──
-        // Naudoja Tawk.to nemokamą widget'ą — pakeiskite URL žemiau savo
-        // Property ID / Widget ID (susikurkite paskyrą tawk.to). Norint kito
-        // tiekėjo (Crisp, Tidio ir t.t.) — tiesiog įklijuokite jų <script>
-        // kodą šios funkcijos viduje, ta pati logika veiks.
         let liveChatLoaded = false;
         function loadLiveChatWidget() {
             if (!currentUser || currentUser.subType !== 'pro' || liveChatLoaded) return;
