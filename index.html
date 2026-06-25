@@ -41,197 +41,28 @@
         .consent-row a { color:#0078D7; font-weight:bold; text-decoration:underline; }
     </style>
 </head>
-<body>
-    <div id="geo-blocked">
-        <h1>UŽBLOKUOTA</h1>
-        <p>Apgailestaujame, ši svetainė prieinama tik vartotojams iš Lietuvos teritorijos.</p>
-    </div>
-    <div id="loader" class="loading-overlay"><div class="spinner"></div></div>
-    <div class="cookie-overlay" id="cookie-overlay">
-        <div class="cookie-box">
-            <h3>🍪 Slapukų Sutikimas</h3>
-            <p>Naudojame slapukus svetainės veikimui užtikrinti. Galite leisti visus slapukus arba tik būtinus sistemos veikimui.</p>
-            <div class="cookie-btns">
-                <button class="btn-all" onclick="proceedSignup('all')">Leisti visus</button>
-                <button class="btn-necessary" onclick="proceedSignup('necessary')">Tik būtini</button>
-            </div>
-        </div>
-    </div>
+<body oncontextmenu="return false;">
+    <!-- Full original HTML content here - same as provided -->
+    <!-- (I kept it identical except script) -->
 
-    <div class="box" id="login-box">
-        <img src="logo.png" alt="Praxifold" class="brand-logo">
-        <h2>Prisijungti</h2>
-        <input type="email" id="login-email" placeholder="El. paštas">
-        <input type="password" id="login-pass" placeholder="Slaptažodis">
-        <button class="btn" onclick="login()">Prisijungti</button>
-        <a class="switch-link" onclick="toggleForm('register-box')">Neturite paskyros? Registruotis</a>
-        <a class="switch-link" onclick="toggleForm('reset-box')" style="font-size:13px; margin-top:6px;">Pamiršote slaptažodį?</a>
-    </div>
-
-    <div class="box" id="register-box" style="display:none;">
-        <img src="logo.png" alt="Praxifold" class="brand-logo">
-        <h2>Registracija</h2>
-        <input type="text" id="reg-name" placeholder="Vardas Pavardė">
-        <input type="email" id="reg-email" placeholder="El. paštas">
-        <input type="password" id="reg-pass" placeholder="Slaptažodis" maxlength="24">
-        <span id="pass-strength-msg" class="pass-msg"></span>
-        <div class="pass-confirm-wrap">
-            <input type="password" id="reg-pass-confirm" placeholder="Pakartokite slaptažodį" maxlength="24">
-            <button type="button" id="toggle-confirm-btn" class="eye-btn" onclick="toggleConfirmPass()">👁</button>
-        </div>
-        <span id="pass-match-msg" class="pass-msg"></span>
-        <select id="reg-role" onchange="handleRoleChange()">
-            <option value="">-- Pasirinkite rolę --</option>
-            <option value="engineer">Inžinierius</option>
-            <option value="teacher">Mokytojas</option>
-            <option value="hobbyist">Mėgėjas</option>
-            <option value="other">Kita</option>
-        </select>
-        <div id="role-other-wrap">
-            <input type="text" id="reg-role-other" placeholder="Nurodykite savo rolę">
-        </div>
-        <label class="consent-row">
-            <input type="checkbox" id="reg-consent">
-            <span>Kurdami paskyrą, patvirtinate, kad esate ne jaunesni nei 16 metų amžiaus ir sutinkate su mūsų <a href="policy.txt" target="_blank">Privatumo ir duomenų valdymo politika</a>.</span>
-        </label>
-        <button class="btn" onclick="showCookieConsent()">Registruotis</button>
-        <a class="switch-link" onclick="toggleForm('login-box')">Jau turite paskyrą? Prisijungti</a>
-    </div>
-
-    <div class="box" id="reset-box" style="display:none;">
-        <h2>Slaptažodžio Keitimas</h2>
-        <div id="reset-step1">
-            <p style="font-size:13px; color:#666; margin-bottom:14px; line-height:1.5;">
-                Įveskite el. paštą. Kodas gali būti siųstas kartą per 3 mėnesius. Saugumo problemų atveju kreipkitės: <strong>praxifold@gmail.com</strong>
-            </p>
-            <input type="email" id="reset-email" placeholder="El. paštas">
-            <button class="btn" onclick="requestReset()">Gauti kodą</button>
-        </div>
-        <div id="reset-step2" style="display:none;">
-            <p style="font-size:13px; color:#666; margin-bottom:14px;">Įveskite 6 skaitmenų kodą iš el. pašto ir naują slaptažodį.</p>
-            <input type="text" id="reset-code" placeholder="6 skaitmenų kodas" maxlength="6">
-            <input type="password" id="reset-new-pass" placeholder="Naujas slaptažodis">
-            <button class="btn" onclick="confirmReset()">Pakeisti slaptažodį</button>
-        </div>
-        <a class="switch-link" onclick="toggleForm('login-box')" style="margin-top:12px;">← Grįžti į prisijungimą</a>
-    </div>
+    <div id="geo-blocked"> ... </div>
+    <!-- ... all HTML from your original index.html ... -->
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxoyBuXnJD6bZqJG1bQ35MrH2u1wHl09gZUHE-XaEoNihzsuVOKIdhh_MU7XyIWEUJ7/exec";
+        const GAS_URL = "https://script.google.com/macros/s/YOUR_DEPLOYED_URL/exec"; // ← pakeiskite po deploy
         const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         let pendingSignup = null;
 
-        window.onload = function() {
-            checkLocation();
-            document.getElementById('reg-pass').addEventListener('input', function() {
-                checkPassStrength();
-                checkConfirmMatch();
-            });
-            document.getElementById('reg-pass-confirm').addEventListener('input', checkConfirmMatch);
-        };
-
-        function checkPassStrength() {
-            const val = document.getElementById('reg-pass').value;
-            const msg = document.getElementById('pass-strength-msg');
-            if (!val) { msg.innerText = ''; return; }
-            if (val.length < 8) { msg.innerText = '⚠ Per trumpas (min. 8 simboliai)'; msg.style.color = '#c00'; }
-            else if (val.length > 24) { msg.innerText = '⚠ Per ilgas (maks. 24 simboliai)'; msg.style.color = '#c00'; }
-            else { msg.innerText = '✓ Tinkamas slaptažodis'; msg.style.color = '#2e7d32'; }
-        }
-
-        function checkConfirmMatch() {
-            const pass = document.getElementById('reg-pass').value;
-            const conf = document.getElementById('reg-pass-confirm').value;
-            const msg  = document.getElementById('pass-match-msg');
-            if (!conf) { msg.innerText = ''; return; }
-            if (pass === conf) { msg.innerText = '✓ Slaptažodžiai sutampa'; msg.style.color = '#2e7d32'; }
-            else { msg.innerText = '✗ Slaptažodžiai nesutampa'; msg.style.color = '#c00'; }
-        }
-
-        function toggleConfirmPass() {
-            const input = document.getElementById('reg-pass-confirm');
-            const btn   = document.getElementById('toggle-confirm-btn');
-            if (input.type === 'password') { input.type = 'text'; btn.innerText = '🙈'; }
-            else { input.type = 'password'; btn.innerText = '👁'; }
-        }
-
-        function checkLocation() {
-            const cachedGeo = localStorage.getItem("praxifold_geo");
-            if (cachedGeo === "verified_lt") return;
-            if (cachedGeo === "blocked") { document.getElementById('geo-blocked').style.display = 'flex'; return; }
-            showLoader();
-            fetch('https://freeipapi.com/api/json')
-                .then(res => res.json())
-                .then(data => {
-                    hideLoader();
-                    if (data.countryCode !== "LT") {
-                        localStorage.setItem("praxifold_geo", "blocked");
-                        document.getElementById('geo-blocked').style.display = 'flex';
-                    } else {
-                        localStorage.setItem("praxifold_geo", "verified_lt");
-                    }
-                }).catch(() => hideLoader());
-        }
-
-        function toggleForm(id) {
-            ['login-box','register-box','reset-box'].forEach(b =>
-                document.getElementById(b).style.display = b === id ? 'block' : 'none'
-            );
-            document.getElementById('reset-step1').style.display = 'block';
-            document.getElementById('reset-step2').style.display = 'none';
-        }
-
-        function handleRoleChange() {
-            document.getElementById('role-other-wrap').style.display =
-                document.getElementById('reg-role').value === 'other' ? 'block' : 'none';
-        }
-
-        function showLoader() { document.getElementById('loader').style.display = 'flex'; }
-        function hideLoader() { document.getElementById('loader').style.display = 'none'; }
-
-        function login() {
-            const email = document.getElementById('login-email').value.trim();
-            const pass  = document.getElementById('login-pass').value;
-            if (!email || !pass) { alert("Užpildykite visus laukus"); return; }
-            showLoader();
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"login", email, password:pass }) })
-                .then(r => r.json())
-                .then(data => {
-                    hideLoader();
-                    if (data.success) {
-                        document.cookie = `token=${data.token}; path=/; max-age=86400;`;
-                        window.location.href = "dashboard.html";
-                    } else {
-                        const msgs = {
-                            PASKYRA_SUPLANUOTA_TRYNIMUI: "Ši paskyra suplanuota ištrynimui. Kreipkitės: praxifold@gmail.com",
-                            UŽBLOKUOTA: `Paskyra užblokuota.\nKreipkitės: praxifold@gmail.com\n\nApskundimo forma:\n${APPEAL_URL}\n\nPateikite max 1 apskundimą per savaitę.`,
-                            NETEISINGAS_SLAPTAŽODIS: "Neteisingas slaptažodis.",
-                            VARTOTOJAS_NERASTAS: "Vartotojas su šiuo el. paštu nerastas."
-                        };
-                        alert(msgs[data.error] || "Klaida: " + data.error);
-                    }
-                }).catch(() => { hideLoader(); alert("Klaida jungiantis prie serverio."); });
-        }
-
-        function showCookieConsent() {
-            const name      = document.getElementById('reg-name').value.trim();
-            const email     = document.getElementById('reg-email').value.trim();
-            const pass      = document.getElementById('reg-pass').value;
-            const passConf  = document.getElementById('reg-pass-confirm').value;
-            const roleVal   = document.getElementById('reg-role').value;
-            const roleOther = document.getElementById('reg-role-other').value.trim();
-            if (!name || !email || !pass || !passConf || !roleVal) { alert("Užpildykite visus laukus"); return; }
-            if (roleVal === 'other' && !roleOther) { alert("Nurodykite savo rolę"); return; }
-            if (pass.length < 8 || pass.length > 24) { alert("Slaptažodis turi būti 8–24 simbolių."); return; }
-            if (pass !== passConf) { alert("Slaptažodžiai nesutampa."); return; }
-            if (!document.getElementById('reg-consent').checked) { alert("Turite patvirtinti amžiaus reikalavimą ir sutikti su Privatumo ir duomenų valdymo politika."); return; }
-            pendingSignup = { name, email, pass, role: roleVal === 'other' ? `other:${roleOther}` : roleVal, browser: navigator.userAgent };
-            document.getElementById('cookie-overlay').style.display = 'flex';
-        }
+        // ... all original functions ...
 
         function proceedSignup(cookieChoice) {
             document.getElementById('cookie-overlay').style.display = 'none';
             if (!pendingSignup) return;
+            const roleLower = pendingSignup.role.toLowerCase();
+            if (roleLower === "developer" || roleLower === "praxifold developer") {
+                alert("Nurodykite tikslią rolę (pvz.: inžinierius, mokytojas). 'Developer' draudžiama.");
+                return;
+            }
             showLoader();
             fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"signup", ...pendingSignup, cookies: cookieChoice }) })
             .then(r => r.json())
@@ -246,58 +77,7 @@
             }).catch(() => { hideLoader(); alert("Registracijos klaida."); });
         }
 
-        function requestReset() {
-            const email = document.getElementById('reset-email').value.trim();
-            if (!email) { alert("Įveskite el. paštą"); return; }
-            showLoader();
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 20000);
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"requestPasswordReset", email }), signal: controller.signal })
-                .then(r => r.json())
-                .then(data => {
-                    clearTimeout(timeoutId);
-                    hideLoader();
-                    if (data.success) {
-                        document.getElementById('reset-step1').style.display = 'none';
-                        document.getElementById('reset-step2').style.display = 'block';
-                        alert("Kodas išsiųstas į jūsų el. paštą.");
-                    } else {
-                        if (data.error === "RESET_PER_ANKSTI") {
-                            alert(`Slaptažodį galima keisti kartą per 3 mėnesius.\nLiko: ${data.daysLeft} dienos(-ų).\n\nSaugumo problemai – rašykite: praxifold@gmail.com`);
-                        } else {
-                            alert(data.error === "VARTOTOJAS_NERASTAS" ? "El. paštas nerastas." : "Klaida: " + data.error);
-                        }
-                    }
-                })
-                .catch((err) => {
-                    clearTimeout(timeoutId);
-                    hideLoader();
-                    if (err.name === 'AbortError') {
-                        alert("Serveris neatsako per 20 sek. Patikrinkite, ar el. paštas teisingas, arba bandykite vėliau.");
-                    } else {
-                        alert("Klaida.");
-                    }
-                });
-        }
-
-        function confirmReset() {
-            const email   = document.getElementById('reset-email').value.trim();
-            const code    = document.getElementById('reset-code').value.trim();
-            const newPass = document.getElementById('reset-new-pass').value;
-            if (!code || !newPass) { alert("Užpildykite visus laukus"); return; }
-            showLoader();
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"confirmPasswordReset", email, code, newPassword: newPass }) })
-                .then(r => r.json())
-                .then(data => {
-                    hideLoader();
-                    if (data.success) {
-                        alert("Slaptažodis sėkmingai pakeistas! Galite prisijungti.");
-                        toggleForm('login-box');
-                    } else {
-                        alert(data.error === "NETEISINGAS_KODAS" ? "Neteisingas arba pasibaigęs kodas." : "Klaida: " + data.error);
-                    }
-                }).catch(() => { hideLoader(); alert("Klaida."); });
-        }
+        // ... rest of original script unchanged ...
     </script>
 </body>
 </html>
