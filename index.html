@@ -117,7 +117,7 @@
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbybxUfE5RIRNxDyY3v3aunmpL_jEloCclUHS08MabCupd-calE4pd0bW8xuhWSpZeXb/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbx4uV7tW-KLnp4-8tcKZ60G8z0QoxnTgEL66Hy-UNk-cKNmJxdDLMz05x-aCttIZfA/exec";
         const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         let pendingSignup = null;
 
@@ -222,6 +222,13 @@
             const roleOther = document.getElementById('reg-role-other').value.trim();
             if (!name || !email || !pass || !passConf || !roleVal) { alert("Užpildykite visus laukus"); return; }
             if (roleVal === 'other' && !roleOther) { alert("Nurodykite savo rolę"); return; }
+            if (roleVal === 'other') {
+                const lowerOther = roleOther.toLowerCase().trim();
+                if (lowerOther === 'developer' || lowerOther === 'praxifold developer') {
+                    alert("Ši rolė neleidžiama. Prašome nurodyti tikslesnę savo rolę.");
+                    return;
+                }
+            }
             if (pass.length < 8 || pass.length > 24) { alert("Slaptažodis turi būti 8–24 simbolių."); return; }
             if (pass !== passConf) { alert("Slaptažodžiai nesutampa."); return; }
             if (!document.getElementById('reg-consent').checked) { alert("Turite patvirtinti amžiaus reikalavimą ir sutikti su Privatumo ir duomenų valdymo politika."); return; }
@@ -241,7 +248,13 @@
                     document.cookie = `token=${data.token}; path=/; max-age=86400;`;
                     window.location.href = "dashboard.html";
                 } else {
-                    alert(data.error === "EL_PASTAS_JAU_EGZISTUOJA" ? "Šis el. paštas jau užregistruotas." : "Klaida: " + data.error);
+                    if (data.error === "EL_PASTAS_JAU_EGZISTUOJA") {
+                        alert("Šis el. paštas jau užregistruotas.");
+                    } else if (data.error === "VAIDMUO_NELEISTINAS") {
+                        alert("Ši rolė neleidžiama. Prašome nurodyti tikslesnę savo rolę.");
+                    } else {
+                        alert("Klaida: " + data.error);
+                    }
                 }
             }).catch(() => { hideLoader(); alert("Registracijos klaida."); });
         }
