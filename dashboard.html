@@ -20,9 +20,8 @@
         .settings-btn:hover { background: #ccc; }
         .container { max-width: 960px; margin: 30px auto; padding: 0 16px 40px; }
         .page-title { font-size: 20px; font-weight: 700; margin-bottom: 14px; color: #333; }
-        .search-wrap { margin-bottom: 18px; position: relative; }
-        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; pointer-events: none; line-height: 1; z-index: 1; }
-        .search-wrap input { width: 100%; padding: 11px 16px 11px 42px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; font-family: inherit; background: #fff; }
+        .search-wrap { margin-bottom: 18px; }
+        .search-wrap input { width: 100%; padding: 11px 16px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; font-family: inherit; background: #fff; }
         .search-wrap input:focus { outline: none; border-color: #0078D7; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
         .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
@@ -96,7 +95,6 @@
     <div class="container">
         <div class="page-title">Įrankiai ir Failai</div>
         <div class="search-wrap">
-            <span class="search-icon">🔍</span>
             <input type="text" id="search-bar" placeholder="Ieškoti failų..." oninput="filterFiles()">
         </div>
         <div id="loading" style="text-align:center; color:#888; padding:40px 0;">Kraunama sistema...</div>
@@ -205,9 +203,9 @@
     </div>
 
     <script>
-        const GAS_URL     = "https://script.google.com/macros/s/AKfycbx4uV7tW-KLnp4-8tcKZ60G8z0QoxnTgEL66Hy-UNk-cKNmJxdDLMz05x-aCttIZfA/exec";
-        const APPEAL_URL  = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
-        const REPORT_URL  = "https://docs.google.com/forms/d/e/1FAIpQLSeKlBK6UKrGVaRCakQQp9mZjHzIVMjx9ke1UfJr8X50F3v0bg/viewform?usp=header";
+        const GAS_URL    = "https://script.google.com/macros/s/AKfycbx4uV7tW-KLnp4-8tcKZ60G8z0QoxnTgEL66Hy-UNk-cKNmJxdDLMz05x-aCttIZfA/exec";
+        const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
+        const REPORT_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeKlBK6UKrGVaRCakQQp9mZjHzIVMjx9ke1UfJr8X50F3v0bg/viewform?usp=header";
         let currentUser = null;
         let previewUrl  = null;
         let previewAutoTimer = null;
@@ -393,17 +391,17 @@
                 const header = document.createElement('div');
                 header.className = 'card-header';
 
+                const title = document.createElement('h3');
+                title.innerText = f.name;
+
                 const reportBtn = document.createElement('button');
                 reportBtn.className = 'report-btn';
                 reportBtn.title = 'Pranešti apie problemą';
                 reportBtn.innerHTML = '🚩';
                 reportBtn.onclick = () => window.open(REPORT_URL, '_blank');
 
-                const title = document.createElement('h3');
-                title.innerText = f.name;
-
-                header.appendChild(reportBtn);
                 header.appendChild(title);
+                header.appendChild(reportBtn);
                 card.appendChild(header);
 
                 const version = document.createElement('span');
@@ -411,7 +409,7 @@
                 version.innerText = 'Versija: V' + f.version;
                 card.appendChild(version);
 
-                if (f.stage || f.access === 'private') {
+                if (f.stage || f.access === 'private' || f.accountId) {
                     const stageLine = document.createElement('div');
                     stageLine.className = 'stage-line';
                     if (f.stage) {
@@ -420,7 +418,7 @@
                         stageBadge.innerText = getStageLabel(f.stage);
                         stageLine.appendChild(stageBadge);
                     }
-                    if (f.access === 'private') {
+                    if (f.access === 'private' || f.accountId) {
                         const privateBadge = document.createElement('span');
                         privateBadge.className = 'access-private';
                         privateBadge.innerText = '🔒 Privatu';
