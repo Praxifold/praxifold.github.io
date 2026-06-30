@@ -117,18 +117,38 @@
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbx4uV7tW-KLnp4-8tcKZ60G8z0QoxnTgEL66Hy-UNk-cKNmJxdDLMz05x-aCttIZfA/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyYuW3cQeWRiALCx9kFPClx-H_jV97RokmLVkoppC9U1EPPmYyn-5jO_6tc-LoFR82K/exec";
         const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         let pendingSignup = null;
 
         window.onload = function() {
             checkLocation();
+            checkAutoLogin();
             document.getElementById('reg-pass').addEventListener('input', function() {
                 checkPassStrength();
                 checkConfirmMatch();
             });
             document.getElementById('reg-pass-confirm').addEventListener('input', checkConfirmMatch);
         };
+
+        function getCookie(name) {
+            const v = `; ${document.cookie}`;
+            const p = v.split(`; ${name}=`);
+            if (p.length === 2) return p.pop().split(';').shift();
+        }
+
+        function checkAutoLogin() {
+            const token = getCookie("token");
+            if (!token) return;
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"establishSession", token }) })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success && data.stayLoggedIn) {
+                        sessionStorage.setItem('sessionToken', data.sessionToken);
+                        window.location.href = "dashboard.html";
+                    }
+                }).catch(() => {});
+        }
 
         function checkPassStrength() {
             const val = document.getElementById('reg-pass').value;
@@ -200,6 +220,7 @@
                     hideLoader();
                     if (data.success) {
                         document.cookie = `token=${data.token}; path=/; max-age=86400;`;
+                        sessionStorage.setItem('sessionToken', data.sessionToken);
                         window.location.href = "dashboard.html";
                     } else {
                         const msgs = {
@@ -246,6 +267,7 @@
                 hideLoader();
                 if (data.success) {
                     document.cookie = `token=${data.token}; path=/; max-age=86400;`;
+                    sessionStorage.setItem('sessionToken', data.sessionToken);
                     window.location.href = "dashboard.html";
                 } else {
                     if (data.error === "EL_PASTAS_JAU_EGZISTUOJA") {
