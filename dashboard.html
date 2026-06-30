@@ -36,6 +36,8 @@
         .stage-beta { background: #e3f2fd; color: #0d47a1; border: 1px solid #90caf9; }
         .stage-general { background: #f5f5f5; color: #555; border: 1px solid #ddd; }
         .stage-stable { background: #e6f4ea; color: #2e7d32; border: 1px solid #81c784; }
+        .stage-experimental { background: #ffe0b2; color: #e65100; border: 1px solid #ff9800; }
+        .compat-note { font-size: 11px; color: #e65100; margin: -4px 0 8px; display: block; }
         .access-private { font-size: 11px; color: #e65100; font-weight: 600; }
         .btn { background: #0078D7; color: white; border: none; padding: 9px 12px; border-radius: 5px; cursor: pointer; font-size: 14px; width: 100%; margin-top: 6px; transition: background 0.2s; }
         .btn:hover { background: #005a9e; }
@@ -202,14 +204,31 @@
         </div>
     </div>
 
+    <!-- EXPERIMENTAL FILE WARNING MODAL -->
+    <div id="experimental-modal" class="modal">
+        <div class="modal-content" style="text-align:center;">
+            <h2 style="margin-bottom:14px; color:#e65100;">⚠️ Eksperimentinis Failas</h2>
+            <p style="font-size:13px; color:#555; line-height:1.6; text-align:left; margin-bottom:20px;">
+                Šis failas yra eksperimentinis. „Praxifold" neprisiima atsakomybės už jokią žalą, padarytą jūsų įrenginiui naudojant šį failą. Kaip ir visų kitų mūsų sukurtų failų atveju, įsitikinome, kad jame nėra kenkėjiškų programų (malware), tačiau net ir naudojant tokį įrankį, jis gali veikti netinkamai ir gali susigadinti. Naudokitės savo rizika.
+            </p>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-secondary" style="margin-top:0;" onclick="cancelExperimentalWarning()">Atšaukti</button>
+                <button class="btn" style="margin-top:0; background:#e65100;" onclick="confirmExperimentalWarning()">Tęsti</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const GAS_URL    = "https://script.google.com/macros/s/AKfycbwHqzvwyLl4xelitOzzGfLsEBkYNuETWeLxqqmkvdGhf0DWeNu8Bpn3jMOJtCV9OjgF/exec";
+        const GAS_URL    = "https://script.google.com/macros/s/AKfycbyYuW3cQeWRiALCx9kFPClx-H_jV97RokmLVkoppC9U1EPPmYyn-5jO_6tc-LoFR82K/exec";
         const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         const REPORT_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeKlBK6UKrGVaRCakQQp9mZjHzIVMjx9ke1UfJr8X50F3v0bg/viewform?usp=header";
         let currentUser = null;
         let previewUrl  = null;
         let previewAutoTimer = null;
         let tokenRefreshInterval = null;
+        let sessionToken = sessionStorage.getItem('sessionToken') || null;
+        let sessionRetried = false;
+        let pendingExperimental = null;
 
         document.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -230,8 +249,9 @@
             if (window.innerWidth <= 768) return;
             if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) {
                 devToolsReported = true;
-                fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"reportDevTools", token: currentUser.token }) })
+                fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"reportDevTools", token: currentUser.token, sessionToken }) })
                     .then(r => r.json()).then(data => {
+                        if (data && data.sessionToken) storeSessionToken(data.sessionToken);
                         if (data && data.error === "UŽBLOKUOTA") {
                             alert("Paskyra užblokuota dėl taisyklių pažeidimo.\nApskundimo forma:\n" + APPEAL_URL + "\n\nPateikite max 1 apskundimą per savaitę.");
                             logout();
@@ -246,7 +266,11 @@
             initAdCounter();
             const token = getCookie("token");
             if (!token) { window.location.href = "index.html"; return; }
-            fetchUserData(token);
+            if (sessionToken) {
+                fetchUserData(token);
+            } else {
+                establishSessionThen(token, () => fetchUserData(token));
+            }
         };
 
         function getCookie(name) {
@@ -255,13 +279,39 @@
             if (p.length === 2) return p.pop().split(';').shift();
         }
 
+        function storeSessionToken(token) {
+            if (!token) return;
+            sessionToken = token;
+            sessionStorage.setItem('sessionToken', sessionToken);
+        }
+
+        function establishSessionThen(token, callback) {
+            showLoader();
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"establishSession", token }) })
+                .then(r => r.json())
+                .then(data => {
+                    hideLoader();
+                    if (data.success) {
+                        storeSessionToken(data.sessionToken);
+                        callback();
+                    } else {
+                        logout();
+                    }
+                }).catch(() => {
+                    hideLoader();
+                    document.getElementById('loading').innerText = "Klaida kraunant. Perkraukite puslapį.";
+                });
+        }
+
         function fetchUserData(token) {
             showLoader();
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"getUserData", token }) })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"getUserData", token, sessionToken }) })
             .then(r => r.json())
             .then(data => {
                 hideLoader();
                 if (data.success) {
+                    sessionRetried = false;
+                    storeSessionToken(data.sessionToken);
                     currentUser = data.user;
                     currentUser.token = token;
                     updateUI();
@@ -275,6 +325,11 @@
                         showUpdateModal(data.updatesNeeded);
                     }
                 } else {
+                    if (data.error === "SESIJA_NEGALIOJA" && !sessionRetried) {
+                        sessionRetried = true;
+                        establishSessionThen(token, () => fetchUserData(token));
+                        return;
+                    }
                     if (data.error === "UŽBLOKUOTA") {
                         alert("Paskyra užblokuota.\nKreipkitės: praxifold@gmail.com\n\nApskundimo forma:\n" + APPEAL_URL + "\n\nPateikite max 1 apskundimą per savaitę.");
                     } else {
@@ -297,7 +352,9 @@
             document.getElementById('ui-sub-status').innerText = u.subType.toUpperCase();
             document.getElementById('ui-downloads').innerText = u.totalDownloads;
             if (u.subExpDate) document.getElementById('ui-sub-exp').innerText = "Galioja iki: " + new Date(u.subExpDate).toLocaleDateString('lt-LT');
-            if (u.subType !== 'free') document.getElementById('dev-program-link').style.display = 'block';
+            if (u.subType !== 'free' && (u.role || '').toLowerCase().trim() !== 'praxifold developer') {
+                document.getElementById('dev-program-link').style.display = 'block';
+            }
 
             const freqSel = document.getElementById('security-freq-select');
             if (freqSel) freqSel.value = u.securityAlertFreq || 5;
@@ -359,6 +416,7 @@
             if (stage === 'alpha') return 'stage-alpha';
             if (stage.startsWith('beta')) return 'stage-beta';
             if (stage === 'stable') return 'stage-stable';
+            if (stage === 'experimental') return 'stage-experimental';
             return 'stage-general';
         }
 
@@ -371,7 +429,8 @@
                 'beta4':  'Beta 4',
                 'beta5':  'Beta 5',
                 'general':'Bendroji',
-                'stable': 'Stabili'
+                'stable': 'Stabili',
+                'experimental': 'Eksperimentinis'
             };
             return map[stage] || stage;
         }
@@ -427,16 +486,23 @@
                     card.appendChild(stageLine);
                 }
 
+                if (f.compatibility && f.compatibility.toLowerCase().trim() === 'computer') {
+                    const compNote = document.createElement('span');
+                    compNote.className = 'compat-note';
+                    compNote.innerText = '⚠ Gali neveikti su telefonais';
+                    card.appendChild(compNote);
+                }
+
                 const btnPrev = document.createElement('button');
                 btnPrev.className = 'btn btn-secondary';
                 btnPrev.innerText = 'Peržiūrėti svetainėje';
-                btnPrev.onclick = () => requestAccess(f.name, 'preview');
+                btnPrev.onclick = () => requestAccess(f.name, 'preview', f.stage);
                 card.appendChild(btnPrev);
 
                 const btnDl = document.createElement('button');
                 btnDl.className = 'btn';
                 btnDl.innerText = 'Atsisiųsti į kompiuterį';
-                btnDl.onclick = () => requestAccess(f.name, 'download');
+                btnDl.onclick = () => requestAccess(f.name, 'download', f.stage);
                 card.appendChild(btnDl);
 
                 grid.appendChild(card);
@@ -474,7 +540,29 @@
             openModal('update-modal');
         }
 
-        function requestAccess(fileName, type) {
+        function requestAccess(fileName, type, stage) {
+            if (stage === 'experimental') {
+                pendingExperimental = { fileName, type };
+                openModal('experimental-modal');
+                return;
+            }
+            proceedRequestAccess(fileName, type);
+        }
+
+        function cancelExperimentalWarning() {
+            pendingExperimental = null;
+            closeModal('experimental-modal');
+        }
+
+        function confirmExperimentalWarning() {
+            closeModal('experimental-modal');
+            if (!pendingExperimental) return;
+            const { fileName, type } = pendingExperimental;
+            pendingExperimental = null;
+            proceedRequestAccess(fileName, type);
+        }
+
+        function proceedRequestAccess(fileName, type) {
             if (type === 'preview') {
                 document.getElementById('preview-pass').innerText = "Gaunamas kodas...";
                 document.getElementById('preview-copy-btn').style.display = 'none';
@@ -492,9 +580,10 @@
 
             fetch(GAS_URL, {
                 method:"POST",
-                body: JSON.stringify({ action:"requestAccess", token: currentUser.token, fileName, type })
+                body: JSON.stringify({ action:"requestAccess", token: currentUser.token, sessionToken, fileName, type })
             }).then(r => r.json()).then(data => {
                 if (data.success) {
+                    storeSessionToken(data.sessionToken);
                     const filePath = `tools/${fileName}.html`;
                     if (type === 'preview') {
                         document.getElementById('preview-pass').innerText = data.password;
@@ -532,6 +621,10 @@
                     }
                 } else {
                     closeModal(type === 'preview' ? 'preview-modal' : 'download-modal');
+                    if (data.error === "SESIJA_NEGALIOJA") {
+                        establishSessionThen(currentUser.token, () => proceedRequestAccess(fileName, type));
+                        return;
+                    }
                     handleAccessError(data, type);
                 }
             });
@@ -619,9 +712,9 @@
             const originalText = btn.innerText;
             btn.disabled = true;
             btn.innerText = 'Tikrinama...';
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"activateCode", token: currentUser.token, code }) })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"activateCode", token: currentUser.token, sessionToken, code }) })
                 .then(r => r.json()).then(data => {
-                    if (data.success) { alert("Kodas aktyvuotas!"); window.location.reload(); }
+                    if (data.success) { storeSessionToken(data.sessionToken); alert("Kodas aktyvuotas!"); window.location.reload(); }
                     else {
                         alert("Kodas neteisingas arba jau panaudotas.");
                         btn.disabled = false;
@@ -636,15 +729,17 @@
 
         function updateSecurityFrequency() {
             const freq = parseInt(document.getElementById('security-freq-select').value);
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"updateSettings", token: currentUser.token, securityAlertFreq: freq }) })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"updateSettings", token: currentUser.token, sessionToken, securityAlertFreq: freq }) })
+                .then(r => r.json()).then(data => { if (data && data.sessionToken) storeSessionToken(data.sessionToken); })
                 .catch(() => {});
         }
 
         function updateStayLoggedIn() {
             const on = document.getElementById('stay-logged-toggle').checked;
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"updateSettings", token: currentUser.token, stayLoggedIn: on }) })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"updateSettings", token: currentUser.token, sessionToken, stayLoggedIn: on }) })
                 .then(r => r.json())
-                .then(() => {
+                .then(data => {
+                    if (data && data.sessionToken) storeSessionToken(data.sessionToken);
                     currentUser.stayLoggedIn = on;
                     if (on) {
                         document.cookie = `token=${currentUser.token}; path=/; max-age=604800;`;
@@ -664,13 +759,14 @@
 
         function refreshToken() {
             if (!currentUser || !currentUser.token || !currentUser.stayLoggedIn) return;
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"refreshToken", token: currentUser.token }) })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"refreshToken", token: currentUser.token, sessionToken }) })
                 .then(r => r.json())
                 .then(data => {
                     if (data.success && data.token) {
                         currentUser.token = data.token;
                         document.cookie = `token=${data.token}; path=/; max-age=604800;`;
                     }
+                    if (data.success && data.sessionToken) storeSessionToken(data.sessionToken);
                 }).catch(() => {});
         }
 
@@ -678,7 +774,7 @@
             const email   = document.getElementById('del-email').value;
             const confirm = document.getElementById('del-confirm').value;
             if (confirm !== "suprantu, kad mano duomenys bus ištrinti") { alert("Neteisinga patvirtinimo frazė."); return; }
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"deleteAccount", token: currentUser.token, email }) })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"deleteAccount", token: currentUser.token, sessionToken, email }) })
                 .then(r => r.json()).then(data => {
                     if (data.success) { alert("Ištrynimas sėkmingai suplanuotas."); logout(); }
                     else alert("Klaida: " + data.error);
@@ -708,6 +804,8 @@
         function logout() {
             if (tokenRefreshInterval) clearInterval(tokenRefreshInterval);
             document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            sessionStorage.removeItem('sessionToken');
+            sessionToken = null;
             window.location.href = "index.html";
         }
     </script>
