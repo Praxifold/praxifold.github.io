@@ -18,6 +18,8 @@
         .badge.restricted { background: #fde8e8; border-color: #e53935; color: #b71c1c; }
         .settings-btn { background: #e1dfdd; border: none; padding: 9px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; white-space: nowrap; }
         .settings-btn:hover { background: #ccc; }
+        .logo-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .dev-badge { display: none; align-items: center; background: #e6f4ea; border: 1px solid #81c784; color: #2e7d32; border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; white-space: nowrap; }
         .container { max-width: 960px; margin: 30px auto; padding: 0 16px 40px; }
         .page-title { font-size: 20px; font-weight: 700; margin-bottom: 14px; color: #333; }
         .search-wrap { margin-bottom: 18px; }
@@ -81,7 +83,10 @@
 </head>
 <body>
     <header>
-        <img src="logo.png" alt="Praxifold" class="logo">
+        <div class="logo-wrap">
+            <img src="logo.png" alt="Praxifold" class="logo">
+            <span id="dev-badge" class="dev-badge">✔ Patvirtintas kūrėjas</span>
+        </div>
         <div class="header-right">
             <div class="quota-badges" id="quota-badges"></div>
             <button class="settings-btn" onclick="openModal('settings-modal')">⚙ Nustatymai</button>
@@ -135,7 +140,7 @@
                     <option value="5">Kas 5 prisijungimai</option>
                     <option value="10">Kas 10 prisijungimų</option>
                 </select>
-                <span class="info-text">El. pašto saugumo įspėjimas siunčiamas kas N prisijungimų.</span>
+                <span class="info-text" id="security-freq-info">El. pašto saugumo įspėjimas siunčiamas kas N prisijungimų.</span>
             </div>
             <div class="setting-group">
                 <label class="toggle-row">
@@ -165,7 +170,7 @@
     <div id="preview-modal" class="modal">
         <div class="modal-content" style="text-align:center;">
             <span class="close" id="preview-close" onclick="closeModal('preview-modal')" style="display:none;">&times;</span>
-            <h2 style="margin-bottom:4px;">Įrankio Peržiūros Slaptažodis</h2>
+            <h2 style="margin-bottom:4px;">Peržiūros Prieš Viešą Paskelbimą Slaptažodis</h2>
             <p class="info-text" style="margin-bottom:4px;">Naudokite šį slaptažodį atidarius įrankio puslapį.</p>
             <div class="pass-display">
                 <code id="preview-pass">Gaunamas kodas...</code>
@@ -219,7 +224,7 @@
     </div>
 
     <script>
-        const GAS_URL    = "https://script.google.com/macros/s/AKfycbyYuW3cQeWRiALCx9kFPClx-H_jV97RokmLVkoppC9U1EPPmYyn-5jO_6tc-LoFR82K/exec";
+        const GAS_URL    = "https://script.google.com/macros/s/AKfycbywajPo1a3zVI4ht3LTxl3mxhDh4cu4u8mM17RNNpN1I0VFJf2TEn_VPWe-gJcyL79G/exec";
         const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         const REPORT_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeKlBK6UKrGVaRCakQQp9mZjHzIVMjx9ke1UfJr8X50F3v0bg/viewform?usp=header";
         let currentUser = null;
@@ -229,6 +234,53 @@
         let sessionToken = sessionStorage.getItem('sessionToken') || null;
         let sessionRetried = false;
         let pendingExperimental = null;
+
+        // ---- Standard/Pro likučių talpykla (sesijos atmintis) ----
+        // Naudojame sessionStorage, nes ji automatiškai išsivalo uždarius
+        // skirtuką (tab). Čia saugome TIK Standard/Pro planų informaciją,
+        // kad nereikėtų kaskart iš naujo tikrinti likučių iš serverio -
+        // šie planai turi neribotas (arba iš dalies neribotas) peržiūras/
+        // atsisiuntimus, tad realaus laiko patikra nereikalinga.
+        const QUOTA_CACHE_KEY = 'praxifold_quota_cache';
+
+        function saveOrClearQuotaCache(user) {
+            if (user.subType !== 'free' && !user.subEndsToday) {
+                sessionStorage.setItem(QUOTA_CACHE_KEY, JSON.stringify({
+                    subType: user.subType,
+                    subExpDate: user.subExpDate,
+                    previewRestricted: user.previewRestricted,
+                    downloadRestricted: user.downloadRestricted,
+                    cachedAt: Date.now()
+                }));
+            } else {
+                // Free planas arba prenumerata baigiasi šiandien - netalpiname,
+                // kad likučiai visada būtų tikrinami iš naujo iš serverio.
+                sessionStorage.removeItem(QUOTA_CACHE_KEY);
+            }
+        }
+
+        function loadQuotaCache() {
+            try {
+                const raw = sessionStorage.getItem(QUOTA_CACHE_KEY);
+                return raw ? JSON.parse(raw) : null;
+            } catch (e) { return null; }
+        }
+
+        function prerenderFromCache(cached) {
+            // Preliminarus, akimirksnį atvaizduojamas likučių ženkliukas iš
+            // talpyklos, kol laukiama serverio atsakymo (be papildomos užklausos).
+            const container = document.getElementById('quota-badges');
+            if (!container) return;
+            container.innerHTML = '';
+            const b = document.createElement('span');
+            b.className = 'badge unlimited';
+            if (cached.subType === 'pro') {
+                b.innerText = '👁 Peržiūros ir ⬇ atsisiuntimai: ∞';
+            } else {
+                b.innerText = '👁 Peržiūros: ∞ · ⬇ Atsisiuntimai: negalima';
+            }
+            container.appendChild(b);
+        }
 
         document.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -266,6 +318,8 @@
             initAdCounter();
             const token = getCookie("token");
             if (!token) { window.location.href = "index.html"; return; }
+            const cachedQuota = loadQuotaCache();
+            if (cachedQuota) prerenderFromCache(cachedQuota);
             if (sessionToken) {
                 fetchUserData(token);
             } else {
@@ -315,6 +369,7 @@
                     currentUser = data.user;
                     currentUser.token = token;
                     updateUI();
+                    saveOrClearQuotaCache(currentUser);
                     renderFiles(data.files);
                     document.getElementById('loading').style.display = 'none';
                     if (currentUser.stayLoggedIn) {
@@ -348,16 +403,28 @@
 
         function updateUI() {
             const u = currentUser;
+            const isDev = (u.role || '').toLowerCase().trim() === 'praxifold developer';
+
             document.getElementById('ui-support-id').innerText = u.supportId;
             document.getElementById('ui-sub-status').innerText = u.subType.toUpperCase();
             document.getElementById('ui-downloads').innerText = u.totalDownloads;
             if (u.subExpDate) document.getElementById('ui-sub-exp').innerText = "Galioja iki: " + new Date(u.subExpDate).toLocaleDateString('lt-LT');
-            if (u.subType !== 'free' && (u.role || '').toLowerCase().trim() !== 'praxifold developer') {
+            if (u.subType !== 'free' && !isDev) {
                 document.getElementById('dev-program-link').style.display = 'block';
             }
 
+            const devBadge = document.getElementById('dev-badge');
+            if (devBadge) devBadge.style.display = isDev ? 'inline-flex' : 'none';
+
+            ensureDevFrequencyOptions(isDev);
             const freqSel = document.getElementById('security-freq-select');
             if (freqSel) freqSel.value = u.securityAlertFreq || 5;
+            const freqInfo = document.getElementById('security-freq-info');
+            if (freqInfo) {
+                freqInfo.innerText = isDev
+                    ? 'El. pašto saugumo įspėjimas siunčiamas kas N prisijungimų. Kaip patvirtintas kūrėjas, galite rinktis ir rečiau siunčiamus pranešimus (15 arba 20).'
+                    : 'El. pašto saugumo įspėjimas siunčiamas kas N prisijungimų.';
+            }
 
             const stayToggle = document.getElementById('stay-logged-toggle');
             if (stayToggle) stayToggle.checked = !!u.stayLoggedIn;
@@ -409,6 +476,22 @@
             } else if (u.subType === 'pro') {
                 if (!u.previewRestricted)  container.appendChild(makeBadge('👁 Peržiūrų liko: ∞', 'unlimited'));
                 if (!u.downloadRestricted) container.appendChild(makeBadge('⬇ Atsisiuntimų liko: ∞', 'unlimited'));
+            }
+        }
+
+        function ensureDevFrequencyOptions(isDev) {
+            const sel = document.getElementById('security-freq-select');
+            if (!sel) return;
+            const hasExtended = !!sel.querySelector('option[value="15"]');
+            if (isDev && !hasExtended) {
+                const o15 = document.createElement('option');
+                o15.value = '15'; o15.innerText = 'Kas 15 prisijungimų';
+                const o20 = document.createElement('option');
+                o20.value = '20'; o20.innerText = 'Kas 20 prisijungimų';
+                sel.appendChild(o15);
+                sel.appendChild(o20);
+            } else if (!isDev && hasExtended) {
+                sel.querySelectorAll('option[value="15"], option[value="20"]').forEach(o => o.remove());
             }
         }
 
@@ -495,7 +578,7 @@
 
                 const btnPrev = document.createElement('button');
                 btnPrev.className = 'btn btn-secondary';
-                btnPrev.innerText = 'Peržiūrėti svetainėje';
+                btnPrev.innerText = 'Peržiūrėti prieš viešą paskelbimą';
                 btnPrev.onclick = () => requestAccess(f.name, 'preview', f.stage);
                 card.appendChild(btnPrev);
 
@@ -563,6 +646,12 @@
         }
 
         function proceedRequestAccess(fileName, type) {
+            if (type === 'download' && currentUser.subType === 'standard') {
+                // Standard planas neleidžia atsisiuntimų - blokuojame IŠKART,
+                // niekur nesikreipdami į serverį (taupome užklausas ir apkrovą).
+                alert("Atsisiuntimai neįtraukti į Standard planą. Norėdami atsisiųsti failus, kreipkitės: praxifold@gmail.com arba pereikite prie Pro plano.");
+                return;
+            }
             if (type === 'preview') {
                 document.getElementById('preview-pass').innerText = "Gaunamas kodas...";
                 document.getElementById('preview-copy-btn').style.display = 'none';
@@ -684,7 +773,16 @@
                 timeLeft--;
                 timerEl.innerText = timeLeft;
                 if (timeLeft === 17) document.getElementById('dl-close-btn').style.display = 'block';
-                if (timeLeft <= 0) { clearInterval(countdown); closeModal('download-modal'); window.location.reload(); }
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    closeModal('download-modal');
+                    if (currentUser.subType === 'free') {
+                        // Free planui likučiai keičiasi - būtina atnaujinti iš serverio.
+                        window.location.reload();
+                    }
+                    // Pro planui atsisiuntimai neriboti - likučiai jau žinomi
+                    // (talpykloje), tad puslapio perkrauti nereikia.
+                }
             }, 1000);
         }
 
@@ -805,6 +903,7 @@
             if (tokenRefreshInterval) clearInterval(tokenRefreshInterval);
             document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             sessionStorage.removeItem('sessionToken');
+            sessionStorage.removeItem(QUOTA_CACHE_KEY);
             sessionToken = null;
             window.location.href = "index.html";
         }
