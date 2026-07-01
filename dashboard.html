@@ -170,7 +170,7 @@
     <div id="preview-modal" class="modal">
         <div class="modal-content" style="text-align:center;">
             <span class="close" id="preview-close" onclick="closeModal('preview-modal')" style="display:none;">&times;</span>
-            <h2 style="margin-bottom:4px;">Peržiūros Prieš Viešą Paskelbimą Slaptažodis</h2>
+            <h2 style="margin-bottom:4px;">Peržiūros Slaptažodis</h2>
             <p class="info-text" style="margin-bottom:4px;">Naudokite šį slaptažodį atidarius įrankio puslapį.</p>
             <div class="pass-display">
                 <code id="preview-pass">Gaunamas kodas...</code>
@@ -578,7 +578,7 @@
 
                 const btnPrev = document.createElement('button');
                 btnPrev.className = 'btn btn-secondary';
-                btnPrev.innerText = 'Peržiūrėti prieš viešą paskelbimą';
+                btnPrev.innerText = 'Peržiūrėti svetainėje';
                 btnPrev.onclick = () => requestAccess(f.name, 'preview', f.stage);
                 card.appendChild(btnPrev);
 
