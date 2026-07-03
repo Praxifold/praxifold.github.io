@@ -79,6 +79,7 @@
         .request-tool-section { text-align: center; margin-top: 28px; padding: 16px 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); font-size: 14px; color: #555; }
         .request-tool-section a { color: #0078D7; font-weight: 600; text-decoration: none; margin-left: 4px; }
         .request-tool-section a:hover { text-decoration: underline; }
+        .queue-msg { display: block; font-size: 12px; color: #666; margin-top: 4px; min-height: 15px; }
     </style>
 </head>
 <body>
@@ -106,7 +107,7 @@
         </div>
         <div id="loading" style="text-align:center; color:#888; padding:40px 0;">Kraunama sistema...</div>
         <div class="grid" id="file-grid"></div>
-        <div class="request-tool-section">
+        <div class="request-tool-section" id="request-tool-section" style="display:none;">
             Nerandate norimo įrankio? <a href="https://docs.google.com/forms/d/e/1FAIpQLScM5TQAPhEyBGnrxlaEPfljNJTeeBWAMpRgTohw-HAiEn6tDw/viewform?usp=header" target="_blank">Paprašykite čia →</a>
         </div>
     </div>
@@ -127,6 +128,7 @@
                 <span class="info-text" id="ui-sub-exp"></span><br><br>
                 <input type="text" id="promo-code" placeholder="Įveskite aktyvavimo kodą (skiria didž./mažąsias)">
                 <button class="btn" id="activate-code-btn" onclick="activateCode()">Aktyvuoti</button>
+                <span class="queue-msg" id="activate-queue-msg"></span>
             </div>
             <div class="setting-group">
                 <strong>Statistika:</strong><br>
@@ -159,7 +161,8 @@
                 <div id="delete-box" style="display:none; margin-top:10px;">
                     <input type="email" id="del-email" placeholder="Patvirtinkite el. paštą">
                     <input type="text" id="del-confirm" placeholder="Įrašykite: suprantu, kad mano duomenys bus ištrinti" style="font-size:11px;">
-                    <button class="btn" style="background:#c9302c;" onclick="deleteAccount()">Suplanuoti ištrynimą</button>
+                    <button class="btn" style="background:#c9302c;" id="delete-account-btn" onclick="deleteAccount()">Suplanuoti ištrynimą</button>
+                    <span class="queue-msg" id="delete-queue-msg"></span>
                 </div>
             </div>
             <button class="btn btn-secondary" style="margin-top:6px;" onclick="logout()">Atsijungti</button>
@@ -170,7 +173,7 @@
     <div id="preview-modal" class="modal">
         <div class="modal-content" style="text-align:center;">
             <span class="close" id="preview-close" onclick="closeModal('preview-modal')" style="display:none;">&times;</span>
-            <h2 style="margin-bottom:4px;">Peržiūros Slaptažodis</h2>
+            <h2 style="margin-bottom:4px;">Peržiūros Prieš Viešą Paskelbimą Slaptažodis</h2>
             <p class="info-text" style="margin-bottom:4px;">Naudokite šį slaptažodį atidarius įrankio puslapį.</p>
             <div class="pass-display">
                 <code id="preview-pass">Gaunamas kodas...</code>
@@ -224,7 +227,7 @@
     </div>
 
     <script>
-        const GAS_URL    = "https://script.google.com/macros/s/AKfycbywajPo1a3zVI4ht3LTxl3mxhDh4cu4u8mM17RNNpN1I0VFJf2TEn_VPWe-gJcyL79G/exec";
+        const GAS_URL    = "https://script.google.com/macros/s/AKfycbxkC1_vanced9OyHXAB0MzZjRsU0G5bZ76F_3LXy7gb24AvK_JfwtjU_eySPSdvRwAO/exec";
         const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         const REPORT_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeKlBK6UKrGVaRCakQQp9mZjHzIVMjx9ke1UfJr8X50F3v0bg/viewform?usp=header";
         let currentUser = null;
@@ -234,6 +237,54 @@
         let sessionToken = sessionStorage.getItem('sessionToken') || null;
         let sessionRetried = false;
         let pendingExperimental = null;
+
+        // Kiek laiko laukiame serverio atsakymo prieš atsisakydami veiksmo,
+        // kuris gali užtrukti kelias sekundes (rašymas į lapą / laiškas).
+        const ACTIVATE_TIMEOUT_MS = 30000;
+        const DELETE_TIMEOUT_MS   = 30000;
+        const SERVER_TIMEOUT_MESSAGE = "Šiuo metu patiriame techninių trikdžių. Vis dėlto tikėtina, kad situacija netrukus pasikeis - grįžkite vėliau ir pirmiausia pabandykite prisijungti.";
+
+        // ---- Eilės vietos rodymas (tik informacinis) ----
+        function pollQueuePosition(targetEl) {
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"getQueuePosition" }) })
+                .then(r => r.json())
+                .then(data => {
+                    if (!targetEl) return;
+                    if (data && data.success && data.position > 1) {
+                        targetEl.innerText = `Jūsų vieta eilėje: ${data.position}`;
+                    } else {
+                        targetEl.innerText = '';
+                    }
+                }).catch(() => {});
+        }
+
+        // ---- Kūrėjo įrankių (developer tools) spartieji klavišai ----
+        function isDevToolsShortcut(e) {
+            const key = (e.key || '').toLowerCase();
+            if (key === 'f12') return true;
+            const ctrlOrCmd = e.ctrlKey || e.metaKey;
+            if (ctrlOrCmd && e.shiftKey && (key === 'i' || key === 'j' || key === 'c')) return true;
+            if (ctrlOrCmd && !e.shiftKey && key === 'u') return true;
+            if (e.metaKey && e.altKey && (key === 'i' || key === 'j' || key === 'c')) return true;
+            return false;
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (!isDevToolsShortcut(e)) return;
+            e.preventDefault();
+            alert("Kūrėjo įrankiai draudžiami, kaip nurodyta mūsų taisyklėse.");
+            if (currentUser && !devToolsReported) {
+                devToolsReported = true;
+                fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"reportDevTools", token: currentUser.token, sessionToken }) })
+                    .then(r => r.json()).then(data => {
+                        if (data && data.sessionToken) storeSessionToken(data.sessionToken);
+                        if (data && data.error === "UŽBLOKUOTA") {
+                            alert("Paskyra užblokuota dėl taisyklių pažeidimo.\nApskundimo forma:\n" + APPEAL_URL + "\n\nPateikite max 1 apskundimą per savaitę.");
+                            logout();
+                        }
+                    }).catch(() => {});
+            }
+        });
 
         // ---- Standard/Pro likučių talpykla (sesijos atmintis) ----
         // Naudojame sessionStorage, nes ji automatiškai išsivalo uždarius
@@ -521,6 +572,8 @@
         function renderFiles(files) {
             const grid = document.getElementById('file-grid');
             grid.innerHTML = '';
+            const reqSection = document.getElementById('request-tool-section');
+            if (reqSection) reqSection.style.display = 'block';
             if (!files || files.length === 0) {
                 grid.innerHTML = '<p class="no-results">Šiuo metu aktyvių failų sistemoje nėra.</p>';
                 return;
@@ -578,7 +631,7 @@
 
                 const btnPrev = document.createElement('button');
                 btnPrev.className = 'btn btn-secondary';
-                btnPrev.innerText = 'Peržiūrėti svetainėje';
+                btnPrev.innerText = 'Peržiūrėti prieš viešą paskelbimą';
                 btnPrev.onclick = () => requestAccess(f.name, 'preview', f.stage);
                 card.appendChild(btnPrev);
 
@@ -807,21 +860,41 @@
         function activateCode() {
             const code = document.getElementById('promo-code').value;
             const btn  = document.getElementById('activate-code-btn');
+            const queueMsgEl = document.getElementById('activate-queue-msg');
             const originalText = btn.innerText;
             btn.disabled = true;
             btn.innerText = 'Tikrinama...';
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"activateCode", token: currentUser.token, sessionToken, code }) })
+            pollQueuePosition(queueMsgEl);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), ACTIVATE_TIMEOUT_MS);
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"activateCode", token: currentUser.token, sessionToken, code }), signal: controller.signal })
                 .then(r => r.json()).then(data => {
+                    clearTimeout(timeoutId);
+                    if (queueMsgEl) queueMsgEl.innerText = '';
                     if (data.success) { storeSessionToken(data.sessionToken); alert("Kodas aktyvuotas!"); window.location.reload(); }
-                    else {
-                        alert("Kodas neteisingas arba jau panaudotas.");
+                    else if (data.error === "SESIJA_NEGALIOJA") {
+                        btn.disabled = false;
+                        btn.innerText = originalText;
+                        establishSessionThen(currentUser.token, () => activateCode());
+                    } else {
+                        if (data.error === "PRENUMERATA_JAU_AKTYVI") {
+                            alert("Jūsų prenumerata dar aktyvi. Naują kodą galėsite aktyvuoti tik tada, kai dabartinė prenumerata pasibaigs arba baigiasi šiandien.");
+                        } else {
+                            alert("Kodas neteisingas arba jau panaudotas.");
+                        }
                         btn.disabled = false;
                         btn.innerText = originalText;
                     }
-                }).catch(() => {
-                    alert("Klaida tikrinant kodą.");
+                }).catch((err) => {
+                    clearTimeout(timeoutId);
+                    if (queueMsgEl) queueMsgEl.innerText = '';
                     btn.disabled = false;
                     btn.innerText = originalText;
+                    if (err.name === 'AbortError') {
+                        alert(SERVER_TIMEOUT_MESSAGE);
+                    } else {
+                        alert("Klaida tikrinant kodą.");
+                    }
                 });
         }
 
@@ -869,13 +942,37 @@
         }
 
         function deleteAccount() {
-            const email   = document.getElementById('del-email').value;
-            const confirm = document.getElementById('del-confirm').value;
-            if (confirm !== "suprantu, kad mano duomenys bus ištrinti") { alert("Neteisinga patvirtinimo frazė."); return; }
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"deleteAccount", token: currentUser.token, sessionToken, email }) })
+            const email       = document.getElementById('del-email').value;
+            const confirmText = document.getElementById('del-confirm').value;
+            if (confirmText !== "suprantu, kad mano duomenys bus ištrinti") { alert("Neteisinga patvirtinimo frazė."); return; }
+            const btn = document.getElementById('delete-account-btn');
+            const queueMsgEl = document.getElementById('delete-queue-msg');
+            const originalText = btn ? btn.innerText : '';
+            if (btn) { btn.disabled = true; btn.innerText = 'Vykdoma...'; }
+            pollQueuePosition(queueMsgEl);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), DELETE_TIMEOUT_MS);
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"deleteAccount", token: currentUser.token, sessionToken, email }), signal: controller.signal })
                 .then(r => r.json()).then(data => {
+                    clearTimeout(timeoutId);
+                    if (queueMsgEl) queueMsgEl.innerText = '';
                     if (data.success) { alert("Ištrynimas sėkmingai suplanuotas."); logout(); }
-                    else alert("Klaida: " + data.error);
+                    else if (data.error === "SESIJA_NEGALIOJA") {
+                        if (btn) { btn.disabled = false; btn.innerText = originalText; }
+                        establishSessionThen(currentUser.token, () => deleteAccount());
+                    } else {
+                        alert("Klaida: " + data.error);
+                        if (btn) { btn.disabled = false; btn.innerText = originalText; }
+                    }
+                }).catch((err) => {
+                    clearTimeout(timeoutId);
+                    if (queueMsgEl) queueMsgEl.innerText = '';
+                    if (btn) { btn.disabled = false; btn.innerText = originalText; }
+                    if (err.name === 'AbortError') {
+                        alert(SERVER_TIMEOUT_MESSAGE);
+                    } else {
+                        alert("Klaida trinant paskyrą.");
+                    }
                 });
         }
 
