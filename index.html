@@ -17,6 +17,7 @@
         .switch-link:hover { color: #0078D7; }
         #role-other-wrap { display: none; }
         .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
+        #queue-msg { font-size: 13px; color: #666; text-align: center; min-height: 16px; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #0078D7; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #geo-blocked { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:10000; flex-direction:column; align-items:center; justify-content:center; color:#333; font-family: sans-serif; text-align:center; padding:20px; }
@@ -46,7 +47,7 @@
         <h1>UŽBLOKUOTA</h1>
         <p>Apgailestaujame, ši svetainė prieinama tik vartotojams iš Lietuvos teritorijos.</p>
     </div>
-    <div id="loader" class="loading-overlay"><div class="spinner"></div></div>
+    <div id="loader" class="loading-overlay"><div class="spinner"></div><p id="queue-msg"></p></div>
     <div class="cookie-overlay" id="cookie-overlay">
         <div class="cookie-box">
             <h3>🍪 Slapukų Sutikimas</h3>
@@ -117,9 +118,16 @@
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbywajPo1a3zVI4ht3LTxl3mxhDh4cu4u8mM17RNNpN1I0VFJf2TEn_VPWe-gJcyL79G/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxkC1_vanced9OyHXAB0MzZjRsU0G5bZ76F_3LXy7gb24AvK_JfwtjU_eySPSdvRwAO/exec";
         const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         let pendingSignup = null;
+
+        // Kiek laiko laukiame serverio atsakymo prieš atsisakydami veiksmo.
+        // Registracija (rašymas į lapą + laiško siuntimas) - iki 30 sek.
+        // Prisijungimas (lengvesnis veiksmas) - iki 20 sek.
+        const SIGNUP_TIMEOUT_MS = 30000;
+        const LOGIN_TIMEOUT_MS  = 20000;
+        const SERVER_TIMEOUT_MESSAGE = "Šiuo metu patiriame techninių trikdžių. Vis dėlto tikėtina, kad situacija netrukus pasikeis - grįžkite vėliau ir pirmiausia pabandykite prisijungti.";
 
         window.onload = function() {
             checkLocation();
@@ -130,6 +138,41 @@
             });
             document.getElementById('reg-pass-confirm').addEventListener('input', checkConfirmMatch);
         };
+
+        // ---- Eilės vietos rodymas (tik informacinis) ----
+        function showQueueMessage(text) {
+            const el = document.getElementById('queue-msg');
+            if (el) el.innerText = text || '';
+        }
+
+        function pollQueuePosition() {
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"getQueuePosition" }) })
+                .then(r => r.json())
+                .then(data => {
+                    if (data && data.success && data.position > 1) {
+                        showQueueMessage(`Jūsų vieta eilėje: ${data.position}`);
+                    } else {
+                        showQueueMessage('');
+                    }
+                }).catch(() => {});
+        }
+
+        // ---- Kūrėjo įrankių (developer tools) spartieji klavišai ----
+        function isDevToolsShortcut(e) {
+            const key = (e.key || '').toLowerCase();
+            if (key === 'f12') return true;
+            const ctrlOrCmd = e.ctrlKey || e.metaKey;
+            if (ctrlOrCmd && e.shiftKey && (key === 'i' || key === 'j' || key === 'c')) return true;
+            if (ctrlOrCmd && !e.shiftKey && key === 'u') return true;
+            if (e.metaKey && e.altKey && (key === 'i' || key === 'j' || key === 'c')) return true;
+            return false;
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (!isDevToolsShortcut(e)) return;
+            e.preventDefault();
+            alert("Kūrėjo įrankiai draudžiami, kaip nurodyta mūsų taisyklėse.");
+        });
 
         function getCookie(name) {
             const v = `; ${document.cookie}`;
@@ -214,9 +257,12 @@
             const pass  = document.getElementById('login-pass').value;
             if (!email || !pass) { alert("Užpildykite visus laukus"); return; }
             showLoader();
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"login", email, password:pass }) })
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), LOGIN_TIMEOUT_MS);
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"login", email, password:pass }), signal: controller.signal })
                 .then(r => r.json())
                 .then(data => {
+                    clearTimeout(timeoutId);
                     hideLoader();
                     if (data.success) {
                         document.cookie = `token=${data.token}; path=/; max-age=86400;`;
@@ -231,7 +277,15 @@
                         };
                         alert(msgs[data.error] || "Klaida: " + data.error);
                     }
-                }).catch(() => { hideLoader(); alert("Klaida jungiantis prie serverio."); });
+                }).catch((err) => {
+                    clearTimeout(timeoutId);
+                    hideLoader();
+                    if (err.name === 'AbortError') {
+                        alert(SERVER_TIMEOUT_MESSAGE);
+                    } else {
+                        alert("Klaida jungiantis prie serverio.");
+                    }
+                });
         }
 
         function showCookieConsent() {
@@ -261,10 +315,15 @@
             document.getElementById('cookie-overlay').style.display = 'none';
             if (!pendingSignup) return;
             showLoader();
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"signup", ...pendingSignup, cookies: cookieChoice }) })
+            pollQueuePosition();
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), SIGNUP_TIMEOUT_MS);
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"signup", ...pendingSignup, cookies: cookieChoice }), signal: controller.signal })
             .then(r => r.json())
             .then(data => {
+                clearTimeout(timeoutId);
                 hideLoader();
+                showQueueMessage('');
                 if (data.success) {
                     document.cookie = `token=${data.token}; path=/; max-age=86400;`;
                     sessionStorage.setItem('sessionToken', data.sessionToken);
@@ -278,7 +337,16 @@
                         alert("Klaida: " + data.error);
                     }
                 }
-            }).catch(() => { hideLoader(); alert("Registracijos klaida."); });
+            }).catch((err) => {
+                clearTimeout(timeoutId);
+                hideLoader();
+                showQueueMessage('');
+                if (err.name === 'AbortError') {
+                    alert(SERVER_TIMEOUT_MESSAGE);
+                } else {
+                    alert("Registracijos klaida.");
+                }
+            });
         }
 
         function requestReset() {
