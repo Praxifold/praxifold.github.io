@@ -1,0 +1,37 @@
+PRAXIFOLD – ĮRANKIŲ DOKUMENTACIJA IR NAUJIENOS
+================================================
+
+Šiame dokumente rasite visų Praxifold įrankių naudojimo instrukcijas bei
+naujausių versijų pakeitimų (changelog) sąrašą. Šis failas atidaromas iš
+Nustatymų lango tiksliai taip pat, kaip ir Naudojimo Sąlygos (policy.txt).
+
+--------------------------------------------------------------------
+KAIP NAUDOTIS ŠIUO DOKUMENTU
+--------------------------------------------------------------------
+Kiekvienam įrankiui žemiau turėtų būti aprašyta:
+  1. Trumpas įrankio aprašymas ir paskirtis
+  2. Sistemos reikalavimai / suderinamumas (pvz. jei neveikia telefonuose)
+  3. Naudojimo instrukcijos žingsnis po žingsnio
+  4. Versijų istorija su pakeitimų aprašymais (changelog)
+
+--------------------------------------------------------------------
+NAUJAUSI PAKEITIMAI (BENDRAI)
+--------------------------------------------------------------------
+- Pridėta progresinė bausmių sistema už kūrėjo įrankių naudojimą.
+- Atnaujintas Free ir Standard planų kreditų modelis: dabar kreditai
+  atsinaujina kas mėnesį (nebe vienkartinis limitas).
+- Pridėtas priminimas atsisiųsti naujausią versiją, kai jūsų turima
+  versija atsilieka 2 ar daugiau versijų nuo naujausios.
+
+--------------------------------------------------------------------
+[ĮRANKIO PAVADINIMAS]
+--------------------------------------------------------------------
+Aprašymas: ...
+Suderinamumas: ...
+
+Versijos istorija:
+  V3 – ...
+  V2 – ...
+  V1 – Pirminis paleidimas.
+
+(Pridėkite po skyrių kiekvienam savo Praxifold įrankiui.)
