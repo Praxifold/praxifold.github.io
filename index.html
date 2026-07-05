@@ -40,6 +40,11 @@
         .consent-row { display:flex; align-items:flex-start; gap:8px; font-size:12px; color:#555; line-height:1.5; margin:10px 0; cursor:pointer; }
         .consent-row input[type=checkbox] { width:auto; margin:2px 0 0 0; flex-shrink:0; }
         .consent-row a { color:#0078D7; font-weight:bold; text-decoration:underline; }
+        .devtools-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.55); z-index:6000; align-items:center; justify-content:center; padding:20px; }
+        .devtools-box { background:white; padding:30px; border-radius:10px; max-width:420px; width:100%; }
+        .devtools-box h3 { color:#c00; margin-bottom:10px; }
+        .devtools-box p { font-size:13px; color:#555; margin-bottom:18px; line-height:1.6; }
+        .devtools-box button { width:100%; padding:11px; border:none; border-radius:5px; cursor:pointer; font-weight:bold; font-size:14px; background:#c00; color:white; }
     </style>
 </head>
 <body>
@@ -117,8 +122,16 @@
         <a class="switch-link" onclick="toggleForm('login-box')" style="margin-top:12px;">← Grįžti į prisijungimą</a>
     </div>
 
+    <div class="devtools-overlay" id="devtools-overlay">
+        <div class="devtools-box">
+            <h3>⚠ Kūrėjo Įrankiai Draudžiami</h3>
+            <p>Kūrėjo įrankiai (developer tools) draudžiami, kaip nurodyta mūsų taisyklėse.</p>
+            <button onclick="document.getElementById('devtools-overlay').style.display='none'; devToolsWarningOpen=false;">Supratau</button>
+        </div>
+    </div>
+
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxkC1_vanced9OyHXAB0MzZjRsU0G5bZ76F_3LXy7gb24AvK_JfwtjU_eySPSdvRwAO/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzL-E6ldNjfUd9utcWnua7voQg6Ca68bH6DSygARQZCI78rqqZT2KDJ1JhALyi_xrC2/exec";
         const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         let pendingSignup = null;
 
@@ -168,16 +181,27 @@
             return false;
         }
 
+        let devToolsWarningOpen = false;
         document.addEventListener('keydown', function(e) {
             if (!isDevToolsShortcut(e)) return;
             e.preventDefault();
-            alert("Kūrėjo įrankiai draudžiami, kaip nurodyta mūsų taisyklėse.");
+            if (devToolsWarningOpen) return;
+            devToolsWarningOpen = true;
+            document.getElementById('devtools-overlay').style.display = 'flex';
         });
 
         function getCookie(name) {
             const v = `; ${document.cookie}`;
             const p = v.split(`; ${name}=`);
             if (p.length === 2) return p.pop().split(';').shift();
+        }
+
+        function formatLockoutUntil(until) {
+            if (!until) return '';
+            try {
+                const d = new Date(until);
+                return "Galios iki: " + d.toLocaleString('lt-LT');
+            } catch (e) { return ''; }
         }
 
         function checkAutoLogin() {
@@ -190,6 +214,9 @@
                         sessionStorage.setItem('sessionToken', data.sessionToken);
                         window.location.href = "dashboard.html";
                     }
+                    // Jei paskyra užrakinta/blokuota, tiesiog liekama prisijungimo
+                    // lange - vartotojas pamatys atitinkamą pranešimą, kai bandys
+                    // prisijungti rankiniu būdu.
                 }).catch(() => {});
         }
 
@@ -269,6 +296,14 @@
                         sessionStorage.setItem('sessionToken', data.sessionToken);
                         window.location.href = "dashboard.html";
                     } else {
+                        if (data.error === "PASKYRA_LAIKINAI_UZRAKINTA") {
+                            alert("Paskyra laikinai užrakinta dėl pakartotinių pažeidimų.\n" + formatLockoutUntil(data.until));
+                            return;
+                        }
+                        if (data.error === "SLAPTAZODIS_UZRAKINTAS") {
+                            alert("Per daug neteisingų slaptažodžio bandymų. Prisijungimas laikinai užrakintas.\n" + formatLockoutUntil(data.until));
+                            return;
+                        }
                         const msgs = {
                             PASKYRA_SUPLANUOTA_TRYNIMUI: "Ši paskyra suplanuota ištrynimui. Kreipkitės: praxifold@gmail.com",
                             UŽBLOKUOTA: `Paskyra užblokuota.\nKreipkitės: praxifold@gmail.com\n\nApskundimo forma:\n${APPEAL_URL}\n\nPateikite max 1 apskundimą per savaitę.`,
