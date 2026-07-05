@@ -14,24 +14,54 @@ Kiekvienam įrankiui žemiau turėtų būti aprašyta:
   3. Naudojimo instrukcijos žingsnis po žingsnio
   4. Versijų istorija su pakeitimų aprašymais (changelog)
 
---------------------------------------------------------------------
-NAUJAUSI PAKEITIMAI (BENDRAI)
---------------------------------------------------------------------
-- Pridėta progresinė bausmių sistema už kūrėjo įrankių naudojimą.
-- Atnaujintas Free ir Standard planų kreditų modelis: dabar kreditai
-  atsinaujina kas mėnesį (nebe vienkartinis limitas).
-- Pridėtas priminimas atsisiųsti naujausią versiją, kai jūsų turima
-  versija atsilieka 2 ar daugiau versijų nuo naujausios.
 
 --------------------------------------------------------------------
-[ĮRANKIO PAVADINIMAS]
+hieroglifu kurejas
 --------------------------------------------------------------------
-Aprašymas: ...
-Suderinamumas: ...
+Aprašymas: Unikalių hieroglifų kurėjas skirtas padėti sukurti savo crypografini rašymo būda, stiliu ar panašiai
 
-Versijos istorija:
-  V3 – ...
-  V2 – ...
-  V1 – Pirminis paleidimas.
+Suderinamumas: pritaikytas kompiuteriams.
 
-(Pridėkite po skyrių kiekvienam savo Praxifold įrankiui.)
+Versijos istorija/plėtros etapas:
+
+- V1 – Pirminis paleidimas (stabilus).
+--------------------------------------------------------------------
+kauliuku ridenimo simuliatorius
+--------------------------------------------------------------------
+Aprašymas: pakeitimas kai neturi fizikinų ridenimo kauliukų po ranka ar neturi pakankamai.
+
+Suderinamumas: pritaikytas kompiuteriams.
+
+Versijos istorija/plėtros etapas:
+
+- V1 – Pirminis paleidimas (stabilus).
+--------------------------------------------------------------------
+klasės sėdimo plano kurėjas
+--------------------------------------------------------------------
+Aprašymas: skirtas mokytojom lengviau sudelioti ir išrinkti sėdėjimo vietas savo studentam.
+
+Suderinamumas: pritaikytas kompiuteriams.
+
+Versijos istorija/plėtros etapas:
+
+- V1 – Pirminis paleidimas (Alpha- gali strigti arba neveikti pilnai, vėliau gali būti paslėpta iš svetainės iki kol generalinė versija bus sukurta)
+--------------------------------------------------------------------
+pamoku planavimui irankis
+--------------------------------------------------------------------
+Aprašymas: skirtas mokytojom lengviau pasiruošti savo pamokų plana.
+
+Suderinamumas: pritaikytas kompiuteriams.
+
+Versijos istorija/plėtros etapas:
+
+- V1 – Pirminis paleidimas (Alpha- gali strigti arba neveikti pilnai, vėliau gali būti paslėpta iš svetainės iki kol generalinė versija bus sukurta)
+--------------------------------------------------------------------
+QR kodu generatorius
+--------------------------------------------------------------------
+Aprašymas: skirtas greitai ir patogiai sukurit qr/bar kodus su skirtingais stiliais.
+
+Suderinamumas: pritaikytas kompiuteriams.
+
+Versijos istorija/plėtros etapas:
+
+- V2 – antras pagerintas išleidimas (Beta 4- žinoma klaida- suderinamumas su Lietuviškomis raidėmis (ą,č,ę,ė,į,š,ų,ū,ž) jegu qr kodas nepasirodo laikiniai pakeiskite arba ištrinkite lietuviškas raides)
