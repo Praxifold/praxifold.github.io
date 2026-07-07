@@ -76,5 +76,5 @@ Suderinamumas: TIK kompiuteriams (arba įrenginiams kurie paleidžia 'download' 
 
 Versijos istorija/plėtros etapas:
 
-- V1 – antras pagerintas išleidimas (Stabilus)
+- V1 – Pirmas išleidimas (Stabilus)
 Naudoja Dirbtinio Intelekto modelį 'Linas' kuris atpažina lietuviškas raides su 80% tikslumu.
