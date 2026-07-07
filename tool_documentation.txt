@@ -65,3 +65,16 @@ Suderinamumas: pritaikytas kompiuteriams.
 Versijos istorija/plėtros etapas:
 
 - V2 – antras pagerintas išleidimas (Beta 4- žinoma klaida- suderinamumas su Lietuviškomis raidėmis (ą,č,ę,ė,į,š,ų,ū,ž) jegu qr kodas nepasirodo laikiniai pakeiskite arba ištrinkite lietuviškas raides)
+
+--------------------------------------------------------------------
+Šrifto kurėjas Lietuvių klaviatūrai (Linas)
+--------------------------------------------------------------------
+Aprašymas: skirtas sukurti ttf/otf rankų rašto šrifta.
+naudojimas: nupieškite raide, ir pasižiurėkite į spėjima jeigu spėjimas taisyngas spauskite įsaugoti, kitaip pasirinkite iš sarašo kokia tai raidė jeigu sarašas neatsiranda are jame nėra jūsų raidės nupieškite ją iš naujo.
+
+Suderinamumas: TIK kompiuteriams (arba įrenginiams kurie paleidžia 'download' kad patikrinti nupieškite ant norimo įrenginio 2-3 raides ir pabandykite atsisiusti '.ttf' arba '.otf' faila jeigu pavyksta vadinasi veiks, kitaip tas įrenginys yra netinkamas).
+
+Versijos istorija/plėtros etapas:
+
+- V1 – antras pagerintas išleidimas (Stabilus)
+Naudoja Dirbtinio Intelekto modelį 'Linas' kuris atpažina lietuviškas raides su 80% tikslumu.
