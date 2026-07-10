@@ -39,6 +39,7 @@
         .stage-general { background: #f5f5f5; color: #555; border: 1px solid #ddd; }
         .stage-stable { background: #e6f4ea; color: #2e7d32; border: 1px solid #81c784; }
         .stage-experimental { background: #ffe0b2; color: #e65100; border: 1px solid #ff9800; }
+        .stage-legacy { background: #eceff1; color: #455a64; border: 1px solid #b0bec5; }
         .compat-note { font-size: 11px; color: #e65100; margin: -4px 0 8px; display: block; }
         .access-private { font-size: 11px; color: #e65100; font-weight: 600; }
         .btn { background: #0078D7; color: white; border: none; padding: 9px 12px; border-radius: 5px; cursor: pointer; font-size: 14px; width: 100%; margin-top: 6px; transition: background 0.2s; }
@@ -56,7 +57,7 @@
         .links-group a { display: block; margin: 6px 0; color: #0078D7; text-decoration: none; font-size: 14px; }
         .links-group a:hover { text-decoration: underline; }
         .pass-display { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 16px; margin: 14px 0; text-align: center; }
-        .pass-display code { font-size: 22px; font-weight: bold; color: #856404; letter-spacing: 2px; display: block; margin-bottom: 8px; }
+        .pass-display code { font-size: clamp(14px, 5vw, 22px); font-weight: bold; color: #856404; letter-spacing: 1px; display: block; margin-bottom: 8px; word-break: break-all; overflow-wrap: break-word; white-space: normal; }
         .pass-display.dl-style { background: #d4edda; border-color: #81c784; }
         .pass-display.dl-style code { color: #155724; }
         .copy-btn { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 12px; color: #555; transition: all 0.2s; }
@@ -155,7 +156,7 @@
                 <a href="policy.txt" target="_blank">📄 Naudojimo Sąlygos</a>
                 <a href="tool_documentation.txt" target="_blank">📘 Įrankių Dokumentacija ir Naujienos</a>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header" target="_blank">🐞 Pranešti apie klaidą</a>
-                <a id="dev-program-link" href="https://forms.fillout.com/t/iEksPVDhRDus" target="_blank" style="display:none;">🛠 Prisijungti prie Kūrėjų Programos</a>
+                <a id="dev-program-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdzr9FxqRQxTCJlrZNqduMdkkM25wSYsbncvCX-Hbpr_BWckg/viewform?usp=header" target="_blank" style="display:none;">🛠 Prisijungti prie Kūrėjų Programos</a>
             </div>
             <div class="setting-group">
                 <button class="btn" style="background:#d9534f;" onclick="document.getElementById('delete-box').style.display='block'">Ištrinti paskyrą</button>
@@ -174,8 +175,8 @@
     <div id="preview-modal" class="modal">
         <div class="modal-content" style="text-align:center;">
             <span class="close" id="preview-close" onclick="closeModal('preview-modal')" style="display:none;">&times;</span>
-            <h2 style="margin-bottom:4px;">Peržiūros Prieš Viešą Paskelbimą Slaptažodis</h2>
-            <p class="info-text" style="margin-bottom:4px;">Naudokite šį slaptažodį atidarius įrankio puslapį.</p>
+            <h2 style="margin-bottom:4px;">Peržiūra Prieš Viešą Paskelbimą</h2>
+            <p class="info-text" style="margin-bottom:4px;">Failo atrakinimo slaptažodis:</p>
             <div class="pass-display">
                 <code id="preview-pass">Gaunamas kodas...</code>
                 <button class="copy-btn" id="preview-copy-btn" onclick="copyPass('preview-pass','preview-copy-btn')" style="display:none;">📋 Kopijuoti</button>
@@ -237,7 +238,7 @@
     </div>
 
     <script>
-        const GAS_URL    = "https://script.google.com/macros/s/AKfycbzL-E6ldNjfUd9utcWnua7voQg6Ca68bH6DSygARQZCI78rqqZT2KDJ1JhALyi_xrC2/exec";
+        const GAS_URL    = "https://script.google.com/macros/s/AKfycbz5F2qfYcQn8vn8ifuwJVv8xKvRhTftzUgFJVQM04wVNxfexRPXnZg4ohexSR5KoONI/exec";
         const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         const REPORT_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeKlBK6UKrGVaRCakQQp9mZjHzIVMjx9ke1UfJr8X50F3v0bg/viewform?usp=header";
         let currentUser = null;
@@ -297,7 +298,7 @@
             closeModal('devtools-modal');
             devToolsWarningOpen = false;
             if (!currentUser) return;
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"reportDevTools", token: currentUser.token, sessionToken }) })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"reportDevTools", token: currentUser.token, sessionToken, browser: navigator.userAgent }) })
                 .then(r => r.json()).then(data => {
                     if (data && data.sessionToken) storeSessionToken(data.sessionToken);
                     handleDevToolsPunishment(data);
@@ -336,6 +337,111 @@
             e.preventDefault();
             triggerDevToolsWarning();
         });
+
+        // ---- Pelės elgsenos stebėjimas (bot / automatizavimo aptikimas) ----
+        // Lengvas (lightweight), foninis patikrinimas, vykdomas TIK
+        // kompiuterio (PC) vartotojams kas atsitiktinį 20–60 sek. intervalą.
+        // Renkami paskutiniai pelės taškai (pozicija + laikas). Kas
+        // intervalą analizuojama, ar judesys:
+        //   a) pelė nejudėjo (arba judėjo minimaliai)  -> viskas gerai,
+        //   b) judėjo "žmogišku" (netolygiu, kreivu) būdu -> viskas gerai,
+        //   c) judėjo beveik tobulai tiesia linija ir pastoviu greičiu,
+        //      kas primena automatizuotą (robotinį) įrankį -> įspėjimas.
+        // Po 3 tokių pažeidimų paskyra užrakinama 7 dienoms (žr.
+        // reportMouseBot backend'e). Kiti automatizavimo aptikimo
+        // mechanizmai (dev tools ir pan.) lieka nepakitę - ŠIS
+        // patikrinimas veda TIK prie pakartotinių užrakinimų, niekada
+        // prie visiško paskyros blokavimo (banned).
+        let mouseSamples = [];
+        let mouseLockoutFinalized = false;
+        let mouseCheckScheduled = false;
+
+        function isDesktopDevice() {
+            const ua = navigator.userAgent;
+            const looksMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
+            const noTouch = !('maxTouchPoints' in navigator) || navigator.maxTouchPoints === 0;
+            return !looksMobile && noTouch;
+        }
+
+        document.addEventListener('mousemove', function(e) {
+            if (!isDesktopDevice()) return;
+            mouseSamples.push({ x: e.clientX, y: e.clientY, t: Date.now() });
+            if (mouseSamples.length > 80) mouseSamples.shift();
+        });
+
+        // Grąžina: 'stationary' (a - nejudėjo), 'human' (b - žmogiškas
+        // judesys) arba 'bot' (c - įtartinas, robotinis judesys).
+        function analyzeMouseSamples(samples) {
+            if (samples.length < 10) return 'stationary';
+
+            let pathLen = 0;
+            for (let i = 1; i < samples.length; i++) {
+                pathLen += Math.hypot(samples[i].x - samples[i - 1].x, samples[i].y - samples[i - 1].y);
+            }
+            if (pathLen < 25) return 'stationary';
+
+            const dx = samples[samples.length - 1].x - samples[0].x;
+            const dy = samples[samples.length - 1].y - samples[0].y;
+            const displacement = Math.hypot(dx, dy);
+            const straightness = displacement / pathLen; // ~1 = tobula tiesi linija
+
+            const speeds = [];
+            for (let i = 1; i < samples.length; i++) {
+                const dist = Math.hypot(samples[i].x - samples[i - 1].x, samples[i].y - samples[i - 1].y);
+                const dt   = Math.max(1, samples[i].t - samples[i - 1].t);
+                speeds.push(dist / dt);
+            }
+            const avgSpeed = speeds.reduce((a, b) => a + b, 0) / speeds.length;
+            const variance = speeds.reduce((a, b) => a + Math.pow(b - avgSpeed, 2), 0) / speeds.length;
+            const speedCV  = avgSpeed > 0 ? Math.sqrt(variance) / avgSpeed : 0;
+
+            // Beveik tobula tiesi linija IR labai pastovus greitis -> bot.
+            if (straightness > 0.97 && speedCV < 0.15) return 'bot';
+            return 'human';
+        }
+
+        function scheduleMouseCheck() {
+            const delayMs = (20 + Math.random() * 40) * 1000; // 20–60 sek.
+            setTimeout(runMouseCheck, delayMs);
+        }
+
+        function runMouseCheck() {
+            if (mouseLockoutFinalized || !currentUser || !isDesktopDevice()) {
+                scheduleMouseCheck();
+                return;
+            }
+            const snapshot = mouseSamples.slice();
+            mouseSamples = [];
+            if (analyzeMouseSamples(snapshot) === 'bot') {
+                reportMouseBotBehavior();
+            }
+            scheduleMouseCheck();
+        }
+
+        function startMouseWatcher() {
+            if (mouseCheckScheduled || !isDesktopDevice()) return;
+            mouseCheckScheduled = true;
+            scheduleMouseCheck();
+        }
+
+        function reportMouseBotBehavior() {
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"reportMouseBot", token: currentUser.token, sessionToken, browser: navigator.userAgent }) })
+                .then(r => r.json()).then(data => {
+                    if (data && data.sessionToken) storeSessionToken(data.sessionToken);
+                    handleMouseBotPunishment(data);
+                }).catch(() => {});
+        }
+
+        function handleMouseBotPunishment(data) {
+            if (!data || !data.success) return;
+            if (data.punishment === "warn") {
+                alert("Užfiksuotas įtartinas elgesys – pelės judesiai primena automatizuotą (robotinį) įrankį. Prašome įsitikinti, kad nenaudojate jokių automatizavimo priemonių.\n\nJei tai pasikartos, paskyra bus laikinai užrakinta.");
+            } else if (data.punishment === "locked") {
+                mouseLockoutFinalized = true;
+                alert("Pakartotinai užfiksuotas automatizuotą įrankį primenantis pelės elgesys. Paskyra užrakinta 7 dienoms.\n\nApskundimo forma:\n" + APPEAL_URL + "\n\nPateikite max 1 apskundimą per savaitę.");
+                logout();
+            }
+        }
 
         // ---- Standard/Pro likučių talpykla (sesijos atmintis) ----
         // Naudojame sessionStorage, nes ji automatiškai išsivalo uždarius
@@ -434,7 +540,7 @@
 
         function establishSessionThen(token, callback) {
             showLoader();
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"establishSession", token }) })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"establishSession", token, browser: navigator.userAgent }) })
                 .then(r => r.json())
                 .then(data => {
                     hideLoader();
@@ -457,7 +563,7 @@
 
         function fetchUserData(token) {
             showLoader();
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"getUserData", token, sessionToken }) })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"getUserData", token, sessionToken, browser: navigator.userAgent }) })
             .then(r => r.json())
             .then(data => {
                 hideLoader();
@@ -469,6 +575,7 @@
                     updateUI();
                     saveOrClearQuotaCache(currentUser);
                     renderFiles(data.files);
+                    startMouseWatcher();
                     document.getElementById('loading').style.display = 'none';
                     if (currentUser.stayLoggedIn) {
                         document.cookie = `token=${token}; path=/; max-age=604800;`;
@@ -604,6 +711,7 @@
             if (stage.startsWith('beta')) return 'stage-beta';
             if (stage === 'stable') return 'stage-stable';
             if (stage === 'experimental') return 'stage-experimental';
+            if (stage === 'legacy') return 'stage-legacy';
             return 'stage-general';
         }
 
@@ -617,7 +725,8 @@
                 'beta5':  'Beta 5',
                 'general':'Bendroji',
                 'stable': 'Stabili',
-                'experimental': 'Eksperimentinis'
+                'experimental': 'Eksperimentinis',
+                'legacy': 'Legacy (atnaujinimai sustabdyti)'
             };
             return map[stage] || stage;
         }
@@ -775,7 +884,7 @@
 
             fetch(GAS_URL, {
                 method:"POST",
-                body: JSON.stringify({ action:"requestAccess", token: currentUser.token, sessionToken, fileName, type })
+                body: JSON.stringify({ action:"requestAccess", token: currentUser.token, sessionToken, fileName, type, browser: navigator.userAgent })
             }).then(r => r.json()).then(data => {
                 if (data.success) {
                     if (data.sessionToken) storeSessionToken(data.sessionToken);
@@ -936,7 +1045,7 @@
             pollQueuePosition(queueMsgEl);
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), ACTIVATE_TIMEOUT_MS);
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"activateCode", token: currentUser.token, sessionToken, code }), signal: controller.signal })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"activateCode", token: currentUser.token, sessionToken, code, browser: navigator.userAgent }), signal: controller.signal })
                 .then(r => r.json()).then(data => {
                     clearTimeout(timeoutId);
                     if (queueMsgEl) queueMsgEl.innerText = '';
@@ -969,14 +1078,14 @@
 
         function updateSecurityFrequency() {
             const freq = parseInt(document.getElementById('security-freq-select').value);
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"updateSettings", token: currentUser.token, sessionToken, securityAlertFreq: freq }) })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"updateSettings", token: currentUser.token, sessionToken, securityAlertFreq: freq, browser: navigator.userAgent }) })
                 .then(r => r.json()).then(data => { if (data && data.sessionToken) storeSessionToken(data.sessionToken); })
                 .catch(() => {});
         }
 
         function updateStayLoggedIn() {
             const on = document.getElementById('stay-logged-toggle').checked;
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"updateSettings", token: currentUser.token, sessionToken, stayLoggedIn: on }) })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"updateSettings", token: currentUser.token, sessionToken, stayLoggedIn: on, browser: navigator.userAgent }) })
                 .then(r => r.json())
                 .then(data => {
                     if (data && data.sessionToken) storeSessionToken(data.sessionToken);
@@ -999,7 +1108,7 @@
 
         function refreshToken() {
             if (!currentUser || !currentUser.token || !currentUser.stayLoggedIn) return;
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"refreshToken", token: currentUser.token, sessionToken }) })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"refreshToken", token: currentUser.token, sessionToken, browser: navigator.userAgent }) })
                 .then(r => r.json())
                 .then(data => {
                     if (data.success && data.token) {
@@ -1021,7 +1130,7 @@
             pollQueuePosition(queueMsgEl);
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), DELETE_TIMEOUT_MS);
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"deleteAccount", token: currentUser.token, sessionToken, email }), signal: controller.signal })
+            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"deleteAccount", token: currentUser.token, sessionToken, email, browser: navigator.userAgent }), signal: controller.signal })
                 .then(r => r.json()).then(data => {
                     clearTimeout(timeoutId);
                     if (queueMsgEl) queueMsgEl.innerText = '';
