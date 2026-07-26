@@ -45,7 +45,8 @@
         .devtools-box h3 { color:#c00; margin-bottom:10px; }
         .devtools-box p { font-size:13px; color:#555; margin-bottom:18px; line-height:1.6; }
         .devtools-box button { width:100%; padding:11px; border:none; border-radius:5px; cursor:pointer; font-weight:bold; font-size:14px; background:#c00; color:white; }
-    </style>
+        .legal-footer { width:100%; max-width:520px; margin:18px auto 0; text-align:center; font-size:11px; line-height:1.6; color:#999; padding:0 12px; }
+</style>
 </head>
 <body>
     <div id="geo-blocked">
@@ -130,14 +131,16 @@
         </div>
     </div>
 
+    <div class="legal-footer">
+        <p>Visos teisės saugomos. Šio failo ir kodo modifikavimas, iššifravimas, deobfuskavimas, platinimas, atvirkštinė inžinerija ar bet koks originalo pažeidimas yra draudžiamas.</p>
+        <p>Bandymas platinti failą kitu pavadinimu arba jį redaguoti platinimo tikslais gali lemti visišką paskyros blokavimą ir/ar įtraukimą į juodąjį sąrašą kitose svetainėse, nesusijusiose su „Praxifold“.</p>
+    </div>
+
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbz5F2qfYcQn8vn8ifuwJVv8xKvRhTftzUgFJVQM04wVNxfexRPXnZg4ohexSR5KoONI/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxn6VgAIwlQrxMNXkXUfmxRJWad30sQoZbLgjV1p97OIe5e-KSwliQLyM-3z67AvDcB/exec";
         const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         let pendingSignup = null;
 
-        // Kiek laiko laukiame serverio atsakymo prieš atsisakydami veiksmo.
-        // Registracija (rašymas į lapą + laiško siuntimas) - iki 30 sek.
-        // Prisijungimas (lengvesnis veiksmas) - iki 20 sek.
         const SIGNUP_TIMEOUT_MS = 30000;
         const LOGIN_TIMEOUT_MS  = 20000;
         const SERVER_TIMEOUT_MESSAGE = "Šiuo metu patiriame techninių trikdžių. Vis dėlto tikėtina, kad situacija netrukus pasikeis - grįžkite vėliau ir pirmiausia pabandykite prisijungti.";
@@ -152,7 +155,6 @@
             document.getElementById('reg-pass-confirm').addEventListener('input', checkConfirmMatch);
         };
 
-        // ---- Eilės vietos rodymas (tik informacinis) ----
         function showQueueMessage(text) {
             const el = document.getElementById('queue-msg');
             if (el) el.innerText = text || '';
@@ -170,7 +172,6 @@
                 }).catch(() => {});
         }
 
-        // ---- Kūrėjo įrankių (developer tools) spartieji klavišai ----
         function isDevToolsShortcut(e) {
             const key = (e.key || '').toLowerCase();
             if (key === 'f12') return true;
@@ -214,9 +215,7 @@
                         sessionStorage.setItem('sessionToken', data.sessionToken);
                         window.location.href = "dashboard.html";
                     }
-                    // Jei paskyra užrakinta/blokuota, tiesiog liekama prisijungimo
-                    // lange - vartotojas pamatys atitinkamą pranešimą, kai bandys
-                    // prisijungti rankiniu būdu.
+
                 }).catch(() => {});
         }
 
@@ -436,6 +435,6 @@
                     }
                 }).catch(() => { hideLoader(); alert("Klaida."); });
         }
-    </script>
+</script>
 </body>
 </html>
