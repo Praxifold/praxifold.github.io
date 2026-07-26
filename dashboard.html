@@ -81,7 +81,8 @@
         .request-tool-section a { color: #0078D7; font-weight: 600; text-decoration: none; margin-left: 4px; }
         .request-tool-section a:hover { text-decoration: underline; }
         .queue-msg { display: block; font-size: 12px; color: #666; margin-top: 4px; min-height: 15px; }
-    </style>
+        .legal-footer { max-width: 960px; margin: 24px auto 30px; text-align: center; font-size: 11px; line-height: 1.6; color: #999; padding: 0 16px; }
+</style>
 </head>
 <body>
     <header>
@@ -111,6 +112,11 @@
         <div class="request-tool-section" id="request-tool-section" style="display:none;">
             Nerandate norimo įrankio? <a href="https://docs.google.com/forms/d/e/1FAIpQLScM5TQAPhEyBGnrxlaEPfljNJTeeBWAMpRgTohw-HAiEn6tDw/viewform?usp=header" target="_blank">Paprašykite čia →</a>
         </div>
+    </div>
+
+    <div class="legal-footer">
+        <p>Visos teisės saugomos. Šio failo ir kodo modifikavimas, iššifravimas, deobfuskavimas, platinimas, atvirkštinė inžinerija ar bet koks originalo pažeidimas yra draudžiamas.</p>
+        <p>Bandymas platinti failą kitu pavadinimu arba jį redaguoti platinimo tikslais gali lemti visišką paskyros blokavimą ir/ar įtraukimą į juodąjį sąrašą kitose svetainėse, nesusijusiose su „Praxifold“.</p>
     </div>
 
     <!-- SETTINGS MODAL -->
@@ -175,7 +181,7 @@
     <div id="preview-modal" class="modal">
         <div class="modal-content" style="text-align:center;">
             <span class="close" id="preview-close" onclick="closeModal('preview-modal')" style="display:none;">&times;</span>
-            <h2 style="margin-bottom:4px;">Peržiūra</h2>
+            <h2 style="margin-bottom:4px;">Peržiūra Prieš Viešą Paskelbimą</h2>
             <p class="info-text" style="margin-bottom:4px;">Failo atrakinimo slaptažodis:</p>
             <div class="pass-display">
                 <code id="preview-pass">Gaunamas kodas...</code>
@@ -238,7 +244,7 @@
     </div>
 
     <script>
-        const GAS_URL    = "https://script.google.com/macros/s/AKfycbz5F2qfYcQn8vn8ifuwJVv8xKvRhTftzUgFJVQM04wVNxfexRPXnZg4ohexSR5KoONI/exec";
+        const GAS_URL    = "https://script.google.com/macros/s/AKfycbxn6VgAIwlQrxMNXkXUfmxRJWad30sQoZbLgjV1p97OIe5e-KSwliQLyM-3z67AvDcB/exec";
         const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         const REPORT_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeKlBK6UKrGVaRCakQQp9mZjHzIVMjx9ke1UfJr8X50F3v0bg/viewform?usp=header";
         let currentUser = null;
@@ -249,13 +255,10 @@
         let sessionRetried = false;
         let pendingExperimental = null;
 
-        // Kiek laiko laukiame serverio atsakymo prieš atsisakydami veiksmo,
-        // kuris gali užtrukti kelias sekundes (rašymas į lapą / laiškas).
         const ACTIVATE_TIMEOUT_MS = 30000;
         const DELETE_TIMEOUT_MS   = 30000;
         const SERVER_TIMEOUT_MESSAGE = "Šiuo metu patiriame techninių trikdžių. Vis dėlto tikėtina, kad situacija netrukus pasikeis - grįžkite vėliau ir pirmiausia pabandykite prisijungti.";
 
-        // ---- Eilės vietos rodymas (tik informacinis) ----
         function pollQueuePosition(targetEl) {
             fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"getQueuePosition" }) })
                 .then(r => r.json())
@@ -269,7 +272,6 @@
                 }).catch(() => {});
         }
 
-        // ---- Kūrėjo įrankių (developer tools) spartieji klavišai ----
         function isDevToolsShortcut(e) {
             const key = (e.key || '').toLowerCase();
             if (key === 'f12') return true;
@@ -280,11 +282,8 @@
             return false;
         }
 
-        // Kol įspėjimo langas atidarytas ir nepatvirtintas, pakartotiniai
-        // suveikimai NESKAIČIUOJAMI - pažeidimas registruojamas TIK po to,
-        // kai vartotojas paspaudžia "Supratau".
         let devToolsWarningOpen = false;
-        let devToolsFinalized   = false; // true, kai paskyra jau užrakinta/blokuota
+        let devToolsFinalized   = false;
 
         function triggerDevToolsWarning() {
             if (devToolsWarningOpen || devToolsFinalized || !currentUser) return;
@@ -310,7 +309,7 @@
             const appealNote = `\n\nApskundimo forma:\n${APPEAL_URL}\n\nPateikite max 1 apskundimą per savaitę.`;
             switch (data.punishment) {
                 case "warn":
-                    // Pranešimas jau parodytas patvirtinimo lange - papildomo veiksmo nereikia.
+
                     break;
                 case "restricted":
                     devToolsFinalized = false;
@@ -338,20 +337,6 @@
             triggerDevToolsWarning();
         });
 
-        // ---- Pelės elgsenos stebėjimas (bot / automatizavimo aptikimas) ----
-        // Lengvas (lightweight), foninis patikrinimas, vykdomas TIK
-        // kompiuterio (PC) vartotojams kas atsitiktinį 20–60 sek. intervalą.
-        // Renkami paskutiniai pelės taškai (pozicija + laikas). Kas
-        // intervalą analizuojama, ar judesys:
-        //   a) pelė nejudėjo (arba judėjo minimaliai)  -> viskas gerai,
-        //   b) judėjo "žmogišku" (netolygiu, kreivu) būdu -> viskas gerai,
-        //   c) judėjo beveik tobulai tiesia linija ir pastoviu greičiu,
-        //      kas primena automatizuotą (robotinį) įrankį -> įspėjimas.
-        // Po 3 tokių pažeidimų paskyra užrakinama 7 dienoms (žr.
-        // reportMouseBot backend'e). Kiti automatizavimo aptikimo
-        // mechanizmai (dev tools ir pan.) lieka nepakitę - ŠIS
-        // patikrinimas veda TIK prie pakartotinių užrakinimų, niekada
-        // prie visiško paskyros blokavimo (banned).
         let mouseSamples = [];
         let mouseLockoutFinalized = false;
         let mouseCheckScheduled = false;
@@ -369,8 +354,6 @@
             if (mouseSamples.length > 80) mouseSamples.shift();
         });
 
-        // Grąžina: 'stationary' (a - nejudėjo), 'human' (b - žmogiškas
-        // judesys) arba 'bot' (c - įtartinas, robotinis judesys).
         function analyzeMouseSamples(samples) {
             if (samples.length < 10) return 'stationary';
 
@@ -383,7 +366,7 @@
             const dx = samples[samples.length - 1].x - samples[0].x;
             const dy = samples[samples.length - 1].y - samples[0].y;
             const displacement = Math.hypot(dx, dy);
-            const straightness = displacement / pathLen; // ~1 = tobula tiesi linija
+            const straightness = displacement / pathLen;
 
             const speeds = [];
             for (let i = 1; i < samples.length; i++) {
@@ -395,13 +378,12 @@
             const variance = speeds.reduce((a, b) => a + Math.pow(b - avgSpeed, 2), 0) / speeds.length;
             const speedCV  = avgSpeed > 0 ? Math.sqrt(variance) / avgSpeed : 0;
 
-            // Beveik tobula tiesi linija IR labai pastovus greitis -> bot.
             if (straightness > 0.97 && speedCV < 0.15) return 'bot';
             return 'human';
         }
 
         function scheduleMouseCheck() {
-            const delayMs = (20 + Math.random() * 40) * 1000; // 20–60 sek.
+            const delayMs = (20 + Math.random() * 40) * 1000;
             setTimeout(runMouseCheck, delayMs);
         }
 
@@ -443,12 +425,6 @@
             }
         }
 
-        // ---- Standard/Pro likučių talpykla (sesijos atmintis) ----
-        // Naudojame sessionStorage, nes ji automatiškai išsivalo uždarius
-        // skirtuką (tab). Čia saugome TIK Standard/Pro planų informaciją,
-        // kad nereikėtų kaskart iš naujo tikrinti likučių iš serverio -
-        // šie planai turi neribotas (arba iš dalies neribotas) peržiūras/
-        // atsisiuntimus, tad realaus laiko patikra nereikalinga.
         const QUOTA_CACHE_KEY = 'praxifold_quota_cache';
 
         function saveOrClearQuotaCache(user) {
@@ -461,8 +437,7 @@
                     cachedAt: Date.now()
                 }));
             } else {
-                // Free planas arba prenumerata baigiasi šiandien - netalpiname,
-                // kad likučiai visada būtų tikrinami iš naujo iš serverio.
+
                 sessionStorage.removeItem(QUOTA_CACHE_KEY);
             }
         }
@@ -475,8 +450,7 @@
         }
 
         function prerenderFromCache(cached) {
-            // Preliminarus, akimirksnį atvaizduojamas likučių ženkliukas iš
-            // talpyklos, kol laukiama serverio atsakymo (be papildomos užklausos).
+
             const container = document.getElementById('quota-badges');
             if (!container) return;
             container.innerHTML = '';
@@ -1008,11 +982,10 @@
                     clearInterval(countdown);
                     closeModal('download-modal');
                     if (currentUser.subType === 'free') {
-                        // Free planui likučiai keičiasi - būtina atnaujinti iš serverio.
+
                         window.location.reload();
                     }
-                    // Pro planui atsisiuntimai neriboti - likučiai jau žinomi
-                    // (talpykloje), tad puslapio perkrauti nereikia.
+
                 }
             }, 1000);
         }
@@ -1182,6 +1155,6 @@
             sessionToken = null;
             window.location.href = "index.html";
         }
-    </script>
+</script>
 </body>
 </html>
