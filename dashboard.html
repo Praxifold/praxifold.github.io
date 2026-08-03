@@ -244,9 +244,47 @@
     </div>
 
     <script>
-        const GAS_URL    = "https://script.google.com/macros/s/AKfycbxn6VgAIwlQrxMNXkXUfmxRJWad30sQoZbLgjV1p97OIe5e-KSwliQLyM-3z67AvDcB/exec";
+        const GAS_URL    = "https://script.google.com/macros/s/AKfycbxr6cp4REu-FeApDBSGvIbM3wBla-fVtB8uh2_-F7Jt7LmDttqgaLeb3Q_jUiVkjT44/exec";
         const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         const REPORT_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeKlBK6UKrGVaRCakQQp9mZjHzIVMjx9ke1UfJr8X50F3v0bg/viewform?usp=header";
+        const HMAC_SECRET = "a4ec2e9f0583dc51e8c46f38a6bffc722b1c90caa1760c64e1e82111d3e9f0a2";
+
+        let hmacKeyPromise = null;
+        function getHmacKey() {
+            if (!hmacKeyPromise) {
+                hmacKeyPromise = crypto.subtle.importKey(
+                    "raw",
+                    new TextEncoder().encode(HMAC_SECRET),
+                    { name: "HMAC", hash: "SHA-256" },
+                    false,
+                    ["sign"]
+                );
+            }
+            return hmacKeyPromise;
+        }
+
+        function canonicalizeForSignature(obj) {
+            return Object.keys(obj).sort().map(function(k) {
+                const v = obj[k];
+                return k + "=" + (v === null || v === undefined ? "" : v.toString());
+            }).join("&");
+        }
+
+        async function signPayload(obj) {
+            const payload = Object.assign({}, obj, { ts: Date.now() });
+            const canonical = canonicalizeForSignature(payload);
+            const key = await getHmacKey();
+            const sigBuf = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(canonical));
+            const sig = Array.from(new Uint8Array(sigBuf)).map(b => b.toString(16).padStart(2, "0")).join("");
+            return Object.assign({}, payload, { sig });
+        }
+
+        function postSigned(obj, opts) {
+            return signPayload(obj).then(body =>
+                fetch(GAS_URL, Object.assign({ method: "POST", body: JSON.stringify(body) }, opts || {}))
+            );
+        }
+
         let currentUser = null;
         let previewUrl  = null;
         let previewAutoTimer = null;
@@ -260,7 +298,7 @@
         const SERVER_TIMEOUT_MESSAGE = "Šiuo metu patiriame techninių trikdžių. Vis dėlto tikėtina, kad situacija netrukus pasikeis - grįžkite vėliau ir pirmiausia pabandykite prisijungti.";
 
         function pollQueuePosition(targetEl) {
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"getQueuePosition" }) })
+            postSigned({ action:"getQueuePosition" })
                 .then(r => r.json())
                 .then(data => {
                     if (!targetEl) return;
@@ -297,7 +335,7 @@
             closeModal('devtools-modal');
             devToolsWarningOpen = false;
             if (!currentUser) return;
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"reportDevTools", token: currentUser.token, sessionToken, browser: navigator.userAgent }) })
+            postSigned({ action:"reportDevTools", token: currentUser.token, sessionToken, browser: navigator.userAgent })
                 .then(r => r.json()).then(data => {
                     if (data && data.sessionToken) storeSessionToken(data.sessionToken);
                     handleDevToolsPunishment(data);
@@ -407,7 +445,7 @@
         }
 
         function reportMouseBotBehavior() {
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"reportMouseBot", token: currentUser.token, sessionToken, browser: navigator.userAgent }) })
+            postSigned({ action:"reportMouseBot", token: currentUser.token, sessionToken, browser: navigator.userAgent })
                 .then(r => r.json()).then(data => {
                     if (data && data.sessionToken) storeSessionToken(data.sessionToken);
                     handleMouseBotPunishment(data);
@@ -514,7 +552,7 @@
 
         function establishSessionThen(token, callback) {
             showLoader();
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"establishSession", token, browser: navigator.userAgent }) })
+            postSigned({ action:"establishSession", token, browser: navigator.userAgent })
                 .then(r => r.json())
                 .then(data => {
                     hideLoader();
@@ -537,7 +575,7 @@
 
         function fetchUserData(token) {
             showLoader();
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"getUserData", token, sessionToken, browser: navigator.userAgent }) })
+            postSigned({ action:"getUserData", token, sessionToken, browser: navigator.userAgent })
             .then(r => r.json())
             .then(data => {
                 hideLoader();
@@ -856,10 +894,8 @@
                 openModal('download-modal');
             }
 
-            fetch(GAS_URL, {
-                method:"POST",
-                body: JSON.stringify({ action:"requestAccess", token: currentUser.token, sessionToken, fileName, type, browser: navigator.userAgent })
-            }).then(r => r.json()).then(data => {
+            postSigned({ action:"requestAccess", token: currentUser.token, sessionToken, fileName, type, browser: navigator.userAgent })
+            .then(r => r.json()).then(data => {
                 if (data.success) {
                     if (data.sessionToken) storeSessionToken(data.sessionToken);
                     const filePath = `tools/${fileName}.html`;
@@ -1018,7 +1054,7 @@
             pollQueuePosition(queueMsgEl);
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), ACTIVATE_TIMEOUT_MS);
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"activateCode", token: currentUser.token, sessionToken, code, browser: navigator.userAgent }), signal: controller.signal })
+            postSigned({ action:"activateCode", token: currentUser.token, sessionToken, code, browser: navigator.userAgent }, { signal: controller.signal })
                 .then(r => r.json()).then(data => {
                     clearTimeout(timeoutId);
                     if (queueMsgEl) queueMsgEl.innerText = '';
@@ -1051,14 +1087,14 @@
 
         function updateSecurityFrequency() {
             const freq = parseInt(document.getElementById('security-freq-select').value);
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"updateSettings", token: currentUser.token, sessionToken, securityAlertFreq: freq, browser: navigator.userAgent }) })
+            postSigned({ action:"updateSettings", token: currentUser.token, sessionToken, securityAlertFreq: freq, browser: navigator.userAgent })
                 .then(r => r.json()).then(data => { if (data && data.sessionToken) storeSessionToken(data.sessionToken); })
                 .catch(() => {});
         }
 
         function updateStayLoggedIn() {
             const on = document.getElementById('stay-logged-toggle').checked;
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"updateSettings", token: currentUser.token, sessionToken, stayLoggedIn: on, browser: navigator.userAgent }) })
+            postSigned({ action:"updateSettings", token: currentUser.token, sessionToken, stayLoggedIn: on, browser: navigator.userAgent })
                 .then(r => r.json())
                 .then(data => {
                     if (data && data.sessionToken) storeSessionToken(data.sessionToken);
@@ -1081,7 +1117,7 @@
 
         function refreshToken() {
             if (!currentUser || !currentUser.token || !currentUser.stayLoggedIn) return;
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"refreshToken", token: currentUser.token, sessionToken, browser: navigator.userAgent }) })
+            postSigned({ action:"refreshToken", token: currentUser.token, sessionToken, browser: navigator.userAgent })
                 .then(r => r.json())
                 .then(data => {
                     if (data.success && data.token) {
@@ -1103,7 +1139,7 @@
             pollQueuePosition(queueMsgEl);
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), DELETE_TIMEOUT_MS);
-            fetch(GAS_URL, { method:"POST", body: JSON.stringify({ action:"deleteAccount", token: currentUser.token, sessionToken, email, browser: navigator.userAgent }), signal: controller.signal })
+            postSigned({ action:"deleteAccount", token: currentUser.token, sessionToken, email, browser: navigator.userAgent }, { signal: controller.signal })
                 .then(r => r.json()).then(data => {
                     clearTimeout(timeoutId);
                     if (queueMsgEl) queueMsgEl.innerText = '';
