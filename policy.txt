@@ -14,7 +14,7 @@ Naudojimosi sąlygų sutikimas:
 - Jeigu nesutinkate su šiomis sąlygomis, naudotis „Praxifold“ negalite.
 
 Pagrindiniai apribojimai:
-- Minimalus naudotojų amžius yra 16 metų.
+- Minimalus naudotojų amžius yra 16 metų. Naudotojas prisiima visišką teisinę atsakomybę.
 - Svetainė veikia tik Lietuvos Respublikos teritorijoje.
 - Integruotos DI (AI) funkcijos veikia tik Lietuvos Respublikos teritorijoje.
 - Gyvojo pokalbio („Live Chat“) paslaugos veikia tik Lietuvos Respublikos teritorijoje.
@@ -22,8 +22,8 @@ Pagrindiniai apribojimai:
 - IP adreso klastojimas (IP spoofing) yra griežtai draudžiamas.
 - Kitų technologijų naudojimas siekiant apeiti regioninį ribojimą yra griežtai draudžiamas.
 
-Kontaktinė informacija:
-- El. paštas: praxifold@gmail.com
+Kontaktinė informacija ir ginčai:
+- El. paštas visiems klausimams, ginčams, duomenų prašymams ir skubiam ištrynimui: praxifold@gmail.com
 
 --------------------------------------------------
 
@@ -34,24 +34,59 @@ Naudotojai yra asmeniškai atsakingi už:
 - Teisingos registracijos informacijos pateikimą.
 - Visų platformos saugumo taisyklių laikymąsi.
 
+Duomenų saugojimas:
+Visi naudotojų duomenys saugomi trečiųjų šalių Google paslaugose. Galioja Google taisyklės ir privatumo politika. Prieiga prie šių duomenų turi tik el. pašto (praxifold@gmail.com) savininkas – CTO ir CEO (tas pats asmuo).
+
 „Praxifold“ sistemoje saugomi duomenys:
-- Paskyros vardas.
-- El. pašto adresas.
-- Slaptažodis maišos (hash) forma.
-- Slaptažodis „salt“ forma.
-- Naršyklės informacija.
-- Įrenginio informacija.
-- Paskyros rolė.
-- Paskyros sukūrimo data.
-- Paskutinio prisijungimo data.
-- Neteisingų prisijungimų skaičius.
-- Sesijos slapukai.
-- Saugumo slapukai.
-- Failų atsisiuntimo istorija.
-- Failų peržiūros istorija.
+- Paskyros vardas
+- El. pašto adresas
+- Slaptažodis maišos (hash) forma
+- Slaptažodis „salt“ forma
+- Paskyros rolė
+- Paskyros sukūrimo data
+- Paskutinio prisijungimo data
+- Prenumeratos tipas
+- Prenumeratos galiojimo pabaigos data
+- Neteisingų prisijungimų skaičius
+- Ar paskyra užblokuota (is banned)
+- Paskyros statistika
+- Paskyros ištrynimo data
+- Bendras atsisiuntimų skaičius per visą laiką
+- Likusių atsisiuntimų skaičius
+- Prisijungimų skaičius
+- Slapukų preferencijos
+- Naršyklė, kuria buvo sukurta paskyra
+- Prisijungimo žetonas (login token)
+- Likusių peržiūrų skaičius
+- Atsisiuntimų istorija (tikslūs failai ir versijos)
+- Paskutinio atsisiuntimo laikas (ms)
+- Laikinas slaptažodžio atkūrimo kodas
+- Laikino slaptažodžio atkūrimo kodo galiojimo laikas
+- Paskutinio slaptažodžio keitimo data
+- Saugumo pranešimų dažnis (kiek kartų siunčiamas el. laiškas apie prisijungimus)
+- Atsisiuntimų pažeidimų skaičius (download strikes)
+- Atsisiuntimų apribojimo trukmė
+- Peržiūrų pažeidimų skaičius (preview strikes)
+- Peržiūrų apribojimo trukmė
+- Paskutinės peržiūros laikas (ms)
+- Valandinis atsisiuntimų skaičius
+- Valandinio lango pradžios laikas
+- Ar aktyvus „Stay logged in“
+- DevTools pažeidimų skaičius
+- DevTools apribojimo trukmė
+- Paskyros užrakinimo laikas
+- Neteisingo slaptažodžio užrakinimo (delay) laikas
+- Neteisingo slaptažodžio etapas (stage)
+- Paskutinis peržiūrų atnaujinimas (mėnesiniam atnaujinimui)
+- Paskutinis atsisiuntimų atnaujinimas
+- Botų vėliavėlės (įtariamas botų elgesys)
+- Sesijos žetonas
+- Sesijos naršyklė
+- Sesijos galiojimo laikas
 
 Saugumo garantija:
 - Slaptažodžiai niekada nėra saugomi paprastu tekstu.
+- Sesijos ir prisijungimo žetonai pasirašomi HMAC-SHA256 algoritmu.
 
 --------------------------------------------------
 
@@ -105,22 +140,33 @@ Failų užrakinimo (Meta-lock) ir blokavimo taisyklės:
 
 --------------------------------------------------
 
-5. Prenumeratos ir papildomos funkcijos
-Prieigos lygiai:
-- Ribota nemokama prieiga.
-- Standard prenumerata.
-- Pro prenumerata.
+5. Prenumeratos, limitai ir papildomos funkcijos
+Prieigos lygiai ir limitai:
+- Nemokama (Free): 10 peržiūrų ir 5 atsisiuntimai per mėnesį (atnaujinama kas mėnesį).
+- Standard: neribotos peržiūros ir 15 atsisiuntimų per mėnesį.
+- Pro: neribotos peržiūros, neriboti atsisiuntimai + gyvasis pokalbis (Live Chat).
 
 Premium funkcijos Pro naudotojams:
 - Išskirtinė prieiga prie integruotų DI (AI) funkcijų.
 - Prieiga prie gyvojo pokalbio („Live Chat“) paslaugos.
 - Šios funkcijos veikia tik Lietuvos teritorijoje.
 
+Live Chat paslauga:
+- Teikiama per tawk.to.
+- Galioja tawk.to taisyklės ir privatumo politika.
+- tawk.to gali rinkti ir saugoti jūsų IP adresą, analitinius duomenis bei siųsti el. laiškus (pvz., bilietų sistemai).
+
 Prenumeratos pabaigos pasekmės:
 - Premium funkcijų pašalinimas.
 - Failų peržiūros teisių panaikinimas.
 - Failų atnaujinimų sustabdymas.
 - Naršyklėje saugomi apsaugoti failai gali tapti nepasiekiami.
+
+Mokėjimai ir grąžinimai:
+- Mokėjimai priimami tik grynaisiais pinigais konkrečių mokyklos renginių metu.
+- Grąžinimai po pirkimo nėra išduodami, išskyrus atvejus, kai atsisiųsti failai neveikia arba turi rimtų, anksčiau nenurodytų klaidų.
+- Tokiu atveju stengiamės ištaisyti problemą per 30 dienų nuo pastebėjimo arba per 14 dienų nuo pranešimo.
+- Jei problemos ištaisyti nepavyksta, o svetainė ir veikla vis dar veikia – galite būti laikomi tinkamais grąžinimui.
 
 --------------------------------------------------
 
@@ -158,7 +204,7 @@ Tikrinimo procedūra ir dizaino standartai:
 
 Atsakomybė ir nuobaudos:
 - Jei pateikiamas kenkėjiškas failas, teisinimasis „nežinojimu“ nėra priimamas.
-- Kenkėjiško failo pateikimo atveju kai priežastis 'nežinojimas kad turinyje yra kenkėjiškų elementų' „Praxifold“ laiko, kad darbas yra plagijuotas.
+- Kenkėjiško failo pateikimo atveju, kai priežastis „nežinojimas, kad turinyje yra kenkėjiškų elementų“, „Praxifold“ laiko, kad darbas yra plagijuotas.
 - „Praxifold“ pasilieka teisę išsaugoti kenkėjišką kodą atsiuntusių kūrėjų duomenis.
 - Šie duomenys saugomi ateities įrašams ir teisiniam identifikavimui.
 - Duomenys prireikus bus perduoti atsakingoms teisėsaugos institucijoms.
@@ -226,14 +272,17 @@ Slaptažodžio keitimo taisyklės:
 
 9. Paskyros ištrynimas ir duomenų saugojimas
 Taisyklės ir apribojimai:
-- Paskyros ištrynimo prašymą galima pateikti tik tiesiogiai per svetainę.
+- Paskyros ištrynimo prašymą galima pateikti per svetainę arba el. paštu praxifold@gmail.com (skubus ištrynimas).
 - Užblokuoti (banned) naudotojai negali pateikti ištrynimo prašymo per svetainę.
 - Apriboti (restricted) naudotojai negali pateikti ištrynimo prašymo per svetainę.
-- Po prašymo pateikimo paskyros duomenys galutinai pašalinami per 1 mėnesį.
+- Po prašymo pateikimo paskyros duomenys galutinai pašalinami per 1 mėnesį (išskyrus skubius prašymus el. paštu).
 
 Apsigalvojimo laikotarpis:
 - Naudotojui suteikiamas 2 savaičių (14 dienų) apsigalvojimo laikotarpis.
 - Šiuo laikotarpiu galima susisiekti su palaikymo komanda ir atšaukti ištrynimą.
+
+Duomenų kopijos prašymas:
+- Galite prašyti savo duomenų kopijos el. paštu praxifold@gmail.com.
 
 Išimtys:
 - Užblokuotų naudotojų duomenys saugomi iki apeliacijos pabaigos arba teisiniais tikslais.
@@ -245,7 +294,8 @@ Išimtys:
 Naudotojų teisės:
 - Prašyti paskyros ištrynimo (jei paskyra nėra apribota).
 - Prašyti slaptažodžio atkūrimo kodo.
-- Susisiekti el. paštu dėl saugomų asmens duomenų išrašo.
+- Prašyti saugomų asmens duomenų kopijos el. paštu praxifold@gmail.com.
+- Prašyti skubaus duomenų ištrynimo el. paštu praxifold@gmail.com.
 
 Apeliacijų teikimo tvarka:
 - Apeliacijos dėl užblokavimo teikiamos tik per specialią nuorodą svetainėje.
