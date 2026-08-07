@@ -244,23 +244,35 @@
     </div>
 
     <script>
-        const GAS_URL    = "https://script.google.com/macros/s/AKfycbxr6cp4REu-FeApDBSGvIbM3wBla-fVtB8uh2_-F7Jt7LmDttqgaLeb3Q_jUiVkjT44/exec";
+        const GAS_URL    = "https://script.google.com/macros/s/AKfycbwaTNxa4Nl7K8P8rZBY3YYjvOKLXTPzRMgvywrVh6sRoCxzJUzWBffUeTXrR1vCH2ZE/exec";
         const APPEAL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSec24sYXhB-C3MrbTBKbCNhFwsGLY6xMoLRhkiRHp6DCX48bg/viewform?usp=header";
         const REPORT_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeKlBK6UKrGVaRCakQQp9mZjHzIVMjx9ke1UfJr8X50F3v0bg/viewform?usp=header";
         const HMAC_SECRET = "a4ec2e9f0583dc51e8c46f38a6bffc722b1c90caa1760c64e1e82111d3e9f0a2";
+        const DEVICE_ID_KEY = "praxifold_device_id";
 
-        let hmacKeyPromise = null;
-        function getHmacKey() {
-            if (!hmacKeyPromise) {
-                hmacKeyPromise = crypto.subtle.importKey(
-                    "raw",
-                    new TextEncoder().encode(HMAC_SECRET),
-                    { name: "HMAC", hash: "SHA-256" },
-                    false,
-                    ["sign"]
-                );
+        function getDeviceId() {
+            let id = localStorage.getItem(DEVICE_ID_KEY);
+            if (!id) {
+                id = (crypto.randomUUID ? crypto.randomUUID() : (Date.now().toString(36) + Math.random().toString(36).slice(2)));
+                localStorage.setItem(DEVICE_ID_KEY, id);
             }
-            return hmacKeyPromise;
+            return id;
+        }
+
+        async function importHmacKey(secret) {
+            return crypto.subtle.importKey(
+                "raw",
+                new TextEncoder().encode(secret || ""),
+                { name: "HMAC", hash: "SHA-256" },
+                false,
+                ["sign"]
+            );
+        }
+
+        let staticKeyPromise = null;
+        function getStaticKey() {
+            if (!staticKeyPromise) staticKeyPromise = importHmacKey(HMAC_SECRET);
+            return staticKeyPromise;
         }
 
         function canonicalizeForSignature(obj) {
@@ -270,17 +282,23 @@
             }).join("&");
         }
 
-        async function signPayload(obj) {
+        async function signWithKey(obj, keyPromise) {
             const payload = Object.assign({}, obj, { ts: Date.now() });
             const canonical = canonicalizeForSignature(payload);
-            const key = await getHmacKey();
+            const key = await keyPromise;
             const sigBuf = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(canonical));
             const sig = Array.from(new Uint8Array(sigBuf)).map(b => b.toString(16).padStart(2, "0")).join("");
             return Object.assign({}, payload, { sig });
         }
 
-        function postSigned(obj, opts) {
-            return signPayload(obj).then(body =>
+        function postPublic(obj, opts) {
+            return signWithKey(obj, getStaticKey()).then(body =>
+                fetch(GAS_URL, Object.assign({ method: "POST", body: JSON.stringify(body) }, opts || {}))
+            );
+        }
+
+        function postAuthed(obj, opts) {
+            return signWithKey(obj, importHmacKey(sessionKey)).then(body =>
                 fetch(GAS_URL, Object.assign({ method: "POST", body: JSON.stringify(body) }, opts || {}))
             );
         }
@@ -290,15 +308,18 @@
         let previewAutoTimer = null;
         let tokenRefreshInterval = null;
         let sessionToken = sessionStorage.getItem('sessionToken') || null;
+        let sessionKey   = sessionStorage.getItem('sessionKey') || null;
         let sessionRetried = false;
         let pendingExperimental = null;
 
         const ACTIVATE_TIMEOUT_MS = 30000;
         const DELETE_TIMEOUT_MS   = 30000;
+        const TOKEN_ROTATION_INTERVAL_MS = 15 * 60 * 1000;
+        const USER_DATA_CACHE_TTL_MS     = 30 * 1000;
         const SERVER_TIMEOUT_MESSAGE = "Šiuo metu patiriame techninių trikdžių. Vis dėlto tikėtina, kad situacija netrukus pasikeis - grįžkite vėliau ir pirmiausia pabandykite prisijungti.";
 
         function pollQueuePosition(targetEl) {
-            postSigned({ action:"getQueuePosition" })
+            postPublic({ action:"getQueuePosition" })
                 .then(r => r.json())
                 .then(data => {
                     if (!targetEl) return;
@@ -335,9 +356,9 @@
             closeModal('devtools-modal');
             devToolsWarningOpen = false;
             if (!currentUser) return;
-            postSigned({ action:"reportDevTools", token: currentUser.token, sessionToken, browser: navigator.userAgent })
+            postAuthed({ action:"reportDevTools", token: currentUser.token, sessionToken, browser: navigator.userAgent })
                 .then(r => r.json()).then(data => {
-                    if (data && data.sessionToken) storeSessionToken(data.sessionToken);
+                    if (data && data.sessionToken) storeSession(data.sessionToken, data.sessionKey);
                     handleDevToolsPunishment(data);
                 }).catch(() => {});
         }
@@ -445,9 +466,9 @@
         }
 
         function reportMouseBotBehavior() {
-            postSigned({ action:"reportMouseBot", token: currentUser.token, sessionToken, browser: navigator.userAgent })
+            postAuthed({ action:"reportMouseBot", token: currentUser.token, sessionToken, browser: navigator.userAgent })
                 .then(r => r.json()).then(data => {
-                    if (data && data.sessionToken) storeSessionToken(data.sessionToken);
+                    if (data && data.sessionToken) storeSession(data.sessionToken, data.sessionKey);
                     handleMouseBotPunishment(data);
                 }).catch(() => {});
         }
@@ -464,6 +485,28 @@
         }
 
         const QUOTA_CACHE_KEY = 'praxifold_quota_cache';
+        const USER_DATA_CACHE_KEY = 'praxifold_userdata_cache';
+
+        function saveUserDataCache(token, payload) {
+            try {
+                sessionStorage.setItem(USER_DATA_CACHE_KEY, JSON.stringify({ token, payload, cachedAt: Date.now() }));
+            } catch (e) {}
+        }
+
+        function loadUserDataCache(token) {
+            try {
+                const raw = sessionStorage.getItem(USER_DATA_CACHE_KEY);
+                if (!raw) return null;
+                const parsed = JSON.parse(raw);
+                if (parsed.token !== token) return null;
+                if (Date.now() - parsed.cachedAt > USER_DATA_CACHE_TTL_MS) return null;
+                return parsed.payload;
+            } catch (e) { return null; }
+        }
+
+        function clearUserDataCache() {
+            sessionStorage.removeItem(USER_DATA_CACHE_KEY);
+        }
 
         function saveOrClearQuotaCache(user) {
             if (user.subType !== 'free' && !user.subEndsToday) {
@@ -544,20 +587,19 @@
             if (p.length === 2) return p.pop().split(';').shift();
         }
 
-        function storeSessionToken(token) {
-            if (!token) return;
-            sessionToken = token;
-            sessionStorage.setItem('sessionToken', sessionToken);
+        function storeSession(tok, key) {
+            if (tok) { sessionToken = tok; sessionStorage.setItem('sessionToken', sessionToken); }
+            if (key) { sessionKey = key; sessionStorage.setItem('sessionKey', sessionKey); }
         }
 
         function establishSessionThen(token, callback) {
             showLoader();
-            postSigned({ action:"establishSession", token, browser: navigator.userAgent })
+            postPublic({ action:"establishSession", token, deviceId: getDeviceId(), browser: navigator.userAgent })
                 .then(r => r.json())
                 .then(data => {
                     hideLoader();
                     if (data.success) {
-                        storeSessionToken(data.sessionToken);
+                        storeSession(data.sessionToken, data.sessionKey);
                         callback();
                     } else {
                         if (data.error === "PASKYRA_LAIKINAI_UZRAKINTA") {
@@ -573,29 +615,40 @@
                 });
         }
 
+        function applyUserData(token, data) {
+            currentUser = data.user;
+            currentUser.token = token;
+            updateUI();
+            saveOrClearQuotaCache(currentUser);
+            renderFiles(data.files);
+            startMouseWatcher();
+            document.getElementById('loading').style.display = 'none';
+            if (currentUser.stayLoggedIn) {
+                document.cookie = `token=${token}; path=/; max-age=604800;`;
+                startTokenRotation();
+            }
+            if (data.updatesNeeded && data.updatesNeeded.length > 0) {
+                showUpdateModal(data.updatesNeeded);
+            }
+        }
+
         function fetchUserData(token) {
+            const cached = loadUserDataCache(token);
+            if (cached) {
+                sessionRetried = false;
+                applyUserData(token, cached);
+                return;
+            }
             showLoader();
-            postSigned({ action:"getUserData", token, sessionToken, browser: navigator.userAgent })
+            postAuthed({ action:"getUserData", token, sessionToken, browser: navigator.userAgent })
             .then(r => r.json())
             .then(data => {
                 hideLoader();
                 if (data.success) {
                     sessionRetried = false;
-                    if (data.sessionToken) storeSessionToken(data.sessionToken);
-                    currentUser = data.user;
-                    currentUser.token = token;
-                    updateUI();
-                    saveOrClearQuotaCache(currentUser);
-                    renderFiles(data.files);
-                    startMouseWatcher();
-                    document.getElementById('loading').style.display = 'none';
-                    if (currentUser.stayLoggedIn) {
-                        document.cookie = `token=${token}; path=/; max-age=604800;`;
-                        startTokenRotation();
-                    }
-                    if (data.updatesNeeded && data.updatesNeeded.length > 0) {
-                        showUpdateModal(data.updatesNeeded);
-                    }
+                    if (data.sessionToken) storeSession(data.sessionToken, data.sessionKey);
+                    saveUserDataCache(token, data);
+                    applyUserData(token, data);
                 } else {
                     if (data.error === "SESIJA_NEGALIOJA" && !sessionRetried) {
                         sessionRetried = true;
@@ -894,10 +947,11 @@
                 openModal('download-modal');
             }
 
-            postSigned({ action:"requestAccess", token: currentUser.token, sessionToken, fileName, type, browser: navigator.userAgent })
+            postAuthed({ action:"requestAccess", token: currentUser.token, sessionToken, fileName, type, browser: navigator.userAgent })
             .then(r => r.json()).then(data => {
                 if (data.success) {
-                    if (data.sessionToken) storeSessionToken(data.sessionToken);
+                    if (data.sessionToken) storeSession(data.sessionToken, data.sessionKey);
+                    clearUserDataCache();
                     const filePath = `tools/${fileName}.html`;
                     if (type === 'preview') {
                         document.getElementById('preview-pass').innerText = data.password;
@@ -1054,11 +1108,11 @@
             pollQueuePosition(queueMsgEl);
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), ACTIVATE_TIMEOUT_MS);
-            postSigned({ action:"activateCode", token: currentUser.token, sessionToken, code, browser: navigator.userAgent }, { signal: controller.signal })
+            postAuthed({ action:"activateCode", token: currentUser.token, sessionToken, code, browser: navigator.userAgent }, { signal: controller.signal })
                 .then(r => r.json()).then(data => {
                     clearTimeout(timeoutId);
                     if (queueMsgEl) queueMsgEl.innerText = '';
-                    if (data.success) { if (data.sessionToken) storeSessionToken(data.sessionToken); alert("Kodas aktyvuotas!"); window.location.reload(); }
+                    if (data.success) { if (data.sessionToken) storeSession(data.sessionToken, data.sessionKey); clearUserDataCache(); alert("Kodas aktyvuotas!"); window.location.reload(); }
                     else if (data.error === "SESIJA_NEGALIOJA") {
                         btn.disabled = false;
                         btn.innerText = originalText;
@@ -1087,17 +1141,18 @@
 
         function updateSecurityFrequency() {
             const freq = parseInt(document.getElementById('security-freq-select').value);
-            postSigned({ action:"updateSettings", token: currentUser.token, sessionToken, securityAlertFreq: freq, browser: navigator.userAgent })
-                .then(r => r.json()).then(data => { if (data && data.sessionToken) storeSessionToken(data.sessionToken); })
+            postAuthed({ action:"updateSettings", token: currentUser.token, sessionToken, securityAlertFreq: freq, browser: navigator.userAgent })
+                .then(r => r.json()).then(data => { if (data && data.sessionToken) storeSession(data.sessionToken, data.sessionKey); clearUserDataCache(); })
                 .catch(() => {});
         }
 
         function updateStayLoggedIn() {
             const on = document.getElementById('stay-logged-toggle').checked;
-            postSigned({ action:"updateSettings", token: currentUser.token, sessionToken, stayLoggedIn: on, browser: navigator.userAgent })
+            postAuthed({ action:"updateSettings", token: currentUser.token, sessionToken, stayLoggedIn: on, browser: navigator.userAgent })
                 .then(r => r.json())
                 .then(data => {
-                    if (data && data.sessionToken) storeSessionToken(data.sessionToken);
+                    if (data && data.sessionToken) storeSession(data.sessionToken, data.sessionKey);
+                    clearUserDataCache();
                     currentUser.stayLoggedIn = on;
                     if (on) {
                         document.cookie = `token=${currentUser.token}; path=/; max-age=604800;`;
@@ -1112,19 +1167,19 @@
         function startTokenRotation() {
             if (tokenRefreshInterval) clearInterval(tokenRefreshInterval);
             if (!currentUser || !currentUser.stayLoggedIn) return;
-            tokenRefreshInterval = setInterval(refreshToken, 10 * 60 * 1000);
+            tokenRefreshInterval = setInterval(refreshToken, TOKEN_ROTATION_INTERVAL_MS);
         }
 
         function refreshToken() {
             if (!currentUser || !currentUser.token || !currentUser.stayLoggedIn) return;
-            postSigned({ action:"refreshToken", token: currentUser.token, sessionToken, browser: navigator.userAgent })
+            postAuthed({ action:"refreshToken", token: currentUser.token, sessionToken, browser: navigator.userAgent })
                 .then(r => r.json())
                 .then(data => {
                     if (data.success && data.token) {
                         currentUser.token = data.token;
                         document.cookie = `token=${data.token}; path=/; max-age=604800;`;
                     }
-                    if (data.success && data.sessionToken) storeSessionToken(data.sessionToken);
+                    if (data.success && data.sessionToken) storeSession(data.sessionToken, data.sessionKey);
                 }).catch(() => {});
         }
 
@@ -1139,7 +1194,7 @@
             pollQueuePosition(queueMsgEl);
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), DELETE_TIMEOUT_MS);
-            postSigned({ action:"deleteAccount", token: currentUser.token, sessionToken, email, browser: navigator.userAgent }, { signal: controller.signal })
+            postAuthed({ action:"deleteAccount", token: currentUser.token, sessionToken, email, browser: navigator.userAgent }, { signal: controller.signal })
                 .then(r => r.json()).then(data => {
                     clearTimeout(timeoutId);
                     if (queueMsgEl) queueMsgEl.innerText = '';
@@ -1187,8 +1242,11 @@
             if (tokenRefreshInterval) clearInterval(tokenRefreshInterval);
             document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             sessionStorage.removeItem('sessionToken');
+            sessionStorage.removeItem('sessionKey');
             sessionStorage.removeItem(QUOTA_CACHE_KEY);
+            sessionStorage.removeItem(USER_DATA_CACHE_KEY);
             sessionToken = null;
+            sessionKey = null;
             window.location.href = "index.html";
         }
 </script>
