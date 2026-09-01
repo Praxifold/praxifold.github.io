@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praxifold — Aktyvacija</title>
+</head>
+<body>
+<script>
+  var params = new URLSearchParams(window.location.search);
+  params.set('activation', '1');
+  window.location.replace('../?' + params.toString());
+</script>
+<noscript>
+  <p>Įjunkite JavaScript arba <a href="../">grįžkite į Praxifold</a>, kad aktyvuotumėte savo pakabuką.</p>
+</noscript>
+</body>
+</html>
