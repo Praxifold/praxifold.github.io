@@ -5,56 +5,64 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Praxifold</title>
 <style>
-:root{--bg:#0f1c1a;--panel:#162220;--panel2:#1d2e2c;--border:#283d3a;--text:#e8f4f0;--dim:#8aaca6;--accent:#e8a33d;--accent2:#b9802e;--danger:#d95f5b;--ok:#4caf7d;--r:10px;--font:'Segoe UI',system-ui,sans-serif}
+:root{--bg:#000000;--panel:#080d1a;--panel2:#0c1426;--border:#162545;--text:#c8d8f0;--dim:#4a6a9a;--accent:#4080ff;--accent2:#1c5fd4;--danger:#e53e3e;--ok:#38a169;--r:10px;--font:'Segoe UI',system-ui,-apple-system,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 h2,h3{font-weight:700;letter-spacing:-.02em}
 .hidden{display:none!important}
 .muted{color:var(--dim);font-size:14px}
 .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:22px}
 .card+.card{margin-top:14px}
-input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 12px;font-size:14px;font-family:var(--font);margin-top:4px;margin-bottom:2px}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);border-color:transparent}
-select option{background:var(--panel)}
-label{display:block;font-size:12px;color:var(--dim);margin-top:12px}
-label.inline{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);margin-top:12px;cursor:pointer}
-label.inline input[type=checkbox]{width:auto;margin:0}
-.field{margin-bottom:4px}
-.btn{border:none;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .12s,transform .1s;font-family:var(--font)}
+input,select,textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 13px;font-size:14px;font-family:var(--font);margin-top:4px;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(64,128,255,.18)}
+select option{background:var(--panel2)}
+textarea{resize:vertical;min-height:70px}
+label{display:block;font-size:12px;color:var(--dim);margin-top:12px;font-weight:500;letter-spacing:.02em}
+label.inline{display:flex;align-items:flex-start;gap:8px;font-size:14px;color:var(--text);margin-top:14px;cursor:pointer;font-weight:400;letter-spacing:0}
+label.inline input[type=checkbox]{width:auto;margin:2px 0 0;flex-shrink:0}
+.field{margin-bottom:2px}
+.pw-wrap{position:relative;margin-top:4px}
+.pw-wrap input{margin-top:0;padding-right:42px}
+.pw-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--dim);padding:4px;font-size:15px;line-height:1;transition:color .15s}
+.pw-eye:hover{color:var(--text)}
+.btn{border:none;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .12s,transform .1s,background .15s;font-family:var(--font)}
 .btn:active{transform:scale(.97)}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.btn-primary{background:var(--accent);color:#12201e}
-.btn-primary:hover:not(:disabled){opacity:.88}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover:not(:disabled){background:var(--accent2)}
 .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
-.btn-ghost:hover:not(:disabled){border-color:var(--accent)}
+.btn-ghost:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
 .btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover:not(:disabled){opacity:.88}
 .btn-sm{padding:6px 13px;font-size:13px}
 .btn-block{width:100%;margin-top:14px}
 .alert{padding:11px 14px;border-radius:8px;font-size:14px;margin:10px 0}
-.alert-error{background:rgba(217,95,91,.15);border:1px solid var(--danger);color:#f5b0ae}
-.alert-ok{background:rgba(76,175,125,.15);border:1px solid var(--ok);color:#a6e2c2}
-.alert-info{background:rgba(232,163,61,.1);border:1px solid var(--accent);color:#f2c980}
-header{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(15,28,26,.93);backdrop-filter:blur(8px);z-index:40}
-.brand{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:800;cursor:pointer}
-.brand .dot{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--accent),#f2c374);flex-shrink:0}
+.alert-error{background:rgba(229,62,62,.12);border:1px solid rgba(229,62,62,.4);color:#fca5a5}
+.alert-ok{background:rgba(56,161,105,.12);border:1px solid rgba(56,161,105,.4);color:#86efac}
+.alert-info{background:rgba(64,128,255,.1);border:1px solid rgba(64,128,255,.35);color:#93c5fd}
+header{display:flex;justify-content:space-between;align-items:center;padding:13px 22px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(0,0,0,.92);backdrop-filter:blur(10px);z-index:40}
+.brand{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:800;cursor:pointer;letter-spacing:-.02em}
+.brand .dot{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--accent),#60a5fa);flex-shrink:0;box-shadow:0 0 14px rgba(64,128,255,.4)}
 .topnav{display:flex;gap:8px;align-items:center}
-.lang-toggle{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden}
-.lang-toggle button{background:none;border:none;color:var(--dim);padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)}
+.lang-toggle{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;margin-right:4px}
+.lang-toggle button{background:none;border:none;color:var(--dim);padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);transition:background .15s,color .15s}
 .lang-toggle button.active{background:var(--panel2);color:var(--accent)}
 main{max-width:1060px;margin:0 auto;padding:30px 18px 80px}
-.hero{text-align:center;padding:60px 10px 10px}
-.hero h1{font-size:38px;font-weight:800;margin-bottom:10px}
-.hero p{color:var(--dim);font-size:16px;margin-bottom:26px}
+.fade-in{animation:fi .2s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.hero{text-align:center;padding:64px 10px 10px}
+.hero h1{font-size:40px;font-weight:800;margin-bottom:10px;letter-spacing:-.03em;background:linear-gradient(135deg,var(--text),#93c5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:var(--dim);font-size:16px;margin-bottom:28px}
 .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .sublink{margin-top:18px;font-size:14px;color:var(--dim);cursor:pointer;text-decoration:underline;display:inline-block}
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:22px;overflow-x:auto}
-.tab{background:none;border:none;color:var(--dim);padding:10px 15px;cursor:pointer;font-size:14px;border-bottom:2px solid transparent;white-space:nowrap;font-family:var(--font)}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:22px;overflow-x:auto}
+.tab{background:none;border:none;color:var(--dim);padding:10px 15px;cursor:pointer;font-size:14px;border-bottom:2px solid transparent;white-space:nowrap;font-family:var(--font);transition:color .15s}
+.tab:hover{color:var(--text)}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
-@media(max-width:540px){.grid2{grid-template-columns:1fr}}
-.switch-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+.switch-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border)}
 .switch-row:last-child{border-bottom:none}
 .switch-row span{font-size:14px}
 .sw{position:relative;width:40px;height:22px;flex-shrink:0}
@@ -63,439 +71,505 @@ main{max-width:1060px;margin:0 auto;padding:30px 18px 80px}
 .sl::before{content:"";position:absolute;height:16px;width:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
 input:checked+.sl{background:var(--accent)}
 input:checked+.sl::before{transform:translateX(18px)}
-.section-label{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);margin:18px 0 6px}
-.tag-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.switch-row .sw input:disabled+.sl{opacity:.5;cursor:not-allowed}
+.sec-lbl{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);margin:18px 0 8px;font-weight:600}
+.tag-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:8px}
 .pill{font-size:11px;padding:3px 9px;border-radius:999px;border:1px solid var(--border);color:var(--dim)}
 .pill.active{border-color:var(--ok);color:var(--ok)}
 .pill.pending{border-color:var(--accent);color:var(--accent)}
-.pill.unreg{border-color:var(--border);color:var(--dim)}
 .copy-row{display:flex;gap:6px;align-items:center;margin-top:6px}
-.copy-row input{flex:1;margin:0;font-size:12px;font-family:monospace}
+.copy-row input{flex:1;margin:0;font-size:12px;font-family:monospace;background:var(--bg)}
 .catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
-.pcard{overflow:hidden;padding:0}
+.pcard{overflow:hidden;padding:0;transition:border-color .15s}
+.pcard:hover{border-color:var(--accent)}
 .pphoto{width:100%;aspect-ratio:1;background:var(--panel2);display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:12px;overflow:hidden}
 .pphoto img{width:100%;height:100%;object-fit:cover}
-.pbody{padding:13px}
-.pbody h4{margin-bottom:3px;font-size:15px}
-.pprice{color:var(--accent);font-weight:700;margin:4px 0}
-.catalog-controls{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.catalog-controls input{flex:1;min-width:160px;margin:0}
-.catalog-controls select{width:auto;margin:0}
-.adm-section{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
-.adm-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.adm-section h4{margin-bottom:12px;font-size:15px}
+.pbody{padding:14px}
+.pbody h4{margin-bottom:4px;font-size:15px}
+.pprice{color:var(--accent);font-weight:700;font-size:18px;margin:5px 0}
+.cat-ctrls{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.cat-ctrls input{flex:1;min-width:160px;margin:0}
+.cat-ctrls select{width:auto;margin:0}
+.adm-sec{margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--border)}
+.adm-sec:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.adm-sec h4{margin-bottom:12px;font-size:15px;color:var(--text)}
 table.dt{width:100%;border-collapse:collapse;font-size:12px}
-table.dt th,table.dt td{border:1px solid var(--border);padding:5px 7px;text-align:left;white-space:nowrap}
-table.dt th{background:var(--panel2)}
-.dt-wrap{overflow-x:auto;max-height:340px;overflow-y:auto}
+table.dt th,table.dt td{border:1px solid var(--border);padding:5px 8px;text-align:left;white-space:nowrap}
+table.dt th{background:var(--panel2);color:var(--dim);font-weight:600}
+.dt-wrap{overflow-x:auto;max-height:350px;overflow-y:auto}
 footer{text-align:center;padding:24px 18px 60px;color:var(--dim);font-size:13px}
-footer a{margin:0 8px}
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:80;padding:16px}
-.modal{background:var(--panel2);border:1px solid var(--border);border-radius:var(--r);padding:24px;max-width:440px;width:100%;max-height:85vh;overflow-y:auto}
+footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:80;padding:16px;backdrop-filter:blur(4px)}
+.modal{background:var(--panel2);border:1px solid var(--border);border-radius:var(--r);padding:24px;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;animation:fi .18s ease}
 .modal h3{margin-bottom:14px}
 .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
-#cookie{position:fixed;bottom:0;left:0;right:0;background:var(--panel2);border-top:1px solid var(--border);padding:14px 18px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;z-index:70}
-#cookie p{font-size:14px;color:var(--dim);margin:0;max-width:540px}
+#cookie{position:fixed;bottom:0;left:0;right:0;background:var(--panel2);border-top:1px solid var(--border);padding:14px 20px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;z-index:60}
+#cookie p{font-size:14px;color:var(--dim);margin:0;max-width:580px}
 #cookie .ca{display:flex;gap:8px}
 #toasts{position:fixed;top:16px;right:16px;z-index:90;display:flex;flex-direction:column;gap:8px}
-.toast{padding:11px 16px;border-radius:8px;font-size:14px;max-width:320px;animation:tin .2s ease}
-.toast-ok{background:var(--ok);color:#0d1f17}
-.toast-error{background:var(--danger);color:#fff}
-.toast-info{background:var(--accent);color:#12201e}
-@keyframes tin{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
-.scan-card{max-width:460px;margin:40px auto}
-.scan-safe{display:flex;align-items:center;gap:8px;background:rgba(76,175,125,.15);border:1px solid var(--ok);border-radius:8px;padding:10px 14px;margin:12px 0;color:var(--ok);font-weight:600}
-.info-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px}
+.toast{padding:11px 16px;border-radius:8px;font-size:14px;max-width:320px;animation:fi .2s ease;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.toast-ok{background:#166534;color:#bbf7d0;border:1px solid #16a34a}
+.toast-error{background:#7f1d1d;color:#fca5a5;border:1px solid #ef4444}
+.toast-info{background:#1e3a5f;color:#93c5fd;border:1px solid #3b82f6}
+#prog{position:fixed;top:0;left:0;height:2px;background:var(--accent);width:0;z-index:100;transition:width .25s ease,opacity .3s;box-shadow:0 0 8px var(--accent)}
+.scan-card{max-width:480px;margin:40px auto}
+.scan-safe{display:flex;align-items:center;gap:8px;background:rgba(56,161,105,.12);border:1px solid rgba(56,161,105,.4);border-radius:8px;padding:10px 14px;margin:12px 0;color:var(--ok);font-weight:600}
+.info-row{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px}
 .info-row:last-child{border-bottom:none}
-.info-row .lbl{color:var(--dim);width:130px;flex-shrink:0}
+.info-row .lbl{color:var(--dim);min-width:130px;flex-shrink:0}
+#geo-loading{position:fixed;inset:0;background:#000;z-index:200;display:flex;align-items:center;justify-content:center}
+#geo-block{position:fixed;inset:0;background:#000;z-index:201;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
+#dev-warn{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:#7f1d1d;color:#fca5a5;border:1px solid #ef4444;padding:11px 20px;border-radius:8px;z-index:95;font-size:14px;animation:fi .2s ease;max-width:340px;text-align:center}
 </style>
 </head>
 <body>
+<div id="prog"></div>
+<div id="geo-loading">
+  <div style="text-align:center">
+    <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#4080ff,#60a5fa);margin:0 auto 14px;box-shadow:0 0 20px rgba(64,128,255,.5)"></div>
+    <div style="color:#4a6a9a;font-size:14px;font-family:'Segoe UI',system-ui,sans-serif">Praxifold</div>
+  </div>
+</div>
+<div id="geo-block" class="hidden">
+  <div>
+    <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#4080ff,#60a5fa);margin:0 auto 20px"></div>
+    <h2 style="font-size:24px;color:#c8d8f0;font-family:'Segoe UI',system-ui,sans-serif">Praxifold</h2>
+    <p style="margin-top:14px;color:#4a6a9a;font-size:15px;font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6">
+      Ši paslauga prieinama tik Lietuvoje.<br>
+      <small style="font-size:13px">This service is only available in Lithuania.</small>
+    </p>
+  </div>
+</div>
+<div id="dev-warn" class="hidden">Kūrėjų įrankiai yra užblokuoti. / Developer tools are blocked.</div>
 <header>
   <div class="brand" onclick="navigate('landing')"><div class="dot"></div>Praxifold</div>
   <div class="topnav" id="nav"></div>
 </header>
 <main id="app"></main>
 <footer>
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header" target="_blank" rel="noopener" id="report-link"></a>
-  <span style="margin:0 8px;color:var(--border)">|</span>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header" target="_blank" rel="noopener" id="fl-report"></a>
+  <span style="margin:0 6px;color:var(--border)">|</span>
   <span>Visos teisės saugomos / All rights reserved.</span>
 </footer>
 <div id="modal-root"></div>
 <div id="cookie" class="hidden">
-  <p id="cookie-text"></p>
+  <p id="ck-text"></p>
   <div class="ca">
-    <button class="btn btn-ghost btn-sm" onclick="cookieChoose('necessary')" id="cookie-nec"></button>
-    <button class="btn btn-primary btn-sm" onclick="cookieChoose('all')" id="cookie-all"></button>
+    <button class="btn btn-ghost btn-sm" onclick="cookieChoose('necessary')" id="ck-nec"></button>
+    <button class="btn btn-primary btn-sm" onclick="cookieChoose('all')" id="ck-all"></button>
   </div>
 </div>
 <div id="toasts"></div>
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbwma0Yg1QeE4U8JTNgBSrn9TaaylWvq5rPELsyL52QAeKZaKPSszL7SFAWfIhApP8lB/exec';
-const REPORT_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header';
+const API_URL    = 'https://script.google.com/macros/s/AKfycbwXUD0Tg4ScLV87ySIFiqvlakRgF4eNnkvJh4haYuN41XU3AQ24QHgivNYVmFk4JX5K/exec';
 const POLICY_URL = 'https://praxifold.github.io/policy.txt';
+const REPORT_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header';
+const ACCESS_TTL_MS = 20 * 60 * 1000;
 
 const TR = {
-  lt:{
-    login:'Prisijungti',register:'Registruotis',logout:'Atsijungti',
-    catalog:'Parduotuvė',dashboard:'Skydelis',settings:'Nustatymai',
-    myTags:'Mano pakabukai',adminTools:'Administravimas',devPanel:'Kūrėjas',
-    heroTitle:'Sveiki, kaip galime padėti?',
-    heroSub:'Praxifold — NFC ir QR pakabukai augintiniams ir raktams.',
-    howToGet:'Neturite pakabuko? Sužinokite kaip jį gauti',
-    howToGetBody:'Rašykite el. paštu pasaulinukai@protonmail.com arba įsigykite mūsų stende JA renginių metu.',
-    shopNow:'Peržiūrėti prekes',
-    email:'El. paštas',password:'Slaptažodis',fullName:'Vardas ir pavardė',
-    createAccount:'Sukurti paskyrą',signIn:'Prisijungti',
-    noAccount:'Neturite paskyros? ',registerHere:'Registruokitės',
-    haveAccount:'Jau turite paskyrą? ',loginHere:'Prisijunkite',
-    forgotPw:'Pamiršote slaptažodį?',
-    policyCheck:'Sutinku su ',policyLink:'Privatumo politika ir taisyklėmis',
-    pwHint:'Bent 10 simbolių: didžioji, mažoji raidė ir skaičius.',
-    resetTitle:'Slaptažodžio atkūrimas',
-    resetHint:'Įveskite el. paštą — išsiųsime atkūrimo nuorodą.',
-    resetSent:'Jei el. paštas yra mūsų sistemoje, netrukus gausite laišką.',
-    sendReset:'Siųsti nuorodą',
-    newPwTitle:'Nustatyti naują slaptažodį',
-    newPw:'Naujas slaptažodis',resetBtn:'Atstatyti slaptažodį',
-    setupTitle:'Paskyros nustatymas',setupHint:'Nustatykite savo vardą ir slaptažodį.',
-    finishSetup:'Baigti registraciją',
-    tagId:'Pakabuko ID',model:'Modelis',type:'Tipas',status:'Statusas',
-    displayName:'Augintinio vardas arba apibūdinimas',
-    ownerFirstName:'Savininko vardas',contactPhone:'Kontaktinis tel.',
-    contactEmail:'Kontaktinis el. paštas',alertEmail:'Įspėjimų el. paštas',
-    safeMode:'Augintinis saugus namuose',
-    streetAddress:'Gatvė ir namas',additionalEmail:'Papildomas el. paštas',
-    meetingSpot:'Susitikimo vieta',vetInfo:'Veterinaro duomenys',
-    microchipNumber:'Mikroschemos numeris',allergies:'Alergijos',
-    age:'Amžius',breed:'Veislė',notes:'Pastabos',
-    proFields:'Pro laukai',baseFields:'Pagrindiniai laukai',
-    saveChanges:'Išsaugoti',saved:'Išsaugota.',
-    noTags:'Neturite priregistruotų pakabukų. Nuskenuokite pakabuko QR kodą arba priglausite NFC.',
-    tagUrl:'Nuoroda',copy:'Kopijuoti',copied:'Nukopijuota!',
-    statusActive:'Aktyvus',statusUnreg:'Neregistruotas',statusPending:'Laukia aktyvacijos',
-    search:'Ieškoti...',allTypes:'Visi tipai',petType:'Augintinis',keyType:'Raktas',
-    noStock:'Prekių nerasta.',
-    accountInfo:'Paskyros informacija',userId:'Vartotojo ID',role:'Rolė',
-    privacyPolicy:'Privatumo politika',
-    changePw:'Pakeisti slaptažodį',currentPw:'Dabartinis slaptažodis',
-    newPassword:'Naujas slaptažodis',updatePw:'Atnaujinti slaptažodį',
-    dangerZone:'Pavojinga zona',
-    deleteAccount:'Ištrinti paskyrą',
-    deleteAccountHint:'Paskyra bus ištrinta po 1 mėnesio. Per tą laikotarpį galite atšaukti.',
-    confirmDelete:'Patvirtinti ištrynimą',cancelDeletion:'Atšaukti ištrynimą',
-    deletionScheduled:'Paskyra suplanuota ištrinti:',
-    generateTag:'Generuoti naują pakabuką',generate:'Generuoti',
-    warrantyTitle:'Garantijos pretenzija',warrantyHint:'Vartotojo ID ir pakabuko ID iš sistemos.',
-    openWarranty:'Atidaryti pretenziją',
-    transferTitle:'Perkelti duomenis į naują pakabuką',transfer:'Perkelti',
-    oldTagId:'Seno pakabuko ID',newTagId:'Naujo pakabuko ID',
-    inviteTitle:'Kviesti klientą el. paštu',sendInvite:'Siųsti kvietimą',
-    manualTitle:'Sukurti paskyrą rankiniu būdu',
-    deleteCustomerTitle:'Ištrinti kliento paskyrą',
-    targetUserId:'Kliento vartotojo ID',targetEmail:'Kliento el. paštas',
-    adminPassword:'Jūsų slaptažodis (patvirtinimas)',requestCode:'Gauti kodą',
-    deletionCode:'Kodas iš kliento el. pašto',confirmDeleteCustomer:'Patvirtinti ištrynimą',
-    scanTitle:'Pakabukas nuskaitytas',notReg:'Šis pakabukas dar neregistruotas.',
-    safeHomeMsg:'Augintinis saugus namuose',scanAlerted:'Savininkas buvo informuotas.',
-    owner:'Savininkas',phone:'Telefonas',contactEmailLbl:'El. paštas',
-    activationTitle:'Pakabukui reikia aktyvacijos',
-    activationInfo:'Šis pakabukas buvo perkeltas naujam vieninteliui. Prisijunkite ir patvirtinkite savininkystę.',
-    loginToActivate:'Prisijunkite, kad aktyvuotumėte',
-    activateBtn:'Aktyvuoti pakabuką',activationOk:'Pakabukas aktyvuotas!',
-    emailMismatch:'Šis pakabukas registruotas kitu el. paštu.',
-    roleCustomer:'Klientas',roleAdmin:'Administratorius',roleDev:'Kūrėjas',
-    cookieText:'Naudojame slapukus svetainės veikimui ir jūsų nustatymams prisiminti.',
-    acceptAll:'Sutikti su visais',necessaryOnly:'Tik būtini',
-    devUsers:'Vartotojai',devTags:'Pakabukai',devStock:'Prekės',
-    purge:'Ištrinti suplanuotas paskyras',purged:'Ištrinta paskyrų:',
-    devCreateTitle:'Sukurti vartotoją tiesiogiai',createUser:'Sukurti vartotoją',
-    loading:'Kraunama...',cancel:'Atšaukti',close:'Uždaryti',send:'Siųsti',create:'Sukurti',
-    sessionExpired:'Sesija pasibaigė. Prisijunkite iš naujo.',
-    networkError:'Nepavyko pasiekti serverio.',
-    report:'Pranešti apie klaidą',
-    edit:'Redaguoti',delete:'Ištrinti',editRecord:'Redaguoti įrašą',save:'Išsaugoti',
-  },
-  en:{
-    login:'Log in',register:'Register',logout:'Log out',
-    catalog:'Shop',dashboard:'Dashboard',settings:'Settings',
-    myTags:'My Tags',adminTools:'Admin',devPanel:'Developer',
-    heroTitle:'Welcome — how can we help?',
-    heroSub:'Praxifold — NFC and QR tags for pets and keys.',
-    howToGet:"Don't have a tag? Find out how to get one",
-    howToGetBody:'Email us at pasaulinukai@protonmail.com or visit our stand at JA events.',
-    shopNow:'Browse shop',
-    email:'Email',password:'Password',fullName:'Full name',
-    createAccount:'Create account',signIn:'Log in',
-    noAccount:'No account? ',registerHere:'Register',
-    haveAccount:'Have an account? ',loginHere:'Log in',
-    forgotPw:'Forgot password?',
-    policyCheck:'I agree to the ',policyLink:'Privacy Policy and Terms',
-    pwHint:'At least 10 characters: uppercase, lowercase and a number.',
-    resetTitle:'Password Reset',
-    resetHint:'Enter your email — we will send a reset link.',
-    resetSent:'If your email is in our system, you will receive a link shortly.',
-    sendReset:'Send link',
-    newPwTitle:'Set a new password',
-    newPw:'New password',resetBtn:'Reset password',
-    setupTitle:'Account Setup',setupHint:'Set your name and password to get started.',
-    finishSetup:'Finish setup',
-    tagId:'Tag ID',model:'Model',type:'Type',status:'Status',
-    displayName:'Pet name or description',
-    ownerFirstName:'Owner first name',contactPhone:'Contact phone',
-    contactEmail:'Contact email',alertEmail:'Alert notification email',
-    safeMode:'Pet is safe at home',
-    streetAddress:'Street address',additionalEmail:'Additional email',
-    meetingSpot:'Nearby meeting spot',vetInfo:'Vet details',
-    microchipNumber:'Microchip number',allergies:'Allergies',
-    age:'Age',breed:'Breed',notes:'Notes',
-    proFields:'Pro fields',baseFields:'Basic fields',
-    saveChanges:'Save',saved:'Saved.',
-    noTags:"No registered tags. Scan your tag's QR code or tap NFC to register it.",
-    tagUrl:'Tag URL',copy:'Copy',copied:'Copied!',
-    statusActive:'Active',statusUnreg:'Unregistered',statusPending:'Pending Activation',
-    search:'Search...',allTypes:'All types',petType:'Pet',keyType:'Key',
-    noStock:'No products found.',
-    accountInfo:'Account information',userId:'User ID',role:'Role',
-    privacyPolicy:'Privacy Policy',
-    changePw:'Change password',currentPw:'Current password',
-    newPassword:'New password',updatePw:'Update password',
-    dangerZone:'Danger zone',
-    deleteAccount:'Delete account',
-    deleteAccountHint:'Account will be deleted in 1 month. You can cancel during this window.',
-    confirmDelete:'Confirm deletion',cancelDeletion:'Cancel deletion',
-    deletionScheduled:'Account deletion scheduled:',
-    generateTag:'Generate new tag',generate:'Generate',
-    warrantyTitle:'Warranty claim',warrantyHint:'Enter the user ID and tag ID from the system.',
-    openWarranty:'Open claim',
-    transferTitle:'Transfer data to new tag',transfer:'Transfer',
-    oldTagId:'Old tag ID',newTagId:'New tag ID',
-    inviteTitle:'Invite customer by email',sendInvite:'Send invite',
-    manualTitle:'Create account manually',
-    deleteCustomerTitle:'Delete customer account',
-    targetUserId:'Customer user ID',targetEmail:'Customer email',
-    adminPassword:'Your password (confirmation)',requestCode:'Request code',
-    deletionCode:'Code from customer email',confirmDeleteCustomer:'Confirm deletion',
-    scanTitle:'Tag scanned',notReg:'This tag is not yet registered.',
-    safeHomeMsg:'Pet is safe at home',scanAlerted:'The owner has been notified.',
-    owner:'Owner',phone:'Phone',contactEmailLbl:'Email',
-    activationTitle:'Tag needs activation',
-    activationInfo:'This tag was recently transferred. Log in with the registered account to confirm ownership.',
-    loginToActivate:'Log in to activate',
-    activateBtn:'Activate tag',activationOk:'Tag activated!',
-    emailMismatch:'This tag is registered to a different account.',
-    roleCustomer:'Customer',roleAdmin:'Admin',roleDev:'Developer',
-    cookieText:'We use cookies for site functionality and to remember your settings.',
-    acceptAll:'Accept all',necessaryOnly:'Necessary only',
-    devUsers:'Users',devTags:'Tags',devStock:'Stock',
-    purge:'Purge scheduled deletions',purged:'Deleted accounts:',
-    devCreateTitle:'Create user directly',createUser:'Create user',
-    loading:'Loading...',cancel:'Cancel',close:'Close',send:'Send',create:'Create',
-    sessionExpired:'Session expired. Please log in again.',
-    networkError:'Could not reach server.',
-    report:'Report a problem',
-    edit:'Edit',delete:'Delete',editRecord:'Edit record',save:'Save',
-  }
+lt:{
+  login:'Prisijungti',register:'Registruotis',logout:'Atsijungti',
+  catalog:'Parduotuvė',dashboard:'Skydelis',settings:'Nustatymai',
+  myTags:'Mano pakabukai',adminTools:'Administravimas',devPanel:'Kūrėjas',
+  heroTitle:'Sveiki, kaip galime padėti?',
+  heroSub:'Praxifold — NFC ir QR pakabukai augintiniams ir raktams.',
+  howToGet:'Neturite pakabuko? Sužinokite kaip jį gauti',
+  howToGetBody:'Rašykite el. paštu pasaulinukai@protonmail.com arba įsigykite mūsų stende JA renginių metu.',
+  shopNow:'Peržiūrėti prekes',
+  email:'El. paštas',password:'Slaptažodis',fullName:'Vardas ir pavardė',
+  createAccount:'Sukurti paskyrą',signIn:'Prisijungti',
+  noAccount:'Neturite paskyros? ',registerHere:'Registruokitės',
+  haveAccount:'Jau turite paskyrą? ',loginHere:'Prisijunkite',
+  forgotPw:'Pamiršote slaptažodį?',
+  policyCheck:'Sutinku su ',policyLink:'Privatumo politika ir taisyklėmis',
+  pwHint:'Bent 10 simbolių: didžioji, mažoji raidė ir skaičius.',
+  confirmPw:'Pakartokite slaptažodį',pwMismatch:'Slaptažodžiai nesutampa.',
+  showPw:'Rodyti',hidePw:'Slėpti',
+  resetTitle:'Slaptažodžio atkūrimas',
+  resetHint:'Įveskite el. paštą — išsiųsime atkūrimo nuorodą.',
+  resetSent:'Jei el. paštas yra mūsų sistemoje, netrukus gausite laišką.',
+  sendReset:'Siųsti nuorodą',
+  badEmailFmt:'El. pašte turi būti simbolis @.',
+  newPwTitle:'Nustatyti naują slaptažodį',
+  newPw:'Naujas slaptažodis',resetBtn:'Atstatyti slaptažodį',
+  setupTitle:'Paskyros nustatymas',setupHint:'Nustatykite vardą ir slaptažodį.',
+  finishSetup:'Baigti registraciją',
+  tagId:'Pakabuko ID',model:'Modelis',type:'Tipas',status:'Statusas',
+  displayName:'Augintinio vardas arba apibūdinimas',
+  ownerFirstName:'Savininko vardas',contactPhone:'Kontaktinis tel.',
+  contactEmail:'Kontaktinis el. paštas',alertEmail:'Įspėjimų el. paštas',
+  safeMode:'Augintinis saugus namuose',
+  streetAddress:'Gatvė ir namas',additionalEmail:'Papildomas el. paštas',
+  meetingSpot:'Susitikimo vieta',vetInfo:'Veterinaro duomenys',
+  microchipNumber:'Mikroschemos numeris',allergies:'Alergijos',
+  age:'Amžius',breed:'Veislė',notes:'Pastabos',
+  proFields:'Pro laukai',baseFields:'Pagrindiniai laukai',
+  saveChanges:'Išsaugoti',saved:'Išsaugota.',
+  noTags:'Neturite priregistruotų pakabukų. Nuskenuokite pakabuko QR kodą arba priglausite NFC, kad jį priregistruotumėte.',
+  tagUrl:'Nuoroda',copy:'Kopijuoti',copied:'Nukopijuota!',
+  statusActive:'Aktyvus',statusUnreg:'Neregistruotas',statusPending:'Laukia aktyvacijos',
+  search:'Ieškoti...',allTypes:'Visi tipai',petType:'Augintinis',keyType:'Raktas',
+  noStock:'Prekių nerasta.',
+  accountInfo:'Paskyros informacija',userId:'Vartotojo ID',role:'Rolė',
+  privacyPolicy:'Privatumo politika',
+  changePw:'Pakeisti slaptažodį',currentPw:'Dabartinis slaptažodis',
+  newPassword:'Naujas slaptažodis',updatePw:'Atnaujinti slaptažodį',
+  dangerZone:'Pavojinga zona',
+  deleteAccount:'Ištrinti paskyrą',
+  deleteAccountHint:'Paskyra bus ištrinta po 1 mėnesio. Per tą laikotarpį galite atšaukti.',
+  confirmDelete:'Patvirtinti ištrynimą',cancelDeletion:'Atšaukti ištrynimą',
+  deletionScheduled:'Paskyra suplanuota ištrinti:',
+  generateTag:'Generuoti naują pakabuką',generate:'Generuoti',
+  warrantyTitle:'Garantijos pretenzija',warrantyHint:'Vartotojo ID ir pakabuko ID iš sistemos.',
+  openWarranty:'Atidaryti pretenziją',
+  transferTitle:'Perkelti duomenis į naują pakabuką',transfer:'Perkelti',
+  oldTagId:'Seno pakabuko ID',newTagId:'Naujo pakabuko ID',
+  inviteTitle:'Kviesti klientą el. paštu',sendInvite:'Siųsti kvietimą',
+  manualTitle:'Sukurti paskyrą rankiniu būdu',
+  deleteCustomerTitle:'Ištrinti kliento paskyrą',
+  targetUserId:'Kliento vartotojo ID',targetEmail:'Kliento el. paštas',
+  adminPw:'Jūsų slaptažodis (patvirtinimas)',requestCode:'Gauti kodą',
+  deletionCode:'Kodas iš kliento el. pašto',confirmDeleteCustomer:'Patvirtinti ištrynimą',
+  scanTitle:'Pakabukas nuskaitytas',notReg:'Šis pakabukas dar neregistruotas.',
+  safeHomeMsg:'Augintinis saugus namuose',scanAlerted:'Savininkas buvo informuotas.',
+  owner:'Savininkas',phone:'Telefonas',emailLbl:'El. paštas',
+  activationTitle:'Pakabukui reikia aktyvacijos',
+  activationInfo:'Šis pakabukas buvo perkeltas. Prisijunkite ir patvirtinkite savininkystę.',
+  loginToActivate:'Prisijungti ir aktyvuoti',
+  activateBtn:'Aktyvuoti pakabuką',activationOk:'Pakabukas aktyvuotas!',
+  roleCustomer:'Klientas',roleAdmin:'Administratorius',roleDev:'Kūrėjas',
+  cookieText:'Naudojame slapukus svetainės veikimui ir jūsų nustatymams prisiminti.',
+  acceptAll:'Sutikti su visais',necessaryOnly:'Tik būtini',
+  devUsers:'Vartotojai',devTags:'Pakabukai',devStock:'Prekės',
+  purge:'Ištrinti suplanuotas paskyras',purged:'Ištrinta paskyrų:',
+  devCreateTitle:'Sukurti vartotoją tiesiogiai',createUser:'Sukurti vartotoją',
+  loading:'Kraunama...',cancel:'Atšaukti',close:'Uždaryti',
+  sessionExpired:'Sesija pasibaigė. Prisijunkite iš naujo.',
+  networkError:'Nepavyko pasiekti serverio.',
+  report:'Pranešti apie klaidą',
+  edit:'Redaguoti',delete:'Ištrinti',editRecord:'Redaguoti įrašą',save:'Išsaugoti',
+  smCooldown:'Palaukite 15 sek. prieš keičiant vėl.',
+  proEditNote:'Pro pakabukai: 1 val. pertrauka tarp duomenų pakeitimų. Saugaus režimo mygtukas nuo to nepriklauso.',
+},
+en:{
+  login:'Log in',register:'Register',logout:'Log out',
+  catalog:'Shop',dashboard:'Dashboard',settings:'Settings',
+  myTags:'My Tags',adminTools:'Admin',devPanel:'Developer',
+  heroTitle:'Welcome — how can we help?',
+  heroSub:'Praxifold — NFC and QR tags for pets and keys.',
+  howToGet:"Don't have a tag? Find out how to get one",
+  howToGetBody:'Email us at pasaulinukai@protonmail.com or visit our stand at JA events.',
+  shopNow:'Browse shop',
+  email:'Email',password:'Password',fullName:'Full name',
+  createAccount:'Create account',signIn:'Log in',
+  noAccount:'No account? ',registerHere:'Register',
+  haveAccount:'Have an account? ',loginHere:'Log in',
+  forgotPw:'Forgot password?',
+  policyCheck:'I agree to the ',policyLink:'Privacy Policy and Terms',
+  pwHint:'At least 10 characters: uppercase, lowercase and a number.',
+  confirmPw:'Confirm password',pwMismatch:'Passwords do not match.',
+  showPw:'Show',hidePw:'Hide',
+  resetTitle:'Password Reset',
+  resetHint:'Enter your email — we will send a reset link.',
+  resetSent:'If your email is in our system, you will receive a link shortly.',
+  sendReset:'Send link',
+  badEmailFmt:'Email must contain an @ symbol.',
+  newPwTitle:'Set a new password',
+  newPw:'New password',resetBtn:'Reset password',
+  setupTitle:'Account Setup',setupHint:'Set your name and password.',
+  finishSetup:'Finish setup',
+  tagId:'Tag ID',model:'Model',type:'Type',status:'Status',
+  displayName:'Pet name or description',
+  ownerFirstName:'Owner first name',contactPhone:'Contact phone',
+  contactEmail:'Contact email',alertEmail:'Alert notification email',
+  safeMode:'Pet is safe at home',
+  streetAddress:'Street address',additionalEmail:'Additional email',
+  meetingSpot:'Nearby meeting spot',vetInfo:'Vet details',
+  microchipNumber:'Microchip number',allergies:'Allergies',
+  age:'Age',breed:'Breed',notes:'Notes',
+  proFields:'Pro fields',baseFields:'Basic fields',
+  saveChanges:'Save',saved:'Saved.',
+  noTags:"No registered tags. Scan your tag's QR code or tap NFC to register it.",
+  tagUrl:'Tag URL',copy:'Copy',copied:'Copied!',
+  statusActive:'Active',statusUnreg:'Unregistered',statusPending:'Pending Activation',
+  search:'Search...',allTypes:'All types',petType:'Pet',keyType:'Key',
+  noStock:'No products found.',
+  accountInfo:'Account information',userId:'User ID',role:'Role',
+  privacyPolicy:'Privacy Policy',
+  changePw:'Change password',currentPw:'Current password',
+  newPassword:'New password',updatePw:'Update password',
+  dangerZone:'Danger zone',
+  deleteAccount:'Delete account',
+  deleteAccountHint:'Account will be deleted in 1 month. You can cancel during this window.',
+  confirmDelete:'Confirm deletion',cancelDeletion:'Cancel deletion',
+  deletionScheduled:'Account deletion scheduled:',
+  generateTag:'Generate new tag',generate:'Generate',
+  warrantyTitle:'Warranty claim',warrantyHint:'Enter the user ID and tag ID from the system.',
+  openWarranty:'Open claim',
+  transferTitle:'Transfer data to new tag',transfer:'Transfer',
+  oldTagId:'Old tag ID',newTagId:'New tag ID',
+  inviteTitle:'Invite customer by email',sendInvite:'Send invite',
+  manualTitle:'Create account manually',
+  deleteCustomerTitle:'Delete customer account',
+  targetUserId:'Customer user ID',targetEmail:'Customer email',
+  adminPw:'Your password (confirmation)',requestCode:'Request code',
+  deletionCode:'Code from customer email',confirmDeleteCustomer:'Confirm deletion',
+  scanTitle:'Tag scanned',notReg:'This tag is not yet registered.',
+  safeHomeMsg:'Pet is safe at home',scanAlerted:'The owner has been notified.',
+  owner:'Owner',phone:'Phone',emailLbl:'Email',
+  activationTitle:'Tag needs activation',
+  activationInfo:'This tag was transferred. Log in with the registered account to confirm ownership.',
+  loginToActivate:'Log in to activate',
+  activateBtn:'Activate tag',activationOk:'Tag activated!',
+  roleCustomer:'Customer',roleAdmin:'Admin',roleDev:'Developer',
+  cookieText:'We use cookies for site functionality and to remember your settings.',
+  acceptAll:'Accept all',necessaryOnly:'Necessary only',
+  devUsers:'Users',devTags:'Tags',devStock:'Stock',
+  purge:'Purge scheduled deletions',purged:'Deleted accounts:',
+  devCreateTitle:'Create user directly',createUser:'Create user',
+  loading:'Loading...',cancel:'Cancel',close:'Close',
+  sessionExpired:'Session expired. Please log in again.',
+  networkError:'Could not reach server.',
+  report:'Report a problem',
+  edit:'Edit',delete:'Delete',editRecord:'Edit record',save:'Save',
+  smCooldown:'Wait 15 sec before toggling again.',
+  proEditNote:'Pro tags: 1-hour cooldown between data edits. Safe mode toggle is independent.',
+}};
+
+const ERRS = {
+  ACCOUNT_BLOCKED:{lt:'Paskyra užblokuota. Susisiekite su palaikymo komanda.',en:'Account blocked. Contact support.'},
+  ACCOUNT_LOCKED:{lt:'Paskyra laikinai užrakinta. Bandykite vėliau.',en:'Account temporarily locked. Try again later.'},
+  ACCOUNT_PENDING:{lt:'Paskyra dar nenustatyta. Patikrinkite el. paštą.',en:'Account not set up. Check your email.'},
+  ALREADY_REG:{lt:'Pakabukas jau priregistruotas.',en:'Tag already registered.'},
+  BAD_EMAIL:{lt:'Neteisingas el. pašto formatas.',en:'Invalid email format.'},
+  COOLDOWN:{lt:'Pro pakabukams taikoma 1 val. pertrauka tarp pakeitimų.',en:'Pro tags: 1-hour cooldown between edits.'},
+  DEST_HAS_OWNER:{lt:'Naujas pakabukas jau turi savininką.',en:'Destination tag already has an owner.'},
+  EMAIL_EXISTS:{lt:'Šis el. paštas jau užregistruotas.',en:'Email already registered.'},
+  EMAIL_MISMATCH:{lt:'Šis pakabukas priklauso kitai paskyrai.',en:'This tag belongs to a different account.'},
+  INVALID_CODE:{lt:'Neteisingas arba pasibaigęs kodas.',en:'Invalid or expired code.'},
+  INVALID_CREDS:{lt:'Neteisingas el. paštas arba slaptažodis.',en:'Invalid email or password.'},
+  INVALID_TOKEN:{lt:'Nuoroda negalioja arba pasibaigė.',en:'Link invalid or expired.'},
+  MAIL_FAILED:{lt:'Nepavyko išsiųsti laiško.',en:'Failed to send email.'},
+  MISSING:{lt:'Užpildykite visus laukus.',en:'Fill all fields.'},
+  NEEDS_ACT:{lt:'Pirmiausia aktyvuokite pakabuką.',en:'Activate this tag first.'},
+  NOT_FOUND:{lt:'Įrašas nerastas.',en:'Record not found.'},
+  POLICY:{lt:'Turite sutikti su privatumo politika.',en:'You must accept the Privacy Policy.'},
+  SESSION_EXPIRED:{lt:'Sesija pasibaigė.',en:'Session expired.'},
+  SESSION_REVOKED:{lt:'Aptiktas įtartinas prisijungimas. Prisijunkite iš naujo.',en:'Suspicious login detected. Please log in again.'},
+  WEAK_PW:{lt:'Slaptažodis per silpnas. Bent 10 simbolių, didžioji, mažoji raidė, skaičius.',en:'Password too weak. Min 10 chars, uppercase, lowercase, number.'},
 };
 
-const ERR = {
-  ACCOUNT_BLOCKED:  {lt:'Paskyra užblokuota. Susisiekite su palaikymo komanda.', en:'Account blocked. Contact support.'},
-  ACCOUNT_LOCKED:   {lt:'Paskyra laikinai užrakinta. Pabandykite vėliau.', en:'Account temporarily locked. Try again later.'},
-  ACCOUNT_PENDING:  {lt:'Paskyra dar nenustatyta. Patikrinkite el. paštą.', en:'Account not set up. Check your email.'},
-  ALREADY_REG:      {lt:'Pakabukas jau priregistruotas.', en:'Tag already registered.'},
-  BAD_EMAIL:        {lt:'Neteisingas el. pašto formatas.', en:'Invalid email format.'},
-  COOLDOWN:         {lt:'Pro pakabukams taikoma 1 val. pertrauka tarp pakeitimų.', en:'Pro tags: 1-hour cooldown between edits.'},
-  DEST_HAS_OWNER:   {lt:'Naujas pakabukas jau turi savininką. Perkėlimas atšauktas.', en:'Destination tag already has an owner. Transfer refused.'},
-  EMAIL_EXISTS:     {lt:'Toks el. paštas jau registruotas.', en:'Email already registered.'},
-  EMAIL_MISMATCH:   {lt:'Šis pakabukas priklauso kitai paskyrai.', en:'This tag belongs to a different account.'},
-  INVALID_CODE:     {lt:'Neteisingas arba pasibaigęs kodas.', en:'Invalid or expired code.'},
-  INVALID_CREDS:    {lt:'Neteisingas el. paštas arba slaptažodis.', en:'Invalid email or password.'},
-  INVALID_TOKEN:    {lt:'Nuoroda negalioja arba pasibaigė.', en:'Link invalid or expired.'},
-  MAIL_FAILED:      {lt:'Nepavyko išsiųsti el. laiško.', en:'Failed to send email.'},
-  MISSING:          {lt:'Užpildykite visus laukus.', en:'Fill all fields.'},
-  NEEDS_ACT:        {lt:'Pirmiausia aktyvuokite pakabuką.', en:'Activate this tag first.'},
-  NOT_FOUND:        {lt:'Įrašas nerastas.', en:'Record not found.'},
-  POLICY:           {lt:'Turite sutikti su privatumo politika.', en:'You must accept the Privacy Policy.'},
-  SESSION_EXPIRED:  {lt:'Sesija pasibaigė. Prisijunkite iš naujo.', en:'Session expired. Please log in again.'},
-  SESSION_REVOKED:  {lt:'Aptiktas įtartinas prisijungimas. Prisijunkite iš naujo.', en:'Suspicious login detected. Please log in again.'},
-  WEAK_PW:          {lt:'Slaptažodis per silpnas.', en:'Password too weak.'},
-};
+let L = localStorage.getItem('pxf_lang')||'lt';
+function t(k){ return TR[L][k]!==undefined?TR[L][k]:(TR.lt[k]||k); }
+function em(r){ return (r&&r.code&&ERRS[r.code]&&ERRS[r.code][L])||(r&&r.message)||t('networkError'); }
+function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function setLang(l){ L=l; localStorage.setItem('pxf_lang',l); render(); }
 
-function t(k)     { return (TR[L][k] !== undefined ? TR[L][k] : (TR.lt[k] || k)); }
-function errMsg(r){ return (r && r.code && ERR[r.code] && ERR[r.code][L]) || (r && r.message) || t('networkError'); }
-function esc(s)   { return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-async function hmacHex(keyHex, msg) {
-  const k = await crypto.subtle.importKey('raw', new TextEncoder().encode(keyHex), {name:'HMAC',hash:'SHA-256'}, false, ['sign']);
-  const s = await crypto.subtle.sign('HMAC', k, new TextEncoder().encode(msg));
+async function hmacHex(kh,msg){
+  const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(kh),{name:'HMAC',hash:'SHA-256'},false,['sign']);
+  const s=await crypto.subtle.sign('HMAC',k,new TextEncoder().encode(msg));
   return Array.from(new Uint8Array(s)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-async function keystream(kh, nonce, len) {
+async function ks(kh,nonce,len){
   const bytes=[]; let c=0;
-  while (bytes.length<len) {
-    const h=await hmacHex(kh, nonce+':'+c);
-    for (let i=0;i<h.length;i+=2) bytes.push(parseInt(h.substr(i,2),16));
-    c++;
-  }
+  while(bytes.length<len){ const h=await hmacHex(kh,nonce+':'+c); for(let i=0;i<h.length;i+=2) bytes.push(parseInt(h.substr(i,2),16)); c++; }
   return bytes.slice(0,len);
 }
-function randHex(n) { const a=new Uint8Array(n); crypto.getRandomValues(a); return Array.from(a).map(b=>b.toString(16).padStart(2,'0')).join(''); }
-async function encPay(kh, obj) {
+function rndHex(n){ const a=new Uint8Array(n); crypto.getRandomValues(a); return Array.from(a).map(b=>b.toString(16).padStart(2,'0')).join(''); }
+async function encPay(kh,obj){
   const pt=Array.from(new TextEncoder().encode(JSON.stringify(obj)));
-  const n=randHex(16), ks=await keystream(kh,n,pt.length);
-  const c=pt.map((b,i)=>(b^ks[i]).toString(16).padStart(2,'0')).join('');
+  const n=rndHex(16),k=await ks(kh,n,pt.length);
+  const c=pt.map((b,i)=>(b^k[i]).toString(16).padStart(2,'0')).join('');
   return {n,c,t:await hmacHex(kh,n+':'+c)};
 }
-async function decPay(kh, enc) {
-  if (await hmacHex(kh,enc.n+':'+enc.c)!==enc.t) throw new Error('Integrity fail');
+async function decPay(kh,enc){
+  if(await hmacHex(kh,enc.n+':'+enc.c)!==enc.t) throw new Error('Integrity fail');
   const ct=[]; for(let i=0;i<enc.c.length;i+=2) ct.push(parseInt(enc.c.substr(i,2),16));
-  const ks=await keystream(kh,enc.n,ct.length);
-  return JSON.parse(new TextDecoder().decode(new Uint8Array(ct.map((b,i)=>b^ks[i]))));
+  const k=await ks(kh,enc.n,ct.length);
+  return JSON.parse(new TextDecoder().decode(new Uint8Array(ct.map((b,i)=>b^k[i]))));
 }
 
-const LS = {
-  g:k=>{try{return localStorage.getItem(k);}catch(_){return null;}},
-  s:(k,v)=>{try{localStorage.setItem(k,v);}catch(_){}}
-};
+const LS={g:k=>{try{return localStorage.getItem(k);}catch(_){return null;}},s:(k,v)=>{try{localStorage.setItem(k,v);}catch(_){}}};
 
-const SM = {
-  at:null, rt:null, ek:null, email:null, fullName:null, role:null, userId:null, _t:null,
+const SM={
+  at:null,rt:null,ek:null,email:null,fullName:null,role:null,userId:null,_t:null,
   load(){
-    this.at=LS.g('at'); this.rt=LS.g('rt'); this.ek=LS.g('ek');
-    this.email=LS.g('em'); this.fullName=LS.g('fn'); this.role=LS.g('ro')||''; this.userId=LS.g('uid');
-    if (this.at && this.rt) this._sched();
+    this.at=LS.g('at');this.rt=LS.g('rt');this.ek=LS.g('ek');
+    this.email=LS.g('em');this.fullName=LS.g('fn');this.role=LS.g('ro')||'';this.userId=LS.g('uid');
+    if(this.at&&this.rt) this._sched();
   },
-  save(d, email){
-    if (email) { this.email=email; LS.s('em',email); }
-    if (d.accessToken)   { this.at=d.accessToken;    LS.s('at',d.accessToken); }
-    if (d.refreshToken)  { this.rt=d.refreshToken;   LS.s('rt',d.refreshToken); }
-    if (d.encryptionKey) { this.ek=d.encryptionKey;  LS.s('ek',d.encryptionKey); }
-    if (d.fullName!==undefined)  { this.fullName=d.fullName; LS.s('fn',d.fullName||''); }
-    if (d.role!==undefined)      { this.role=d.role;         LS.s('ro',d.role||''); }
-    if (d.userId)                { this.userId=d.userId;     LS.s('uid',d.userId); }
+  save(d,email){
+    if(email){this.email=email;LS.s('em',email);}
+    if(d.accessToken){this.at=d.accessToken;LS.s('at',d.accessToken);}
+    if(d.refreshToken){this.rt=d.refreshToken;LS.s('rt',d.refreshToken);}
+    if(d.encryptionKey){this.ek=d.encryptionKey;LS.s('ek',d.encryptionKey);}
+    if(d.fullName!==undefined){this.fullName=d.fullName;LS.s('fn',d.fullName||'');}
+    if(d.role!==undefined){this.role=d.role;LS.s('ro',d.role||'');}
+    if(d.userId){this.userId=d.userId;LS.s('uid',d.userId);}
     this._sched();
+  },
+  _sched(){ clearTimeout(this._t); this._t=setTimeout(()=>this._ref(), 18*60*1000); },
+  async _ref(){
+    if(!this.rt||!this.email) return;
+    try{
+      const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'refreshSession',payload:{refreshToken:this.rt,email:this.email}})});
+      const d=await r.json();
+      if(d.success){this.save(d);}
+      else if(d.code==='SESSION_REVOKED'||d.code==='SESSION_EXPIRED'){this.clear();navigate('login');toast(t('sessionExpired'),'error');}
+      else{this._sched();}
+    }catch(_){this._sched();}
   },
   clear(){
     clearTimeout(this._t);
     this.at=this.rt=this.ek=this.email=this.fullName=this.role=this.userId=null;
     ['at','rt','ek','em','fn','ro','uid'].forEach(k=>localStorage.removeItem(k));
   },
-  _sched(){ clearTimeout(this._t); this._t=setTimeout(()=>this._ref(), 4*60*1000+30*1000); },
-  async _ref(){
-    if (!this.rt||!this.email) return;
-    try {
-      const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'refreshSession',payload:{refreshToken:this.rt,email:this.email}})});
-      const d=await r.json();
-      if (d.success) { this.save(d); }
-      else if (d.code==='SESSION_REVOKED'||d.code==='SESSION_EXPIRED') { this.clear(); navigate('login'); toast(t('sessionExpired'),'error'); }
-      else { this._sched(); }
-    } catch(_){ this._sched(); }
-  },
   get ok(){ return !!(this.at&&this.rt); },
   get isAdmin(){ return this.role==='admin'||this.role==='developer'; },
   get isDev()  { return this.role==='developer'; }
 };
 
-const API = {
-  async call(action, payload, raw){
+const prog={
+  el:null,
+  start(){ if(!this.el) this.el=document.getElementById('prog'); if(this.el){this.el.style.cssText='width:65%;opacity:1';} },
+  done(){ if(!this.el) return; this.el.style.width='100%'; setTimeout(()=>{if(this.el)this.el.style.cssText='width:0;opacity:0';},300); }
+};
+
+const API={
+  async call(action,payload,raw){
     payload=Object.assign({},payload||{});
     const body={action};
-    if (SM.ek&&SM.at&&!raw) {
+    prog.start();
+    if(SM.ek&&SM.at&&!raw){
       body.tok=SM.at;
       body.enc=await encPay(SM.ek,payload);
     } else {
-      if (SM.at) payload.accessToken=SM.at;
+      if(SM.at) payload.accessToken=SM.at;
       body.payload=payload;
     }
     let data;
-    try { const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}); data=await r.json(); }
-    catch(_){ return {success:false,code:'NETWORK',message:t('networkError')}; }
-    if (data.enc&&SM.ek) {
-      try { data=await decPay(SM.ek,data.enc); }
-      catch(_){ return {success:false,code:'DECRYPT',message:t('networkError')}; }
+    try{
+      const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});
+      data=await r.json();
+    }catch(_){prog.done();return {success:false,code:'NETWORK',message:t('networkError')};}
+    if(data.enc&&SM.ek){
+      try{data=await decPay(SM.ek,data.enc);}
+      catch(_){prog.done();return {success:false,code:'DECRYPT',message:t('networkError')};}
     }
-    if (data.code==='SESSION_EXPIRED'||data.code==='SESSION_REVOKED') { SM.clear(); navigate('login'); toast(t('sessionExpired'),'error'); }
+    prog.done();
+    if(data.code==='SESSION_EXPIRED'||data.code==='SESSION_REVOKED'){SM.clear();navigate('login');toast(t('sessionExpired'),'error');}
     return data;
   },
   async pub(params){
     const url=new URL(API_URL);
     Object.keys(params).forEach(k=>url.searchParams.set(k,params[k]));
-    try { const r=await fetch(url); return await r.json(); }
-    catch(_){ return {success:false,code:'NETWORK',message:t('networkError')}; }
+    prog.start();
+    try{const r=await fetch(url);const d=await r.json();prog.done();return d;}
+    catch(_){prog.done();return {success:false,code:'NETWORK',message:t('networkError')};}
   }
 };
 
-let L = LS.g('lang')||'lt';
-function setLang(l){ L=l; LS.s('lang',l); render(); }
-
-const State = {view:'landing', _tagResult:null, _tagParams:null, _setupParams:null, _resetParams:null, _dash:null, _stock:null, _devSheet:null};
-
-function navigate(v){ State.view=v; render(); }
-
-function render(){
-  renderNav();
-  document.getElementById('report-link').textContent=t('report');
-  const app=document.getElementById('app');
-  switch(State.view){
-    case 'landing':    app.innerHTML=vLanding(); break;
-    case 'login':      app.innerHTML=vLogin(); break;
-    case 'register':   app.innerHTML=vRegister(); break;
-    case 'resetReq':   app.innerHTML=vResetReq(); break;
-    case 'resetForm':  app.innerHTML=vResetForm(); break;
-    case 'setup':      app.innerHTML=vSetup(); break;
-    case 'catalog':    renderCatalog(); break;
-    case 'dashboard':  renderDash(); break;
-    case 'tagScan':    app.innerHTML=vTagScan(); break;
-    case 'activation': app.innerHTML=vActivation(); break;
-    default:           app.innerHTML=vLanding();
-  }
+async function withBtn(btn,fn){
+  const orig=btn.textContent; btn.disabled=true; btn.textContent=t('loading');
+  try{return await fn();}finally{btn.disabled=false;btn.textContent=orig;}
 }
-
-function renderNav(){
-  const lt=`<div class="lang-toggle"><button class="${L==='lt'?'active':''}" onclick="setLang('lt')">LT</button><button class="${L==='en'?'active':''}" onclick="setLang('en')">EN</button></div>`;
-  const nav=document.getElementById('nav');
-  if (SM.ok) {
-    nav.innerHTML=`${lt}<button class="btn btn-ghost btn-sm" onclick="navigate('catalog')">${t('catalog')}</button><button class="btn btn-ghost btn-sm" onclick="navigate('dashboard')">${t('dashboard')}</button><button class="btn btn-primary btn-sm" onclick="doLogout()">${t('logout')}</button>`;
-  } else {
-    nav.innerHTML=`${lt}<button class="btn btn-ghost btn-sm" onclick="navigate('catalog')">${t('catalog')}</button><button class="btn btn-ghost btn-sm" onclick="navigate('login')">${t('login')}</button><button class="btn btn-primary btn-sm" onclick="navigate('register')">${t('register')}</button>`;
-  }
-}
-
 function toast(msg,type='info'){
   const el=document.createElement('div');
   el.className='toast toast-'+(type==='error'?'error':type==='ok'?'ok':'info');
   el.textContent=msg;
   document.getElementById('toasts').appendChild(el);
-  setTimeout(()=>el.remove(),3500);
+  setTimeout(()=>el.remove(),3800);
 }
-
 function modal(html){
   document.getElementById('modal-root').innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">${html}<div class="modal-btns"><button class="btn btn-ghost btn-sm" onclick="closeModal()">${t('close')}</button></div></div></div>`;
 }
 function closeModal(){ document.getElementById('modal-root').innerHTML=''; }
+function showAlert(id,msg,type='error'){ const e=document.getElementById(id); if(e) e.innerHTML=`<div class="alert alert-${type==='ok'?'ok':type==='info'?'info':'error'}">${esc(msg)}</div>`; }
+function clearAlert(id){ const e=document.getElementById(id); if(e) e.innerHTML=''; }
+function hk(event,btnId){ if(event.key==='Enter'&&event.target.tagName!=='TEXTAREA'){event.preventDefault();document.getElementById(btnId)?.click();} }
+function togglePwVis(id,btn){ const el=document.getElementById(id); el.type=el.type==='password'?'text':'password'; btn.textContent=el.type==='password'?'👁':'🙈'; }
+function copyUrl(id){ const el=document.getElementById(id); if(!el) return; el.select(); try{document.execCommand('copy');}catch(_){} toast(t('copied'),'ok'); }
 
-async function withBtn(btn,fn){
-  const orig=btn.textContent; btn.disabled=true; btn.textContent=t('loading');
-  try { return await fn(); } finally { btn.disabled=false; btn.textContent=orig; }
-}
-
-function alertEl(id){ return document.getElementById(id); }
-function showAlert(id,msg,type='error'){ const e=alertEl(id); if(e) e.innerHTML=`<div class="alert alert-${type==='ok'?'ok':type==='info'?'info':'error'}">${esc(msg)}</div>`; }
-function clearAlert(id){ const e=alertEl(id); if(e) e.innerHTML=''; }
-
-function cookieChoose(m){ LS.s('pxf_cookie',m); document.getElementById('cookie').classList.add('hidden'); }
+function cookieChoose(m){ localStorage.setItem('pxf_cookie',m); document.getElementById('cookie').classList.add('hidden'); }
 function initCookies(){
-  document.getElementById('cookie-text').textContent=t('cookieText');
-  document.getElementById('cookie-nec').textContent=t('necessaryOnly');
-  document.getElementById('cookie-all').textContent=t('acceptAll');
-  if (!LS.g('pxf_cookie')) document.getElementById('cookie').classList.remove('hidden');
+  document.getElementById('ck-text').textContent=t('cookieText');
+  document.getElementById('ck-nec').textContent=t('necessaryOnly');
+  document.getElementById('ck-all').textContent=t('acceptAll');
+  if(!localStorage.getItem('pxf_cookie')) document.getElementById('cookie').classList.remove('hidden');
 }
 
-async function doLogout(){
-  await API.call('logout',{});
-  SM.clear();
-  navigate('landing');
+function initDevBlock(){
+  let warnTimer=null;
+  const warn=()=>{
+    const el=document.getElementById('dev-warn');
+    el.classList.remove('hidden');
+    clearTimeout(warnTimer);
+    warnTimer=setTimeout(()=>el.classList.add('hidden'),3000);
+  };
+  document.addEventListener('contextmenu',e=>{e.preventDefault();warn();});
+  document.addEventListener('keydown',e=>{
+    const blocked=e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C','K'].includes(e.key.toUpperCase()))||(e.ctrlKey&&e.key.toLowerCase()==='u');
+    if(blocked){e.preventDefault();warn();}
+  });
 }
+
+async function checkGeo(){
+  try{
+    const ctrl=new AbortController();
+    const timer=setTimeout(()=>ctrl.abort(),2500);
+    const r=await fetch('https://www.cloudflare.com/cdn-cgi/trace',{signal:ctrl.signal});
+    clearTimeout(timer);
+    const text=await r.text();
+    const m=text.match(/loc=([A-Z]{2})/);
+    if(m&&m[1]!=='LT'){
+      document.getElementById('geo-loading').classList.add('hidden');
+      document.getElementById('geo-block').classList.remove('hidden');
+      return false;
+    }
+  }catch(_){}
+  document.getElementById('geo-loading').classList.add('hidden');
+  return true;
+}
+
+const State={view:'landing',_tagResult:null,_tagParams:null,_setupParams:null,_resetParams:null,_dash:null,_stock:null};
+
+function navigate(v){ State.view=v; render(); }
+
+function render(){
+  renderNav();
+  document.getElementById('fl-report').textContent=t('report');
+  const app=document.getElementById('app');
+  app.classList.remove('fade-in');
+  void app.offsetWidth;
+  app.classList.add('fade-in');
+  let ff=null;
+  switch(State.view){
+    case 'landing':    app.innerHTML=vLanding();                   break;
+    case 'login':      app.innerHTML=vLogin();    ff='li-email';   break;
+    case 'register':   app.innerHTML=vReg();      ff='rg-name';    break;
+    case 'resetReq':   app.innerHTML=vResetReq(); ff='rq-email';   break;
+    case 'resetForm':  app.innerHTML=vResetForm();ff='rf-pw';      break;
+    case 'setup':      app.innerHTML=vSetup();    ff='su-name';    break;
+    case 'catalog':    renderCatalog();                            break;
+    case 'dashboard':  renderDash();                               break;
+    case 'tagScan':    app.innerHTML=vTagScan();                   break;
+    case 'activation': app.innerHTML=vActivation();                break;
+    default:           app.innerHTML=vLanding();
+  }
+  if(ff) setTimeout(()=>document.getElementById(ff)?.focus(),60);
+}
+
+function renderNav(){
+  const lt=`<div class="lang-toggle"><button class="${L==='lt'?'active':''}" onclick="setLang('lt')">LT</button><button class="${L==='en'?'active':''}" onclick="setLang('en')">EN</button></div>`;
+  const nav=document.getElementById('nav');
+  if(SM.ok){
+    nav.innerHTML=`${lt}<button class="btn btn-ghost btn-sm" onclick="navigate('catalog')">${t('catalog')}</button><button class="btn btn-ghost btn-sm" onclick="navigate('dashboard')">${t('dashboard')}</button><button class="btn btn-primary btn-sm" onclick="doLogout()">${t('logout')}</button>`;
+  }else{
+    nav.innerHTML=`${lt}<button class="btn btn-ghost btn-sm" onclick="navigate('catalog')">${t('catalog')}</button><button class="btn btn-ghost btn-sm" onclick="navigate('login')">${t('login')}</button><button class="btn btn-primary btn-sm" onclick="navigate('register')">${t('register')}</button>`;
+  }
+}
+
+async function doLogout(){ await API.call('logout',{}); SM.clear(); navigate('landing'); }
 
 function vLanding(){
   return `<div class="hero">
@@ -506,53 +580,66 @@ function vLanding(){
       <button class="btn btn-ghost" onclick="navigate('login')">${t('login')}</button>
       <button class="btn btn-ghost" onclick="navigate('catalog')">${t('shopNow')}</button>
     </div>
-    <span class="sublink" onclick="modal('<h3>${t('howToGet')}</h3><p style=margin-top:10px>${t('howToGetBody')}</p>')">${t('howToGet')}</span>
+    <span class="sublink" onclick="modal('<h3 style=margin-bottom:12px>${t('howToGet')}</h3><p style=line-height:1.6;color:var(--dim)>${t('howToGetBody')}</p>')">${t('howToGet')}</span>
   </div>`;
+}
+
+function pwField(id,labelKey,submitBtnId){
+  return `<label>${t(labelKey)}
+    <div class="pw-wrap">
+      <input id="${id}" type="password" autocomplete="${id==='rg-pw'||id==='su-pw'||id==='rf-pw'?'new-password':'current-password'}" onkeydown="hk(event,'${submitBtnId}')">
+      <button type="button" class="pw-eye" onclick="togglePwVis('${id}',this)">👁</button>
+    </div></label>`;
 }
 
 function vLogin(){
   return `<div class="card" style="max-width:400px;margin:0 auto">
-    <h2 style="margin-bottom:16px">${t('login')}</h2>
+    <h2 style="margin-bottom:18px">${t('login')}</h2>
     <div id="login-alert"></div>
-    <label>${t('email')}<input id="li-email" type="email" autocomplete="email"></label>
-    <label>${t('password')}<input id="li-pw" type="password" autocomplete="current-password"></label>
-    <button class="btn btn-primary btn-block" onclick="withBtn(this,submitLogin)">${t('signIn')}</button>
+    <label>${t('email')}<input id="li-email" type="email" autocomplete="email" onkeydown="hk(event,'li-submit')"></label>
+    ${pwField('li-pw','password','li-submit')}
+    <button id="li-submit" class="btn btn-primary btn-block" onclick="withBtn(this,submitLogin)">${t('signIn')}</button>
     <p style="margin-top:12px;font-size:14px;color:var(--dim)">${t('noAccount')}<a href="#" onclick="navigate('register');return false">${t('registerHere')}</a></p>
-    <p style="margin-top:6px"><a href="#" onclick="navigate('resetReq');return false" style="font-size:13px">${t('forgotPw')}</a></p>
+    <p style="margin-top:6px"><a href="#" onclick="navigate('resetReq');return false" style="font-size:13px;color:var(--dim)">${t('forgotPw')}</a></p>
   </div>`;
 }
 async function submitLogin(){
   const email=document.getElementById('li-email').value.trim();
   const pw=document.getElementById('li-pw').value;
   const r=await API.call('login',{email,password:pw},true);
-  if (!r.success){showAlert('login-alert',errMsg(r));return;}
-  SM.save(r,email);
-  navigate('dashboard');
+  if(!r.success){showAlert('login-alert',em(r));return;}
+  SM.save(r,email); navigate('dashboard');
 }
 
-function vRegister(){
-  return `<div class="card" style="max-width:400px;margin:0 auto">
-    <h2 style="margin-bottom:16px">${t('register')}</h2>
+function vReg(){
+  return `<div class="card" style="max-width:420px;margin:0 auto">
+    <h2 style="margin-bottom:18px">${t('register')}</h2>
     <div id="reg-alert"></div>
-    <label>${t('fullName')}<input id="rg-name" autocomplete="name"></label>
-    <label>${t('email')}<input id="rg-email" type="email" autocomplete="email"></label>
-    <label>${t('password')}<input id="rg-pw" type="password" autocomplete="new-password"></label>
-    <p class="muted" style="margin-top:4px">${t('pwHint')}</p>
-    <label class="inline" style="margin-top:14px"><input type="checkbox" id="rg-policy"> ${t('policyCheck')}<a href="${POLICY_URL}" target="_blank">${t('policyLink')}</a></label>
-    <button class="btn btn-primary btn-block" onclick="withBtn(this,submitRegister)">${t('createAccount')}</button>
+    <label>${t('fullName')}<input id="rg-name" autocomplete="name" onkeydown="hk(event,'rg-submit')"></label>
+    <label>${t('email')}<input id="rg-email" type="email" autocomplete="email" onkeydown="hk(event,'rg-submit')"></label>
+    ${pwField('rg-pw','password','rg-submit')}
+    <label>${t('confirmPw')}
+      <div class="pw-wrap">
+        <input id="rg-pw2" type="password" autocomplete="new-password" onkeydown="hk(event,'rg-submit')">
+        <button type="button" class="pw-eye" onclick="togglePwVis('rg-pw2',this)">👁</button>
+      </div></label>
+    <p class="muted" style="margin-top:6px">${t('pwHint')}</p>
+    <label class="inline"><input type="checkbox" id="rg-policy"> ${t('policyCheck')}<a href="${POLICY_URL}" target="_blank">${t('policyLink')}</a></label>
+    <button id="rg-submit" class="btn btn-primary btn-block" onclick="withBtn(this,submitReg)">${t('createAccount')}</button>
     <p style="margin-top:12px;font-size:14px;color:var(--dim)">${t('haveAccount')}<a href="#" onclick="navigate('login');return false">${t('loginHere')}</a></p>
   </div>`;
 }
-async function submitRegister(){
+async function submitReg(){
   const name=document.getElementById('rg-name').value.trim();
   const email=document.getElementById('rg-email').value.trim();
   const pw=document.getElementById('rg-pw').value;
+  const pw2=document.getElementById('rg-pw2').value;
   const pol=document.getElementById('rg-policy').checked;
-  if (!pol){showAlert('reg-alert',errMsg({code:'POLICY'}));return;}
+  if(pw!==pw2){showAlert('reg-alert',t('pwMismatch'));return;}
+  if(!pol){showAlert('reg-alert',em({code:'POLICY'}));return;}
   const r=await API.call('register',{fullName:name,email,password:pw,policyAccepted:true},true);
-  if (!r.success){showAlert('reg-alert',errMsg(r));return;}
-  SM.save(r,email);
-  navigate('dashboard');
+  if(!r.success){showAlert('reg-alert',em(r));return;}
+  SM.save(r,email); navigate('dashboard');
 }
 
 function vResetReq(){
@@ -560,46 +647,44 @@ function vResetReq(){
     <h2 style="margin-bottom:10px">${t('resetTitle')}</h2>
     <p class="muted" style="margin-bottom:14px">${t('resetHint')}</p>
     <div id="reset-alert"></div>
-    <label>${t('email')}<input id="rq-email" type="email"></label>
-    <button class="btn btn-primary btn-block" onclick="withBtn(this,submitResetReq)">${t('sendReset')}</button>
-    <p style="margin-top:12px"><a href="#" onclick="navigate('login');return false" style="font-size:13px">${t('haveAccount')}${t('loginHere')}</a></p>
+    <label>${t('email')}<input id="rq-email" type="email" onkeydown="hk(event,'rq-submit')"></label>
+    <button id="rq-submit" class="btn btn-primary btn-block" onclick="withBtn(this,submitResetReq)">${t('sendReset')}</button>
+    <p style="margin-top:12px"><a href="#" onclick="navigate('login');return false" style="font-size:13px;color:var(--dim)">${t('haveAccount')}${t('loginHere')}</a></p>
   </div>`;
 }
 async function submitResetReq(){
   const email=document.getElementById('rq-email').value.trim();
+  if(!email.includes('@')){showAlert('reset-alert',t('badEmailFmt'));return;}
   await API.call('requestPasswordReset',{email},true);
   showAlert('reset-alert',t('resetSent'),'ok');
 }
 
 function vResetForm(){
-  const p=State._resetParams||{};
   return `<div class="card" style="max-width:400px;margin:0 auto">
     <h2 style="margin-bottom:10px">${t('newPwTitle')}</h2>
     <div id="rf-alert"></div>
-    <label>${t('newPw')}<input id="rf-pw" type="password" autocomplete="new-password"></label>
-    <p class="muted" style="margin-top:4px">${t('pwHint')}</p>
-    <button class="btn btn-primary btn-block" onclick="withBtn(this,submitResetForm)">${t('resetBtn')}</button>
+    ${pwField('rf-pw','newPw','rf-submit')}
+    <p class="muted" style="margin-top:6px">${t('pwHint')}</p>
+    <button id="rf-submit" class="btn btn-primary btn-block" onclick="withBtn(this,submitResetForm)">${t('resetBtn')}</button>
   </div>`;
 }
 async function submitResetForm(){
   const p=State._resetParams||{};
   const pw=document.getElementById('rf-pw').value;
   const r=await API.call('completePasswordReset',{userId:p.uid,token:p.token,password:pw},true);
-  if (!r.success){showAlert('rf-alert',errMsg(r));return;}
-  SM.save(r,r.email||(State._resetParams||{}).email);
-  toast(t('saved'),'ok'); navigate('dashboard');
+  if(!r.success){showAlert('rf-alert',em(r));return;}
+  SM.save(r,r.email); navigate('dashboard');
 }
 
 function vSetup(){
-  const p=State._setupParams||{};
   return `<div class="card" style="max-width:400px;margin:0 auto">
     <h2 style="margin-bottom:10px">${t('setupTitle')}</h2>
     <p class="muted" style="margin-bottom:14px">${t('setupHint')}</p>
     <div id="su-alert"></div>
-    <label>${t('fullName')}<input id="su-name" autocomplete="name"></label>
-    <label>${t('password')}<input id="su-pw" type="password" autocomplete="new-password"></label>
-    <p class="muted" style="margin-top:4px">${t('pwHint')}</p>
-    <button class="btn btn-primary btn-block" onclick="withBtn(this,submitSetup)">${t('finishSetup')}</button>
+    <label>${t('fullName')}<input id="su-name" autocomplete="name" onkeydown="hk(event,'su-submit')"></label>
+    ${pwField('su-pw','password','su-submit')}
+    <p class="muted" style="margin-top:6px">${t('pwHint')}</p>
+    <button id="su-submit" class="btn btn-primary btn-block" onclick="withBtn(this,submitSetup)">${t('finishSetup')}</button>
   </div>`;
 }
 async function submitSetup(){
@@ -607,15 +692,14 @@ async function submitSetup(){
   const name=document.getElementById('su-name').value.trim();
   const pw=document.getElementById('su-pw').value;
   const r=await API.call('completeAccountSetup',{userId:p.uid,setupToken:p.token,fullName:name,password:pw},true);
-  if (!r.success){showAlert('su-alert',errMsg(r));return;}
-  SM.save(r,r.email);
-  navigate('dashboard');
+  if(!r.success){showAlert('su-alert',em(r));return;}
+  SM.save(r,r.email); navigate('dashboard');
 }
 
 async function renderCatalog(){
   const app=document.getElementById('app');
   app.innerHTML=`<h2 style="margin-bottom:16px">${t('catalog')}</h2>
-    <div class="catalog-controls">
+    <div class="cat-ctrls">
       <input id="cs" placeholder="${t('search')}" oninput="filterCatalog()">
       <select id="cf" onchange="filterCatalog()">
         <option value="">${t('allTypes')}</option>
@@ -624,19 +708,14 @@ async function renderCatalog(){
       </select>
     </div>
     <div id="cg" class="catalog-grid"><p class="muted">${t('loading')}</p></div>`;
-  if (!State._stock){
-    const r=await API.pub({action:'stock'});
-    State._stock=r.success?r.items:[];
-  }
+  if(!State._stock){ const r=await API.pub({action:'stock'}); State._stock=r.success?r.items:[]; }
   filterCatalog();
 }
 function filterCatalog(){
-  const s=(document.getElementById('cs')?.value||'').toLowerCase();
-  const f=document.getElementById('cf')?.value||'';
+  const s=(document.getElementById('cs')?.value||'').toLowerCase(),f=document.getElementById('cf')?.value||'';
   const items=(State._stock||[]).filter(i=>String(i['Name']).toLowerCase().includes(s)&&(!f||i['Type']===f));
-  const g=document.getElementById('cg');
-  if (!g) return;
-  if (!items.length){g.innerHTML=`<p class="muted">${t('noStock')}</p>`;return;}
+  const g=document.getElementById('cg'); if(!g) return;
+  if(!items.length){g.innerHTML=`<p class="muted">${t('noStock')}</p>`;return;}
   g.innerHTML=items.map(i=>`<div class="card pcard">
     <div class="pphoto"><img src="${esc(i['Product ID'])}.png" alt="${esc(i['Name'])}" onerror="this.style.display='none';this.parentElement.textContent='—'"></div>
     <div class="pbody">
@@ -652,53 +731,62 @@ async function renderDash(){
   const app=document.getElementById('app');
   app.innerHTML=`<p class="muted">${t('loading')}</p>`;
   const r=await API.call('getUserData',{});
-  if (!r.success){
-    if (r.code==='FORBIDDEN'||r.code==='SESSION_EXPIRED'){SM.clear();navigate('login');return;}
-    app.innerHTML=`<div class="alert alert-error">${esc(errMsg(r))}</div>`;return;
-  }
+  if(!r.success){if(r.code==='SESSION_EXPIRED'){SM.clear();navigate('login');return;} app.innerHTML=`<div class="alert alert-error">${esc(em(r))}</div>`;return;}
   SM.save({fullName:r.fullName,role:r.role,userId:r.userId});
   State._dash=r;
   let tabs=`<button class="tab active" data-tab="tags" onclick="switchTab('tags')">${t('myTags')}</button>`;
-  if (SM.isAdmin) tabs+=`<button class="tab" data-tab="admin" onclick="switchTab('admin')">${t('adminTools')}</button>`;
-  if (SM.isDev)   tabs+=`<button class="tab" data-tab="dev" onclick="switchTab('dev')">${t('devPanel')}</button>`;
+  if(SM.isAdmin) tabs+=`<button class="tab" data-tab="admin" onclick="switchTab('admin')">${t('adminTools')}</button>`;
+  if(SM.isDev)   tabs+=`<button class="tab" data-tab="dev" onclick="switchTab('dev')">${t('devPanel')}</button>`;
   tabs+=`<button class="tab" data-tab="settings" onclick="switchTab('settings')">${t('settings')}</button>`;
-  app.innerHTML=`<h2 style="margin-bottom:4px">${esc(r.fullName)}</h2>
-    <p class="muted" style="margin-bottom:4px">${esc(r.email)}</p>
+  app.innerHTML=`<h2 style="margin-bottom:2px">${esc(r.fullName)}</h2>
+    <p class="muted" style="margin-bottom:4px">${esc(r.email)} · ${esc({'admin':t('roleAdmin'),'developer':t('roleDev')}[SM.role]||t('roleCustomer'))}</p>
     <div class="tabs">${tabs}</div>
-    <div id="tab-content"></div>`;
+    <div id="tc"></div>`;
   switchTab('tags');
 }
 
 function switchTab(tab){
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
-  const el=document.getElementById('tab-content');
-  if (tab==='tags')     el.innerHTML=renderTagsTab();
-  if (tab==='admin')    el.innerHTML=renderAdminTab();
-  if (tab==='dev')      renderDevTab(el);
-  if (tab==='settings') el.innerHTML=renderSettingsTab();
+  const el=document.getElementById('tc');
+  if(tab==='tags')     el.innerHTML=renderTagsTab();
+  if(tab==='admin')    el.innerHTML=renderAdminTab();
+  if(tab==='dev')      renderDevTab(el);
+  if(tab==='settings') el.innerHTML=renderSettingsTab();
 }
 
-function statusPill(s){
-  if (s==='Active') return `<span class="pill active">${t('statusActive')}</span>`;
-  if (s==='Pending Activation') return `<span class="pill pending">${t('statusPending')}</span>`;
-  return `<span class="pill unreg">${t('statusUnreg')}</span>`;
+function sPill(s){ if(s==='Active') return `<span class="pill active">${t('statusActive')}</span>`; if(s==='Pending Activation') return `<span class="pill pending">${t('statusPending')}</span>`; return `<span class="pill">${t('statusUnreg')}</span>`; }
+
+const smTimers={};
+async function toggleSafeModeUI(e,tagId){
+  const cb=e.target;
+  if(smTimers[tagId]){cb.checked=!cb.checked;toast(t('smCooldown'),'info');return;}
+  cb.disabled=true;
+  smTimers[tagId]=true;
+  const r=await API.call('toggleSafeMode',{tagId,safeMode:cb.checked});
+  cb.disabled=false;
+  if(!r.success){cb.checked=!cb.checked;toast(em(r),'error');}
+  setTimeout(()=>delete smTimers[tagId],15000);
 }
 
 function renderTagsTab(){
   const tags=(State._dash&&State._dash.tags)||[];
-  if (!tags.length) return `<div class="card"><p class="muted">${t('noTags')}</p></div>`;
+  if(!tags.length) return `<div class="card"><p class="muted">${t('noTags')}</p></div>`;
   return tags.map(tag=>{
-    const tid=esc(tag['Tag ID']||''), isPro=tag['Model']==='Pro';
-    const urlRow=tag._url?`<div class="copy-row"><input id="url-${tid}" readonly value="${esc(tag._url)}"><button class="btn btn-ghost btn-sm" onclick="copyUrl('url-${tid}')">${t('copy')}</button></div>`:'';
-    return `<div class="card tag-card">
+    const tid=esc(tag['Tag ID']||''),isPro=tag['Model']==='Pro';
+    const urlRow=tag._url?`<div class="copy-row" style="margin-bottom:12px"><input id="url-${tid}" readonly value="${esc(tag._url)}"><button class="btn btn-ghost btn-sm" onclick="copyUrl('url-${tid}')">${t('copy')}</button></div>`:'';
+    return `<div class="card" style="margin-bottom:14px">
       <div class="tag-head">
-        <div><strong>${esc(tag['Display Name']||tag['Tag ID'])}</strong> <span class="pill">${esc(tag['Tag ID'])}</span></div>
-        <div style="display:flex;gap:6px;align-items:center">${statusPill(tag['Status'])} <span class="pill">${esc(tag['Model'])}</span> <span class="pill">${esc(tag['Type']==='Key'?t('keyType'):t('petType'))}</span></div>
+        <div><strong>${esc(tag['Display Name']||tag['Tag ID'])}</strong> <span class="pill" style="margin-left:4px">${esc(tag['Tag ID'])}</span></div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">${sPill(tag['Status'])} <span class="pill">${esc(tag['Model'])}</span> <span class="pill">${esc(tag['Type']==='Key'?t('keyType'):t('petType'))}</span></div>
       </div>
       ${urlRow}
-      ${tag['Status']==='Pending Activation'?`<div class="alert alert-info">${t('statusPending')}</div>`:''}
-      <form onsubmit="return false">
-        <div class="section-label">${t('baseFields')}</div>
+      ${tag['Status']==='Pending Activation'?`<div class="alert alert-info" style="margin-bottom:12px">${t('statusPending')}</div>`:''}
+      <div class="switch-row">
+        <span><strong>${t('safeMode')}</strong></span>
+        <label class="sw"><input type="checkbox" ${tag['Safe Mode']?'checked':''} onchange="toggleSafeModeUI(event,'${tid}')"><span class="sl"></span></label>
+      </div>
+      <form onsubmit="return false" style="margin-top:14px">
+        <div class="sec-lbl">${t('baseFields')}</div>
         <div class="grid2">
           <div class="field"><label>${t('displayName')}<input name="Display Name" value="${esc(tag['Display Name']||'')}"></label></div>
           <div class="field"><label>${t('ownerFirstName')}<input name="Owner First Name" value="${esc(tag['Owner First Name']||'')}"></label></div>
@@ -706,8 +794,7 @@ function renderTagsTab(){
           <div class="field"><label>${t('contactEmail')}<input name="Contact Email" type="email" value="${esc(tag['Contact Email']||'')}"></label></div>
           <div class="field"><label>${t('alertEmail')}<input name="Alert Email" type="email" value="${esc(tag['Alert Email']||'')}"></label></div>
         </div>
-        <div class="switch-row"><span>${t('safeMode')}</span><label class="sw"><input type="checkbox" name="Safe Mode" ${tag['Safe Mode']?'checked':''}><span class="sl"></span></label></div>
-        ${isPro?`<div class="section-label">${t('proFields')}</div>
+        ${isPro?`<div class="sec-lbl">${t('proFields')}</div>
         <div class="grid2">
           <div class="field"><label>${t('streetAddress')}<input name="Street Address" value="${esc(tag['Street Address']||'')}"></label></div>
           <div class="field"><label>${t('additionalEmail')}<input name="Additional Email" type="email" value="${esc(tag['Additional Email']||'')}"></label></div>
@@ -718,32 +805,24 @@ function renderTagsTab(){
           <div class="field"><label>${t('age')}<input name="Age" value="${esc(String(tag['Age']||''))}"></label></div>
           <div class="field"><label>${t('breed')}<input name="Breed" value="${esc(tag['Breed']||'')}"></label></div>
         </div>
-        <div class="field"><label>${t('notes')}<textarea name="Notes" rows="2">${esc(tag['Notes']||'')}</textarea></label></div>
-        <p class="muted" style="margin-top:6px">${t('pwHint').replace('10','').replace('uppercase','').replace('lowercase','').replace('number','')} Pro: 1h cooldown between saves.</p>`:''}
+        <div class="field"><label>${t('notes')}<textarea name="Notes">${esc(tag['Notes']||'')}</textarea></label></div>
+        <p class="muted" style="margin-top:6px;font-size:12px">${t('proEditNote')}</p>`:''}
         <div id="tag-alert-${tid}"></div>
         <button class="btn btn-primary" style="margin-top:12px" onclick="withBtn(this,()=>submitEditTag('${tid}',this.closest('form')))">${t('saveChanges')}</button>
       </form>
     </div>`;
   }).join('');
 }
-
-function copyUrl(id){
-  const el=document.getElementById(id); if(!el) return;
-  el.select(); document.execCommand('copy'); toast(t('copied'),'ok');
-}
-
-async function submitEditTag(tagId, form){
+async function submitEditTag(tagId,form){
   const fields={};
-  form.querySelectorAll('input[name],textarea[name]').forEach(el=>{
-    fields[el.name]=el.type==='checkbox'?el.checked:el.value;
-  });
+  form.querySelectorAll('input[name],textarea[name]').forEach(el=>{ fields[el.name]=el.value; });
   const r=await API.call('editTag',{tagId,fields});
-  const id='tag-alert-'+tagId;
-  if (r.success) showAlert(id,t('saved'),'ok'); else showAlert(id,errMsg(r));
+  if(r.success) showAlert('tag-alert-'+tagId,t('saved'),'ok'); else showAlert('tag-alert-'+tagId,em(r));
 }
 
 function renderAdminTab(){
-  return `<div class="adm-section">
+  return `<div class="card">
+  <div class="adm-sec">
     <h4>${t('generateTag')}</h4>
     <div class="grid2">
       <div class="field"><label>${t('model')}<select id="gen-model"><option value="Base">Base</option><option value="Pro">Pro</option></select></label></div>
@@ -753,32 +832,33 @@ function renderAdminTab(){
     <button class="btn btn-primary" onclick="withBtn(this,submitGenTag)">${t('generate')}</button>
     <div id="gen-result" style="margin-top:12px"></div>
   </div>
-  <div class="adm-section">
+  <div class="adm-sec">
     <h4>${t('warrantyTitle')}</h4>
     <p class="muted" style="margin-bottom:10px">${t('warrantyHint')}</p>
     <div class="grid2">
-      <div class="field"><label>${t('targetUserId')}<input id="wa-uid"></label></div>
-      <div class="field"><label>${t('tagId')}<input id="wa-tag"></label></div>
+      <div class="field"><label>${t('targetUserId')}<input id="wa-uid" onkeydown="hk(event,'wa-submit')"></label></div>
+      <div class="field"><label>${t('tagId')}<input id="wa-tag" onkeydown="hk(event,'wa-submit')"></label></div>
     </div>
     <div id="wa-alert"></div>
-    <button class="btn btn-primary" onclick="withBtn(this,submitWarranty)">${t('openWarranty')}</button>
+    <button id="wa-submit" class="btn btn-primary" onclick="withBtn(this,submitWarranty)">${t('openWarranty')}</button>
   </div>
-  <div class="adm-section">
+  <div class="adm-sec">
     <h4>${t('transferTitle')}</h4>
+    <p class="muted" style="margin-bottom:10px">Duomenys bus perkelti iš seno pakabuko į naują. Senas pakabukas bus išvalytas.</p>
     <div class="grid2">
-      <div class="field"><label>${t('oldTagId')}<input id="tr-old"></label></div>
-      <div class="field"><label>${t('newTagId')}<input id="tr-new"></label></div>
+      <div class="field"><label>${t('oldTagId')}<input id="tr-old" onkeydown="hk(event,'tr-submit')"></label></div>
+      <div class="field"><label>${t('newTagId')}<input id="tr-new" onkeydown="hk(event,'tr-submit')"></label></div>
     </div>
     <div id="tr-alert"></div>
-    <button class="btn btn-primary" onclick="withBtn(this,submitTransfer)">${t('transfer')}</button>
+    <button id="tr-submit" class="btn btn-primary" onclick="withBtn(this,submitTransfer)">${t('transfer')}</button>
   </div>
-  <div class="adm-section">
+  <div class="adm-sec">
     <h4>${t('inviteTitle')}</h4>
-    <div class="field"><label>${t('email')}<input id="inv-email" type="email"></label></div>
+    <div class="field"><label>${t('email')}<input id="inv-email" type="email" onkeydown="hk(event,'inv-submit')"></label></div>
     <div id="inv-alert"></div>
-    <button class="btn btn-primary" onclick="withBtn(this,submitInvite)">${t('sendInvite')}</button>
+    <button id="inv-submit" class="btn btn-primary" onclick="withBtn(this,submitInvite)">${t('sendInvite')}</button>
   </div>
-  <div class="adm-section">
+  <div class="adm-sec">
     <h4>${t('manualTitle')}</h4>
     <div class="grid2">
       <div class="field"><label>${t('email')}<input id="mc-email" type="email"></label></div>
@@ -787,173 +867,108 @@ function renderAdminTab(){
     <div id="mc-alert"></div>
     <button class="btn btn-primary" onclick="withBtn(this,submitManualCustomer)">${t('create')}</button>
   </div>
-  <div class="adm-section">
+  <div class="adm-sec">
     <h4>${t('deleteCustomerTitle')}</h4>
     <div class="grid2">
       <div class="field"><label>${t('targetUserId')}<input id="dc-uid"></label></div>
       <div class="field"><label>${t('targetEmail')}<input id="dc-email" type="email"></label></div>
     </div>
-    <div class="field"><label>${t('adminPassword')}<input id="dc-apw" type="password"></label></div>
+    <div class="field"><label>${t('adminPw')}<input id="dc-apw" type="password"></label></div>
     <div id="dc-alert"></div>
     <button class="btn btn-danger" onclick="withBtn(this,submitReqDelCustomer)">${t('requestCode')}</button>
     <div id="dc-step2" class="hidden" style="margin-top:14px">
-      <label class="field">${t('deletionCode')}<input id="dc-code"></label>
-      <button class="btn btn-danger" style="margin-top:10px" onclick="withBtn(this,submitConfirmDelCustomer)">${t('confirmDeleteCustomer')}</button>
+      <label class="field">${t('deletionCode')}<input id="dc-code" onkeydown="hk(event,'dc-confirm')"></label>
+      <button id="dc-confirm" class="btn btn-danger" style="margin-top:10px" onclick="withBtn(this,submitConfirmDelCustomer)">${t('confirmDeleteCustomer')}</button>
     </div>
+  </div>
   </div>`;
 }
-
 async function submitGenTag(){
-  const model=document.getElementById('gen-model').value;
-  const type=document.getElementById('gen-type').value;
-  const tech=document.getElementById('gen-tech').value;
-  const r=await API.call('generateTag',{model,type,technologies:tech});
+  const r=await API.call('generateTag',{model:document.getElementById('gen-model').value,type:document.getElementById('gen-type').value,technologies:document.getElementById('gen-tech').value});
   const el=document.getElementById('gen-result');
-  if (!r.success){el.innerHTML=`<div class="alert alert-error">${esc(errMsg(r))}</div>`;return;}
-  el.innerHTML=`<div class="alert alert-ok">${esc(r.tagId)} — ${esc(r.model)} — ${esc(r.technologies)}</div>
+  if(!r.success){el.innerHTML=`<div class="alert alert-error">${esc(em(r))}</div>`;return;}
+  el.innerHTML=`<div class="alert alert-ok">${esc(r.tagId)} — ${esc(r.model)} — ${esc(r.type)} — ${esc(r.technologies)}</div>
     <label>${t('tagUrl')}<div class="copy-row"><input id="gen-url" readonly value="${esc(r.url)}"><button class="btn btn-ghost btn-sm" onclick="copyUrl('gen-url')">${t('copy')}</button></div></label>
-    <div style="margin-top:6px"><span class="muted">Key: </span><code style="font-size:12px;word-break:break-all">${esc(r.key)}</code></div>`;
+    <p class="muted" style="margin-top:6px;font-size:12px">Key: <code style="word-break:break-all">${esc(r.key)}</code></p>`;
 }
-
-async function submitWarranty(){
-  const uid=document.getElementById('wa-uid').value.trim();
-  const tag=document.getElementById('wa-tag').value.trim();
-  const r=await API.call('openWarrantyClaim',{userId:uid,tagId:tag});
-  if (r.success) showAlert('wa-alert',t('saved'),'ok'); else showAlert('wa-alert',errMsg(r));
-}
-
-async function submitTransfer(){
-  const old=document.getElementById('tr-old').value.trim();
-  const nw=document.getElementById('tr-new').value.trim();
-  const r=await API.call('transferTagData',{oldTagId:old,newTagId:nw});
-  if (r.success) showAlert('tr-alert',t('saved'),'ok'); else showAlert('tr-alert',errMsg(r));
-}
-
-async function submitInvite(){
-  const email=document.getElementById('inv-email').value.trim();
-  const r=await API.call('adminInviteCustomer',{email});
-  if (r.success){showAlert('inv-alert','ID: '+r.userId,'ok');document.getElementById('inv-email').value='';}
-  else showAlert('inv-alert',errMsg(r));
-}
-
-async function submitManualCustomer(){
-  const email=document.getElementById('mc-email').value.trim();
-  const pw=document.getElementById('mc-pw').value;
-  const r=await API.call('adminManualCreateCustomer',{email,password:pw});
-  if (r.success){showAlert('mc-alert','ID: '+r.userId,'ok');}
-  else showAlert('mc-alert',errMsg(r));
-}
-
-async function submitReqDelCustomer(){
-  const uid=document.getElementById('dc-uid').value.trim();
-  const email=document.getElementById('dc-email').value.trim();
-  const apw=document.getElementById('dc-apw').value;
-  const r=await API.call('adminRequestDeleteCustomer',{targetUserId:uid,targetEmail:email,adminPassword:apw});
-  if (r.success){showAlert('dc-alert',t('loading'),'info');document.getElementById('dc-step2').classList.remove('hidden');}
-  else showAlert('dc-alert',errMsg(r));
-}
-
-async function submitConfirmDelCustomer(){
-  const uid=document.getElementById('dc-uid').value.trim();
-  const code=document.getElementById('dc-code').value.trim();
-  const r=await API.call('adminConfirmDeleteCustomer',{targetUserId:uid,code});
-  if (r.success){showAlert('dc-alert',t('saved'),'ok');document.getElementById('dc-step2').classList.add('hidden');}
-  else showAlert('dc-alert',errMsg(r));
-}
+async function submitWarranty(){ const r=await API.call('openWarrantyClaim',{userId:document.getElementById('wa-uid').value.trim(),tagId:document.getElementById('wa-tag').value.trim()}); if(r.success)showAlert('wa-alert',t('saved'),'ok');else showAlert('wa-alert',em(r)); }
+async function submitTransfer(){ const r=await API.call('transferTagData',{oldTagId:document.getElementById('tr-old').value.trim(),newTagId:document.getElementById('tr-new').value.trim()}); if(r.success){showAlert('tr-alert',t('saved'),'ok');}else showAlert('tr-alert',em(r)); }
+async function submitInvite(){ const r=await API.call('adminInviteCustomer',{email:document.getElementById('inv-email').value.trim()}); if(r.success){showAlert('inv-alert','ID: '+r.userId,'ok');document.getElementById('inv-email').value='';}else showAlert('inv-alert',em(r)); }
+async function submitManualCustomer(){ const r=await API.call('adminManualCreateCustomer',{email:document.getElementById('mc-email').value.trim(),password:document.getElementById('mc-pw').value}); if(r.success)showAlert('mc-alert','ID: '+r.userId,'ok');else showAlert('mc-alert',em(r)); }
+async function submitReqDelCustomer(){ const r=await API.call('adminRequestDeleteCustomer',{targetUserId:document.getElementById('dc-uid').value.trim(),targetEmail:document.getElementById('dc-email').value.trim(),adminPassword:document.getElementById('dc-apw').value}); if(r.success){showAlert('dc-alert',t('loading'),'info');document.getElementById('dc-step2').classList.remove('hidden');}else showAlert('dc-alert',em(r)); }
+async function submitConfirmDelCustomer(){ const r=await API.call('adminConfirmDeleteCustomer',{targetUserId:document.getElementById('dc-uid').value.trim(),code:document.getElementById('dc-code').value.trim()}); if(r.success){showAlert('dc-alert',t('saved'),'ok');document.getElementById('dc-step2').classList.add('hidden');}else showAlert('dc-alert',em(r)); }
 
 async function renderDevTab(el){
-  el.innerHTML=`<div class="adm-section">
-    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
-      <button class="btn btn-ghost btn-sm" onclick="loadDevSheet('Users')">${t('devUsers')}</button>
-      <button class="btn btn-ghost btn-sm" onclick="loadDevSheet('Tags')">${t('devTags')}</button>
-      <button class="btn btn-ghost btn-sm" onclick="loadDevSheet('Stock')">${t('devStock')}</button>
+  el.innerHTML=`<div class="card">
+    <div class="adm-sec">
+      <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" onclick="loadDevSheet('Users')">${t('devUsers')}</button>
+        <button class="btn btn-ghost btn-sm" onclick="loadDevSheet('Tags')">${t('devTags')}</button>
+        <button class="btn btn-ghost btn-sm" onclick="loadDevSheet('Stock')">${t('devStock')}</button>
+      </div>
+      <div id="dev-sheet-wrap"><p class="muted">${t('loading')}</p></div>
     </div>
-    <div id="dev-sheet-wrap"><p class="muted">${t('loading')}</p></div>
-  </div>
-  <div class="adm-section">
-    <h4>${t('devCreateTitle')}</h4>
-    <div class="grid2">
-      <div class="field"><label>${t('fullName')}<input id="du-name"></label></div>
-      <div class="field"><label>${t('email')}<input id="du-email" type="email"></label></div>
-      <div class="field"><label>${t('password')}<input id="du-pw" type="password"></label></div>
-      <div class="field"><label>${t('role')}<select id="du-role"><option value="">Customer</option><option value="admin">Admin</option><option value="developer">Developer</option></select></label></div>
+    <div class="adm-sec">
+      <h4>${t('devCreateTitle')}</h4>
+      <div class="grid2">
+        <div class="field"><label>${t('fullName')}<input id="du-name"></label></div>
+        <div class="field"><label>${t('email')}<input id="du-email" type="email"></label></div>
+        <div class="field"><label>${t('password')}<input id="du-pw" type="password"></label></div>
+        <div class="field"><label>${t('role')}<select id="du-role"><option value="">Customer</option><option value="admin">Admin</option><option value="developer">Developer</option></select></label></div>
+      </div>
+      <div id="du-alert"></div>
+      <button class="btn btn-primary" onclick="withBtn(this,submitDevCreateUser)">${t('createUser')}</button>
     </div>
-    <div id="du-alert"></div>
-    <button class="btn btn-primary" onclick="withBtn(this,submitDevCreateUser)">${t('createUser')}</button>
-  </div>
-  <div class="adm-section">
-    <button class="btn btn-danger" onclick="withBtn(this,submitPurge)">${t('purge')}</button>
-    <div id="purge-alert" style="margin-top:10px"></div>
+    <div class="adm-sec">
+      <button class="btn btn-danger" onclick="withBtn(this,submitPurge)">${t('purge')}</button>
+      <div id="purge-alert" style="margin-top:10px"></div>
+    </div>
   </div>`;
   loadDevSheet('Users');
 }
-
 async function loadDevSheet(name){
-  State._devSheet=name;
   const wrap=document.getElementById('dev-sheet-wrap');
-  if (wrap) wrap.innerHTML=`<p class="muted">${t('loading')}</p>`;
+  if(wrap) wrap.innerHTML=`<p class="muted">${t('loading')}</p>`;
   const r=await API.call('adminGetSheet',{sheetName:name});
-  if (!wrap||!r.success){if(wrap)wrap.innerHTML=`<div class="alert alert-error">${esc(errMsg(r))}</div>`;return;}
-  const cols=r.columns||[], rows=r.rows||[];
-  wrap.innerHTML=`<div class="dt-wrap"><table class="dt"><thead><tr>${cols.filter(c=>!c.startsWith('Password')).map(c=>`<th>${esc(c)}</th>`).join('')}<th></th></tr></thead><tbody>
-    ${rows.map(row=>`<tr>${cols.filter(c=>!c.startsWith('Password')).map(c=>`<td>${esc(String(row[c]??'').substring(0,80))}</td>`).join('')}
+  if(!wrap||!r.success){if(wrap)wrap.innerHTML=`<div class="alert alert-error">${esc(em(r))}</div>`;return;}
+  const cols=r.columns.filter(c=>!c.startsWith('Password')),rows=r.rows||[];
+  wrap.innerHTML=`<div class="dt-wrap"><table class="dt"><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join('')}<th></th></tr></thead>
+    <tbody>${rows.map(row=>`<tr>${cols.map(c=>`<td title="${esc(String(row[c]??''))}">${esc(String(row[c]??'').substring(0,60))}</td>`).join('')}
       <td style="white-space:nowrap">
         <button class="btn btn-ghost btn-sm" onclick="openEditModal(${row._row},'${esc(name)}')" style="margin-right:4px">${t('edit')}</button>
         <button class="btn btn-danger btn-sm" onclick="devDelete(${row._row},'${esc(name)}')">${t('delete')}</button>
       </td></tr>`).join('')}
-  </tbody></table></div>`;
+    </tbody></table></div>`;
 }
-
-function openEditModal(row, sheetName){
-  const r=API.call('adminGetSheet',{sheetName}).then(res=>{
-    if (!res.success) return;
-    const rec=res.rows.find(r=>r._row===row);
-    if (!rec) return;
-    const cols=res.columns.filter(c=>!c.startsWith('Password')&&c!=='_row');
-    modal(`<h3>${t('editRecord')}</h3>
-      ${cols.map(c=>`<label style="margin-bottom:0">${esc(c)}<input id="ef-${esc(c.replace(/\s/g,'_'))}" value="${esc(String(rec[c]??''))}"></label>`).join('')}
-      <div id="ef-alert"></div>
-      <div class="modal-btns" style="margin-top:14px">
+function openEditModal(row,sheetName){
+  API.call('adminGetSheet',{sheetName}).then(res=>{
+    if(!res.success) return;
+    const rec=res.rows.find(r=>r._row===row); if(!rec) return;
+    const cols=res.columns.filter(c=>!c.startsWith('Password')&&c!=='_row'&&c!=='_url');
+    modal(`<h3 style="margin-bottom:14px">${t('editRecord')}: ${esc(sheetName)}</h3>
+      ${cols.map(c=>`<label style="margin-bottom:2px">${esc(c)}<input id="ef-${esc(c.replace(/[\s+]/g,'_'))}" value="${esc(String(rec[c]??''))}"></label>`).join('')}
+      <div id="ef-alert" style="margin-top:6px"></div>
+      <div class="modal-btns" style="margin-top:12px">
         <button class="btn btn-primary" onclick="withBtn(this,()=>submitEditRecord(${row},'${esc(sheetName)}',[${cols.map(c=>`'${esc(c)}'`).join(',')}]))">${t('save')}</button>
       </div>`);
   });
 }
-
-async function submitEditRecord(row, sheetName, cols){
+async function submitEditRecord(row,sheetName,cols){
   const fields={};
-  cols.forEach(c=>{ const el=document.getElementById('ef-'+c.replace(/\s/g,'_')); if(el) fields[c]=el.value; });
+  cols.forEach(c=>{ const el=document.getElementById('ef-'+c.replace(/[\s+]/g,'_')); if(el) fields[c]=el.value; });
   const r=await API.call('adminUpdateRecord',{sheetName,row,fields});
-  if (r.success){closeModal();loadDevSheet(sheetName);toast(t('saved'),'ok');}
-  else showAlert('ef-alert',errMsg(r));
+  if(r.success){closeModal();loadDevSheet(sheetName);toast(t('saved'),'ok');}else showAlert('ef-alert',em(r));
 }
-
-async function devDelete(row, sheetName){
-  if (!confirm(t('delete')+'?')) return;
-  const r=await API.call('adminDeleteRecord',{sheetName,row});
-  if (r.success) loadDevSheet(sheetName); else toast(errMsg(r),'error');
-}
-
-async function submitDevCreateUser(){
-  const name=document.getElementById('du-name').value.trim();
-  const email=document.getElementById('du-email').value.trim();
-  const pw=document.getElementById('du-pw').value;
-  const role=document.getElementById('du-role').value;
-  const r=await API.call('devCreateUser',{fullName:name,email,password:pw,role});
-  if (r.success) showAlert('du-alert','ID: '+r.userId,'ok'); else showAlert('du-alert',errMsg(r));
-}
-
-async function submitPurge(){
-  const r=await API.call('purgeScheduledDeletions',{});
-  if (r.success) showAlert('purge-alert',t('purged')+' '+r.count,'ok'); else showAlert('purge-alert',errMsg(r));
-}
+async function devDelete(row,sheetName){ if(!confirm(t('delete')+'?')) return; const r=await API.call('adminDeleteRecord',{sheetName,row}); if(r.success)loadDevSheet(sheetName);else toast(em(r),'error'); }
+async function submitDevCreateUser(){ const r=await API.call('devCreateUser',{fullName:document.getElementById('du-name').value.trim(),email:document.getElementById('du-email').value.trim(),password:document.getElementById('du-pw').value,role:document.getElementById('du-role').value}); if(r.success)showAlert('du-alert','ID: '+r.userId,'ok');else showAlert('du-alert',em(r)); }
+async function submitPurge(){ const r=await API.call('purgeScheduledDeletions',{}); if(r.success)showAlert('purge-alert',t('purged')+' '+r.count,'ok');else showAlert('purge-alert',em(r)); }
 
 function renderSettingsTab(){
-  const d=State._dash||{};
-  const roleLabel={'admin':t('roleAdmin'),'developer':t('roleDev')}[SM.role]||t('roleCustomer');
-  const delSection=d.deletionScheduled
+  const d=State._dash||{},del=d.deletionScheduled;
+  const delSection=del
     ?`<div class="alert alert-info" style="margin-bottom:12px">${t('deletionScheduled')} ${d.deletionDate?new Date(d.deletionDate).toLocaleDateString(L==='en'?'en-GB':'lt-LT'):''}</div>
        <button class="btn btn-ghost" onclick="withBtn(this,submitCancelDeletion)">${t('cancelDeletion')}</button>`
-    :`<p class="muted" style="margin-bottom:10px">${t('deleteAccountHint')}</p>
+    :`<p class="muted" style="margin-bottom:12px">${t('deleteAccountHint')}</p>
        <label>${t('password')}<input id="da-pw" type="password"></label>
        <div id="da-alert"></div>
        <button class="btn btn-danger" style="margin-top:10px" onclick="withBtn(this,submitDeleteAccount)">${t('confirmDelete')}</button>`;
@@ -961,124 +976,104 @@ function renderSettingsTab(){
     <h3 style="margin-bottom:14px">${t('accountInfo')}</h3>
     <div class="info-row"><span class="lbl">${t('userId')}</span><code>${esc(d.userId||'')}</code></div>
     <div class="info-row"><span class="lbl">${t('email')}</span>${esc(d.email||'')}</div>
-    <div class="info-row"><span class="lbl">${t('role')}</span>${roleLabel}</div>
+    <div class="info-row"><span class="lbl">${t('role')}</span>${esc({'admin':t('roleAdmin'),'developer':t('roleDev')}[SM.role]||t('roleCustomer'))}</div>
     <div style="margin-top:16px"><a href="${POLICY_URL}" target="_blank" rel="noopener">${t('privacyPolicy')}</a></div>
   </div>
   <div class="card">
     <h3 style="margin-bottom:14px">${t('changePw')}</h3>
-    <label>${t('currentPw')}<input id="cp-old" type="password"></label>
-    <label>${t('newPassword')}<input id="cp-new" type="password"></label>
-    <p class="muted" style="margin-top:4px">${t('pwHint')}</p>
+    ${pwField('cp-old','currentPw','cp-submit')}
+    ${pwField('cp-new','newPassword','cp-submit')}
+    <p class="muted" style="margin-top:6px">${t('pwHint')}</p>
     <div id="cp-alert"></div>
-    <button class="btn btn-primary" style="margin-top:12px" onclick="withBtn(this,submitChangePw)">${t('updatePw')}</button>
+    <button id="cp-submit" class="btn btn-primary" style="margin-top:12px" onclick="withBtn(this,submitChangePw)">${t('updatePw')}</button>
   </div>
   <div class="card">
     <h3 style="margin-bottom:14px;color:var(--danger)">${t('dangerZone')}</h3>
     ${delSection}
   </div>`;
 }
-
 async function submitChangePw(){
-  const old=document.getElementById('cp-old').value;
-  const nw=document.getElementById('cp-new').value;
-  const r=await API.call('changePassword',{oldPassword:old,newPassword:nw});
-  if (r.success){SM.save(r);showAlert('cp-alert',t('saved'),'ok');}
-  else showAlert('cp-alert',errMsg(r));
+  const r=await API.call('changePassword',{oldPassword:document.getElementById('cp-old').value,newPassword:document.getElementById('cp-new').value});
+  if(r.success){SM.save(r);showAlert('cp-alert',t('saved'),'ok');}else showAlert('cp-alert',em(r));
 }
-
 async function submitDeleteAccount(){
-  const pw=document.getElementById('da-pw').value;
-  const r=await API.call('deleteAccountRequest',{password:pw});
-  if (r.success){showAlert('da-alert',t('deletionScheduled')+' '+new Date(r.scheduledDate).toLocaleDateString(L==='en'?'en-GB':'lt-LT'),'ok');renderDash();}
-  else showAlert('da-alert',errMsg(r));
+  const r=await API.call('deleteAccountRequest',{password:document.getElementById('da-pw').value});
+  if(r.success){showAlert('da-alert',t('deletionScheduled')+' '+new Date(r.scheduledDate).toLocaleDateString(L==='en'?'en-GB':'lt-LT'),'ok');renderDash();}else showAlert('da-alert',em(r));
 }
-
-async function submitCancelDeletion(){
-  const r=await API.call('cancelAccountDeletion',{});
-  if (r.success) renderDash(); else toast(errMsg(r),'error');
-}
+async function submitCancelDeletion(){ const r=await API.call('cancelAccountDeletion',{}); if(r.success)renderDash();else toast(em(r),'error'); }
 
 function vTagScan(){
-  const res=State._tagResult, t_=t;
-  if (!res||!res.success) return `<div class="card scan-card"><h2>${t_('scanTitle')}</h2><div class="alert alert-error">Access denied.</div></div>`;
+  const res=State._tagResult;
+  if(!res||!res.success) return `<div class="card scan-card"><h2>${t('scanTitle')}</h2><div class="alert alert-error" style="margin-top:12px">Access denied.</div></div>`;
   const tag=res.tag;
-  if (!tag.registered) return `<div class="card scan-card"><h2>${t_('scanTitle')}</h2><p class="muted" style="margin-top:10px">${t_('notReg')}</p></div>`;
+  if(!tag.registered) return `<div class="card scan-card"><h2 style="margin-bottom:12px">${t('scanTitle')}</h2><p class="muted">${t('notReg')}</p></div>`;
   return `<div class="card scan-card">
     <h2 style="margin-bottom:4px">${esc(tag.displayName||tag.tagId)}</h2>
-    <p class="muted">${esc(tag.tagId)} · ${esc(tag.type==='Key'?t_('keyType'):t_('petType'))} · ${esc(tag.model)}</p>
-    ${tag.safeMode?`<div class="scan-safe">✓ ${t_('safeHomeMsg')}</div>`:''}
+    <p class="muted">${esc(tag.tagId)} · ${esc(tag.type==='Key'?t('keyType'):t('petType'))} · ${esc(tag.model)}</p>
+    ${tag.safeMode?`<div class="scan-safe">✓ ${t('safeHomeMsg')}</div>`:''}
     <div style="margin-top:14px">
-      ${tag.ownerFirstName?`<div class="info-row"><span class="lbl">${t_('owner')}</span>${esc(tag.ownerFirstName)}</div>`:''}
-      ${tag.contactPhone?`<div class="info-row"><span class="lbl">${t_('phone')}</span>${esc(tag.contactPhone)}</div>`:''}
-      ${tag.contactEmail?`<div class="info-row"><span class="lbl">${t_('contactEmailLbl')}</span>${esc(tag.contactEmail)}</div>`:''}
-      ${tag.model==='Pro'&&tag.streetAddress?`<div class="info-row"><span class="lbl">${t_('streetAddress')}</span>${esc(tag.streetAddress)}</div>`:''}
-      ${tag.model==='Pro'&&tag.meetingSpot?`<div class="info-row"><span class="lbl">${t_('meetingSpot')}</span>${esc(tag.meetingSpot)}</div>`:''}
-      ${tag.model==='Pro'&&tag.vetInfo?`<div class="info-row"><span class="lbl">${t_('vetInfo')}</span>${esc(tag.vetInfo)}</div>`:''}
-      ${tag.model==='Pro'&&tag.microchipNumber?`<div class="info-row"><span class="lbl">${t_('microchipNumber')}</span>${esc(tag.microchipNumber)}</div>`:''}
-      ${tag.model==='Pro'&&tag.allergies?`<div class="info-row"><span class="lbl">${t_('allergies')}</span>${esc(tag.allergies)}</div>`:''}
-      ${tag.model==='Pro'&&tag.age?`<div class="info-row"><span class="lbl">${t_('age')}</span>${esc(tag.age)}</div>`:''}
-      ${tag.model==='Pro'&&tag.breed?`<div class="info-row"><span class="lbl">${t_('breed')}</span>${esc(tag.breed)}</div>`:''}
-      ${tag.model==='Pro'&&tag.notes?`<div class="info-row"><span class="lbl">${t_('notes')}</span>${esc(tag.notes)}</div>`:''}
+      ${tag.ownerFirstName?`<div class="info-row"><span class="lbl">${t('owner')}</span>${esc(tag.ownerFirstName)}</div>`:''}
+      ${tag.contactPhone?`<div class="info-row"><span class="lbl">${t('phone')}</span><a href="tel:${esc(tag.contactPhone)}">${esc(tag.contactPhone)}</a></div>`:''}
+      ${tag.contactEmail?`<div class="info-row"><span class="lbl">${t('emailLbl')}</span><a href="mailto:${esc(tag.contactEmail)}">${esc(tag.contactEmail)}</a></div>`:''}
+      ${tag.model==='Pro'&&tag.streetAddress?`<div class="info-row"><span class="lbl">${t('streetAddress')}</span>${esc(tag.streetAddress)}</div>`:''}
+      ${tag.model==='Pro'&&tag.additionalEmail?`<div class="info-row"><span class="lbl">${t('additionalEmail')}</span><a href="mailto:${esc(tag.additionalEmail)}">${esc(tag.additionalEmail)}</a></div>`:''}
+      ${tag.model==='Pro'&&tag.meetingSpot?`<div class="info-row"><span class="lbl">${t('meetingSpot')}</span>${esc(tag.meetingSpot)}</div>`:''}
+      ${tag.model==='Pro'&&tag.vetInfo?`<div class="info-row"><span class="lbl">${t('vetInfo')}</span>${esc(tag.vetInfo)}</div>`:''}
+      ${tag.model==='Pro'&&tag.microchipNumber?`<div class="info-row"><span class="lbl">${t('microchipNumber')}</span>${esc(tag.microchipNumber)}</div>`:''}
+      ${tag.model==='Pro'&&tag.allergies?`<div class="info-row"><span class="lbl">${t('allergies')}</span>${esc(tag.allergies)}</div>`:''}
+      ${tag.model==='Pro'&&tag.age?`<div class="info-row"><span class="lbl">${t('age')}</span>${esc(tag.age)}</div>`:''}
+      ${tag.model==='Pro'&&tag.breed?`<div class="info-row"><span class="lbl">${t('breed')}</span>${esc(tag.breed)}</div>`:''}
+      ${tag.model==='Pro'&&tag.notes?`<div class="info-row"><span class="lbl">${t('notes')}</span>${esc(tag.notes)}</div>`:''}
     </div>
-    <p class="muted" style="margin-top:14px;font-size:12px">${t_('scanAlerted')}</p>
+    <p class="muted" style="margin-top:14px;font-size:12px">${t('scanAlerted')}</p>
   </div>`;
 }
 
 function vActivation(){
   const p=State._tagParams||{};
-  const loggedIn=SM.ok;
   return `<div class="card scan-card">
     <h2 style="margin-bottom:10px">${t('activationTitle')}</h2>
-    <p class="muted" style="margin-bottom:14px">${t('activationInfo')}</p>
+    <p class="muted" style="margin-bottom:16px">${t('activationInfo')}</p>
     <div id="act-alert"></div>
-    ${!loggedIn?`<label>${t('email')}<input id="act-email" type="email" value="${esc(State._tagResult&&State._tagResult.tag&&State._tagResult.tag.ownerEmail?State._tagResult.tag.ownerEmail:'')}"></label>
-      <label>${t('password')}<input id="act-pw" type="password"></label>
-      <button class="btn btn-primary btn-block" onclick="withBtn(this,loginAndActivate)">${t('loginToActivate')}</button>`
-    :`<button class="btn btn-primary btn-block" onclick="withBtn(this,doActivate)">${t('activateBtn')}</button>`}
+    ${!SM.ok?`<label>${t('email')}<input id="act-email" type="email" onkeydown="hk(event,'act-submit')"></label>
+      ${pwField('act-pw','password','act-submit')}
+      <button id="act-submit" class="btn btn-primary btn-block" onclick="withBtn(this,loginAndActivate)">${t('loginToActivate')}</button>`
+    :`<button id="act-submit" class="btn btn-primary btn-block" onclick="withBtn(this,doActivate)">${t('activateBtn')}</button>`}
   </div>`;
 }
-
 async function loginAndActivate(){
-  const email=document.getElementById('act-email').value.trim();
-  const pw=document.getElementById('act-pw').value;
+  const email=document.getElementById('act-email').value.trim(),pw=document.getElementById('act-pw').value;
   const lr=await API.call('login',{email,password:pw},true);
-  if (!lr.success){showAlert('act-alert',errMsg(lr));return;}
-  SM.save(lr,email);
-  await doActivate();
+  if(!lr.success){showAlert('act-alert',em(lr));return;}
+  SM.save(lr,email); await doActivate();
 }
-
 async function doActivate(){
   const p=State._tagParams||{};
   const r=await API.call('activateTag',{tagId:p.tagId,key:p.key});
-  if (r.success){showAlert('act-alert',t('activationOk'),'ok');setTimeout(()=>navigate('dashboard'),1500);}
-  else showAlert('act-alert',errMsg(r));
+  if(r.success){showAlert('act-alert',t('activationOk'),'ok');setTimeout(()=>navigate('dashboard'),1600);}
+  else showAlert('act-alert',em(r));
 }
 
 async function init(){
+  initDevBlock();
+  const allowed=await checkGeo();
+  if(!allowed) return;
   initCookies();
   SM.load();
   const params=new URLSearchParams(window.location.search);
-  const resetTok=params.get('reset');
-  const setupTok=params.get('setup');
-  const uid=params.get('uid');
-  const key=params.get('key');
-  const tagId=params.get('tag_id');
-  const isActivation=params.get('activation')==='1';
-
-  if (resetTok&&uid){ State._resetParams={token:resetTok,uid}; State.view='resetForm'; render(); return; }
-  if (setupTok&&uid){ State._setupParams={token:setupTok,uid}; State.view='setup'; render(); return; }
-  if (key&&tagId){
+  const resetTok=params.get('reset'),setupTok=params.get('setup'),uid=params.get('uid');
+  const key=params.get('key'),tagId=params.get('tag_id'),isAct=params.get('activation')==='1';
+  if(resetTok&&uid){State._resetParams={token:resetTok,uid};State.view='resetForm';render();return;}
+  if(setupTok&&uid){State._setupParams={token:setupTok,uid};State.view='setup';render();return;}
+  if(key&&tagId){
     const res=await API.pub({key,tag_id:tagId});
     State._tagResult=res; State._tagParams={key,tagId};
-    if (res.success&&res.tag&&res.tag.status==='Pending Activation') State.view='activation';
-    else if (isActivation) State.view='activation';
-    else State.view='tagScan';
+    State.view=(res.success&&res.tag&&res.tag.status==='Pending Activation')||isAct?'activation':'tagScan';
     render(); return;
   }
   State.view=SM.ok?'dashboard':'landing';
   render();
 }
-
 init();
 </script>
 </body>
