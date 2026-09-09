@@ -5,25 +5,25 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Praxifold — Aktyvacija</title>
 <style>
-  body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f1c1a;color:#e8f4f0;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
-  .box{text-align:center;padding:40px 24px}
-  p{color:#8aaca6;margin-top:10px;font-size:14px}
-  .dot{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#e8a33d,#f2c374);margin:0 auto 16px}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#000;color:#c8d8f0;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
+.box{text-align:center;padding:40px 24px}
+.dot{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#4080ff,#60a5fa);margin:0 auto 16px;box-shadow:0 0 20px rgba(64,128,255,.4)}
+p{color:#4a6a9a;margin-top:10px;font-size:14px}
 </style>
 </head>
 <body>
 <div class="box">
   <div class="dot"></div>
   <h2>Praxifold</h2>
-  <p id="msg">Nukreipiama... / Redirecting...</p>
+  <p>Nukreipiama... / Redirecting...</p>
 </div>
 <script>
 (function(){
-  const p = new URLSearchParams(window.location.search);
-  const key = p.get('key') || p.get('k');
-  const tagId = p.get('tag_id') || p.get('id');
-  if (key && tagId) {
-    window.location.replace('../?activation=1&key=' + encodeURIComponent(key) + '&tag_id=' + encodeURIComponent(tagId));
+  var p=new URLSearchParams(window.location.search);
+  var key=p.get('key')||p.get('k');
+  var tagId=p.get('tag_id')||p.get('id');
+  if(key&&tagId){
+    window.location.replace('../?activation=1&key='+encodeURIComponent(key)+'&tag_id='+encodeURIComponent(tagId));
   } else {
     window.location.replace('../');
   }
