@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AiroIntelligence2 - Chat</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .chat-container { width: 100%; max-width: 450px; background: white; height: 90vh; max-height: 800px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0, 123, 255, 0.2); display: flex; flex-direction: column; overflow: hidden; }
+        .header { background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white; padding: 20px; text-align: center; }
+        .header h2 { margin: 0; font-size: 22px; }
+        .header p { margin: 5px 0 0 0; font-size: 12px; opacity: 0.8; }
+        .chat-box { flex: 1; padding: 20px; overflow-y: auto; background: #f8fbff; display: flex; flex-direction: column; gap: 15px; }
+        .message { max-width: 80%; padding: 12px 16px; border-radius: 18px; line-height: 1.4; font-size: 15px; }
+        .msg-user { background: #007bff; color: white; align-self: flex-end; }
+        .msg-ai { background: white; color: #333; align-self: flex-start; border: 1px solid #e0f2fe; }
+        .input-area { padding: 15px; background: white; border-top: 1px solid #e0f2fe; display: flex; gap: 10px; }
+        .input-area input { flex: 1; padding: 12px 15px; border: 1px solid #bae6fd; border-radius: 25px; outline: none; }
+        .input-area button { background: #007bff; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="header">
+        <h2>AiroIntelligence2</h2>
+        <p>Model: DI-AI-0.1-ALPHA | v0.1</p>
+    </div>
+    <div class="chat-box" id="chatBox">
+        <div class="message msg-ai">Sveiki! Aš esu pasiruošęs padėti. Paklauskite ko nors.</div>
+    </div>
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Įveskite žinutę..." onkeypress="handleEnter(event)">
+        <button onclick="sendMessage()">➔</button>
+    </div>
+</div>
+
+<script>
+    const brain = [{"q":"kas tu esi?","a":"Aš esu Dirbtinio intelekto padėjėjas skirtas padėti su jūsu klausimais susijusiais su \"Praxifold\""},{"q":"koks tavo vardas?","a":"Aš esu Airo Intelligence (Airo- sukūrėjo vardo trumpinys paverstas į Anglų kalba)."},{"q":"koks tavo žinių laikotarpis?","a":"Mano žinios iš 2026 metų"},{"q":"Kas yra NFC raktų pakabukas?","a":"NFC raktų pakabukas leidžia telefonu nuskaityti jame esančią informaciją. Priklausomai nuo pasirinkimo, jis gali atidaryti jūsų nurodytą nuorodą ar kitą informaciją. Daugeliu atvejų papildomos programėlės nereikia."},{"q":"Kaip jis veikia?","a":"Jeigu Jūs kalbate apie mūsų raktų pakabukus jie naudoja NFC technologija\n\n- NFC (artimojo lauko ryšys) yra trumpojo nuotolio belaidė technologija, veikianti iki 4 cm atstumu.\n\n -Veikimas remiasi elektromagnetine indukcija: aktyvus įrenginys (pvz., telefonas ar terminalas) skleidžia magnetinį lauką.\n\n-Technologija yra saugi, nes dėl itin mažo atstumo signalo praktiškai neįmanoma perimti iš tolo."},{"q":"Ar reikia programėlės kad NFC veiktu?","a":"Daugeliu atvejų papildomos programėlės nereikia.\nBet gali prireikti įjungti NFC/ALR per nustatymus pagrinde ant 'Android įrenginių'."},{"q":"Ar reikia programėlės kad ALR veiktu?","a":"Daugeliu atvejų papildomos programėlės nereikia. Bet gali prireikti įjungti NFC/ALR per nustatymus pagrinde ant 'Android įrenginių'."},{"q":"Ar veikia su iPhone?","a":"Taip veikia su visais telefonais tiek Android tiek Iphone tik gali skirtis skaitytuvo vietos pvz: (ant Iphone viršuje o ant android labiau gale truputi žemiau)."},{"q":"Ar veikia su Android?","a":"Taip veikia su visais telefonais tiek Android tiek Iphone tik gali skirtis skaitytuvo vietos pvz: (ant Iphone viršuje o ant android labiau gale truputi žemiau)."},{"q":"Ką galiu įrašyti į NFC?","a":"Jūs į 'Praxifold' pakabukus įrašyti nieko negalite bandymas padaryti tai gali sugadinti veikimą Jūsų pakabuko/nfc lipduko. Kalbant plačiau aplamai galima įrašyti daug ką pvz: (nuoroda,teksta,medicinos informacija,kontaktine informacija ir t.t)."},{"q":"Ar galiu pats pakeisti informaciją?","a":"Taip, kadangi duomenys saugomi pas mus o ne pačiame pakabuke/lipduke Jūs galite pakeisti duomenis prisijunge prie Jūsų paskyros ant 'praxifold.github.io'. Ir kadangi duomenys saugomi pas mus Jūs galite padaryti kad tų duomenų nerodytu kol Jūsų gyvūnas/raktai saugiai pas jus."},{"q":"Iš ko pagamintas pakabukas?","a":"Iš mano kol kas žinomos informacijos pakabukai yra iš plastmasės (3D atspausdintas) arba Iš medienos (išgraviruota). Išsamesnės informacijos rasite 'praxifold.github.io' 'parduotuvė' skiltyje."},{"q":"Ar galima pasirinkti medinį?","a":"Taip, žinoma."},{"q":"Ar galima pasirinkti plastikinį?","a":"Taip, žinoma."},{"q":"Kuo skiriasi medinis ir plastikinis?","a":"Medinis yra išgraviruotas tad gali turėti mažus griovelius kur lazeris išgraviravo, o plastikinis 3D atspausdintas tad gali turėti iškilimų, plastikinis yra lengvesnis bet jie abudu veikia vienodai."},{"q":"Ar galima išgraviruoti vardą?","a":"Dėja ne negalima, dėl privatumo, ir kaip mes veikiame, jokios pašalinės informacijos ant pakabuko negraviruojame."},{"q":"Ar galiu įdėti savo logotipą?","a":"Ne, negalite Produktas ir su juo susijusios svetainės priklauso 'Praxifold'."},{"q":"Ar galiu pasirinkti spalvą?","a":"Plastiko, Taip. Medienos, Ne (dėl spalvų pasirinkimo žiurėti 'parduotuvė' skiltelį svetainėje 'praxifold.github.io'."},{"q":"Ar galiu atsiųsti savo dizainą?","a":"Taip galite, kad sužinoti kur susisiekite asmeniškai (naujausius kontaktus rasite svetainėje 'praxifold.github.io')."},{"q":"Ar galima pagaminti pagal mano formą?","a":"Ne, bet mes galbūt turime formų pasirinkimų (žiurėti 'parduotuvė' skiltelį svetainėje 'praxifold.github.io' arba jeigu labai reikia susisiekite asmeniškai."}];
+    const GAS_URL = "";
+    const SECRET_KEY = "8f4a9c2e0b1d3f5a7c9e1b3d5f7a9c1e3b5d7f9a1c3e5b7d9f0a2b4c6d8e0f2a";
+
+    const lithuanianSynonyms = {
+        "labas": ["sveikas", "sveika", "sveiki", "labidiena", "laba"],
+        "pagalba": ["parama", "asistavimas", "informacija"],
+        "kaina": ["suma", "vertė", "mokestis", "kainuoja"],
+        "kontaktai": ["telefonas", "paštas", "adresas", "ryšys"],
+        "pirkti": ["įsigyti", "užsisakyti", "paimti"],
+        "vieta": ["vietovė", "miestas", "adresas"]
+    };
+
+    function cleanText(text) {
+        return text.toLowerCase().replace(/[^a-ząčęėįšųūž0-9\s]/g, '');
+    }
+
+    function levenshtein(a, b) {
+        const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+        for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+        for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+
+        for (let i = 1; i <= a.length; i++) {
+            for (let j = 1; j <= b.length; j++) {
+                const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j] + 1,
+                    matrix[i][j - 1] + 1,
+                    matrix[i - 1][j - 1] + cost
+                );
+            }
+        }
+        return matrix[a.length][b.length];
+    }
+
+    function extractVocabulary() {
+        const vocab = new Set();
+        brain.forEach(item => {
+            cleanText(item.q).split(' ').forEach(token => {
+                if (token.length > 2) vocab.add(token);
+            });
+        });
+        Object.keys(lithuanianSynonyms).forEach(k => vocab.add(k));
+        return Array.from(vocab);
+    }
+
+    function spellCorrectTokens(tokens) {
+        const vocab = extractVocabulary();
+        return tokens.map(token => {
+            if (vocab.includes(token)) return token;
+            let bestWord = token;
+            let minDistance = 2;
+            
+            vocab.forEach(word => {
+                const dist = levenshtein(token, word);
+                if (dist < minDistance) {
+                    minDistance = dist;
+                    bestWord = word;
+                }
+            });
+            return bestWord;
+        });
+    }
+
+    function expandSynonyms(tokens) {
+        let expanded = [...tokens];
+        tokens.forEach(token => {
+            if (lithuanianSynonyms[token]) {
+                expanded.push(...lithuanianSynonyms[token]);
+            }
+            Object.entries(lithuanianSynonyms).forEach(([key, list]) => {
+                if (list.includes(token)) {
+                    expanded.push(key);
+                    expanded.push(...list);
+                }
+            });
+        });
+        return Array.from(new Set(expanded));
+    }
+
+    function matchBrain(tokens) {
+        let bestMatch = null;
+        let highestScore = 0;
+
+        for (const memory of brain) {
+            const memoryTokens = cleanText(memory.q).split(' ').filter(t => t.length > 0);
+            let score = 0;
+
+            for (const token of tokens) {
+                if (memoryTokens.includes(token)) score++;
+            }
+
+            const lengthDiff = Math.abs(tokens.length - memoryTokens.length);
+            const finalScore = score - (lengthDiff * 0.1);
+
+            if (finalScore > highestScore) {
+                highestScore = finalScore;
+                bestMatch = memory.a;
+            }
+        }
+        return highestScore > 0.4 ? bestMatch : null;
+    }
+
+    function getBestResponse(userInput) {
+        let tokens = cleanText(userInput).split(' ').filter(t => t.length > 0);
+        
+        let response = matchBrain(tokens);
+        if (response) return response;
+
+        const correctedTokens = spellCorrectTokens(tokens);
+        response = matchBrain(correctedTokens);
+        if (response) return response;
+
+        const synonymTokens = expandSynonyms(correctedTokens);
+        response = matchBrain(synonymTokens);
+        if (response) return response;
+
+        return "Atsiprašau, nesupratau klausimo.";
+    }
+
+    async function signPayload(message, secret) {
+        const encoder = new TextEncoder();
+        const keyData = encoder.encode(secret);
+        const msgData = encoder.encode(message);
+        
+        const cryptoKey = await crypto.subtle.importKey(
+            'raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+        );
+        const signature = await crypto.subtle.sign('HMAC', cryptoKey, msgData);
+        return Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function sendToGoogleSheet(question, answer) {
+        if (!GAS_URL || !SECRET_KEY) return;
+        
+        const timestamp = new Date().toISOString();
+        const payloadToSign = `${question}:${timestamp}`;
+        const signature = await signPayload(payloadToSign, SECRET_KEY);
+
+        const body = {
+            question: question,
+            answer: answer,
+            timestamp: timestamp,
+            signature: signature,
+            origin: window.location.hostname || "praxifold.github.io"
+        };
+
+        fetch(GAS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify(body)
+        }).catch(err => console.error("Sheet error:", err));
+    }
+
+    function appendMessage(text, sender) {
+        const chatBox = document.getElementById('chatBox');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message ' + (sender === 'user' ? 'msg-user' : 'msg-ai');
+        msgDiv.innerText = text;
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('userInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        appendMessage(text, 'user');
+        input.value = '';
+
+        setTimeout(() => {
+            const response = getBestResponse(text);
+            appendMessage(response, 'ai');
+            sendToGoogleSheet(text, response);
+        }, 300);
+    }
+
+    function handleEnter(e) { if (e.key === 'Enter') sendMessage(); }
+</script>
+</body>
+</html>
