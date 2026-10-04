@@ -108,24 +108,23 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
 .toast-ok{background:#166534;color:#bbf7d0;border:1px solid #16a34a}
 .toast-error{background:#7f1d1d;color:#fca5a5;border:1px solid #ef4444}
 .toast-info{background:#1e3a5f;color:#93c5fd;border:1px solid #3b82f6}
-#prog{position:fixed;top:0;left:0;height:2px;background:var(--accent);width:0;z-index:100;transition:width .25s ease,opacity .3s;box-shadow:0 0 8px var(--accent)}
-.scan-card{max-width:480px;margin:40px auto}
+.scan-card{max-width:480px;margin:40px auto;word-break:break-word;overflow-wrap:break-word}
 .scan-safe{display:flex;align-items:center;gap:8px;background:rgba(56,161,105,.12);border:1px solid rgba(56,161,105,.4);border-radius:8px;padding:10px 14px;margin:12px 0;color:var(--ok);font-weight:600}
 .scan-emg{display:flex;align-items:flex-start;gap:10px;background:rgba(229,62,62,.12);border:1px solid rgba(229,62,62,.5);border-radius:8px;padding:12px 14px;margin:12px 0;color:#fca5a5;font-size:14px;line-height:1.5}
-.info-row{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px}
+.info-row{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px;flex-wrap:wrap}
 .info-row:last-child{border-bottom:none}
 .info-row .lbl{color:var(--dim);min-width:140px;flex-shrink:0}
+.info-row .val{flex:1;min-width:0;word-break:break-word;overflow-wrap:break-word}
 #geo-loading{position:fixed;inset:0;background:#000;z-index:200;display:flex;align-items:center;justify-content:center}
 #geo-block{position:fixed;inset:0;background:#000;z-index:201;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
 #dev-warn{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:#7f1d1d;color:#fca5a5;border:1px solid #ef4444;padding:11px 20px;border-radius:8px;z-index:95;font-size:14px;animation:fi .2s ease;max-width:340px;text-align:center}
 .opt-hint{font-size:11px;color:var(--dim);font-weight:400;margin-left:4px;font-style:italic}
-/* Loading dots animation */
 .ld-dots{display:flex;gap:9px;justify-content:center;margin:18px 0 14px}
 .ld-dots span{display:inline-block;width:9px;height:9px;border-radius:50%;background:#4080ff;animation:ldbounce 1.4s ease-in-out infinite}
 .ld-dots span:nth-child(2){animation-delay:.22s}
 .ld-dots span:nth-child(3){animation-delay:.44s}
 @keyframes ldbounce{0%,80%,100%{transform:scale(.35);opacity:.25}40%{transform:scale(1);opacity:1}}
-/* AI FAB */
+#api-spin{position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;pointer-events:none}
 #ai-fab{position:fixed;bottom:28px;right:22px;z-index:50;display:flex;align-items:flex-end;gap:9px}
 .ai-info-btn{width:26px;height:26px;border-radius:50%;border:1px solid var(--border);background:var(--panel);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:12px;font-style:italic;font-weight:700;flex-shrink:0;margin-bottom:19px;transition:border-color .15s,color .15s;position:relative}
 .ai-info-btn:hover{border-color:var(--accent);color:var(--accent)}
@@ -135,22 +134,14 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
 .ai-circle-btn:hover{box-shadow:0 0 36px rgba(64,128,255,.4),inset 0 0 22px rgba(64,128,255,.15);border-color:rgba(100,160,255,.7)}
 .ai-circle-btn .ai-label{font-size:16px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#7cb8ff,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;user-select:none}
 .ai-beta{position:absolute;top:-5px;right:-7px;background:#4080ff;color:#fff;font-size:9px;font-weight:800;padding:2px 5px;border-radius:999px;letter-spacing:.04em;border:1px solid rgba(255,255,255,.15)}
-/* AI overlay */
-#ai-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:150;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px}
-.ai-overlay-box{width:min(740px,100%);height:min(88vh,740px);background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;animation:fi .18s ease;box-shadow:0 24px 60px rgba(0,0,0,.6)}
-.ai-overlay-bar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
-.ai-overlay-bar strong{font-size:15px;display:flex;align-items:center;gap:8px}
-.ai-overlay-bar .ai-beta{position:static;font-size:10px}
-.ai-close{background:none;border:none;color:var(--dim);font-size:22px;cursor:pointer;padding:4px 8px;line-height:1;border-radius:6px;transition:color .15s,background .15s}
-.ai-close:hover{color:var(--text);background:rgba(255,255,255,.06)}
-#ai-frame{flex:1;border:none;width:100%;background:#000}
-/* Search result panels in admin/dev */
 .srp{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:4px}
+.sm-info-wrap{position:relative;display:inline-flex;align-items:center}
+.sm-info-icon{cursor:pointer;color:var(--dim);font-size:13px;font-style:normal;margin-left:5px;user-select:none;transition:color .15s;line-height:1}
+.sm-info-icon:hover{color:var(--accent)}
+.sm-info-tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);width:230px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--text);line-height:1.5;z-index:60;box-shadow:0 4px 16px rgba(0,0,0,.5);white-space:normal;pointer-events:none;font-weight:400}
 </style>
 </head>
 <body>
-<div id="prog"></div>
-<!-- Loading screen with animated dots -->
 <div id="geo-loading">
   <div style="text-align:center">
     <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#4080ff,#60a5fa);margin:0 auto 16px;box-shadow:0 0 22px rgba(64,128,255,.5)"></div>
@@ -170,6 +161,7 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
   </div>
 </div>
 <div id="dev-warn" class="hidden">Kūrėjų įrankiai yra užblokuoti. / Developer tools are blocked.</div>
+<div id="api-spin" class="hidden"><div class="ld-dots"><span></span><span></span><span></span></div></div>
 <header>
   <div class="brand" onclick="navigate('landing')"><div class="dot"></div>Praxifold</div>
   <div class="topnav" id="nav"></div>
@@ -189,8 +181,6 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
   </div>
 </div>
 <div id="toasts"></div>
-
-<!-- AI FAB -->
 <div id="ai-fab">
   <div class="ai-info-btn" onmouseenter="showAiTip()" onmouseleave="hideAiTip()" onclick="toggleAiTip(event)">i
     <div class="ai-tooltip" id="ai-tt"></div>
@@ -200,22 +190,12 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
     <div class="ai-beta">Beta</div>
   </div>
 </div>
-<!-- AI Overlay -->
-<div id="ai-overlay" class="hidden">
-  <div class="ai-overlay-box">
-    <div class="ai-overlay-bar">
-      <strong>Praxifold AI <span class="ai-beta" style="position:static">Beta</span></strong>
-      <button class="ai-close" onclick="closeAI()">✕</button>
-    </div>
-    <iframe id="ai-frame" src="" title="Praxifold AI"></iframe>
-  </div>
-</div>
 
 <script>
-const API_URL    = 'https://script.google.com/macros/s/AKfycby8m4LZGo0FwPSxuYz_2cGDJYMzVWwvlwS4KUldHoW8tC0EPxpR3JlhXNHmvGxifYeW/exec';
+const API_URL    = 'https://script.google.com/macros/s/AKfycbya9H41uNkL-N4KJUAbN5yUWYet5TbcBW5GOdJHQr1McrBq_p6u7vWWssZxahi6jYW7/exec';
 const POLICY_URL = 'https://praxifold.github.io/policy.txt';
 const REPORT_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header';
-const ACCESS_TTL_MS = 20 * 60 * 1000;
+const ORIGIN     = 'https://praxifold.github.io';
 
 const TR = {
 lt:{
@@ -248,12 +228,13 @@ lt:{
   tagId:'Pakabuko ID',model:'Modelis',type:'Tipas',status:'Statusas',
   displayName:'Augintinio vardas arba apibūdinimas',
   ownerFirstName:'Savininko vardas',contactPhone:'Savininko tel. numeris',
-  alertEmail:'Įspėjimų el. paštas',
+  alertEmail:'Kontaktinis el. paštas',
   safeMode:'Augintinis saugus namuose',
-  streetAddress:'Gatvė ir namas',secondaryEmail:'Antrinis el. paštas',
+  safeModeInfo:'Kai aktyvuota, kiekvienas žymę nuskenuojantis naudotojas nematys jūsų informacijos.',
+  streetAddress:'Gatvės adresas',secondaryEmail:'Antrinis el. paštas',
   meetingSpot:'Susitikimo vieta',vetInfo:'Veterinaro duomenys',
   microchipNumber:'Mikroschemos numeris',allergies:'Alergijos',
-  age:'Amžius',breed:'Veislė',notes:'Pastabos',
+  age:'Amžius',breed:'Veislė',
   emergencyNotes:'Skubios pastabos',
   proFields:'Pro laukai',baseFields:'Pagrindiniai laukai',
   saveChanges:'Išsaugoti',saved:'Išsaugota.',
@@ -284,7 +265,8 @@ lt:{
   deletionCode:'Kodas iš kliento el. pašto',confirmDeleteCustomer:'Patvirtinti ištrynimą',
   scanTitle:'Pakabukas nuskaitytas',notReg:'Šis pakabukas dar neregistruotas.',
   safeHomeMsg:'Augintinis saugus namuose',
-  scanOwnerName:'Savininko vardas',scanPhone:'Savininko telefonas',scanSecEmail:'Antrinis el. paštas',
+  scanOwnerName:'Savininko vardas',scanPhone:'Savininko telefonas',
+  scanSecEmail:'Antrinis el. paštas',scanContactEmail:'Kontaktinis el. paštas',
   emergency:'SVARBU',
   activationTitle:'Pakabukui reikia aktyvacijos',
   activationInfo:'Šis pakabukas buvo perkeltas. Prisijunkite ir patvirtinkite savininkystę.',
@@ -342,12 +324,13 @@ en:{
   tagId:'Tag ID',model:'Model',type:'Type',status:'Status',
   displayName:'Pet name or description',
   ownerFirstName:'Owner first name',contactPhone:'Owner phone number',
-  alertEmail:'Alert notification email',
+  alertEmail:'Contact email',
   safeMode:'Pet is safe at home',
+  safeModeInfo:'When activated, any user that scans the tag will not be able to see your information.',
   streetAddress:'Street address',secondaryEmail:'Secondary email',
   meetingSpot:'Nearby meeting spot',vetInfo:'Vet details',
   microchipNumber:'Microchip number',allergies:'Allergies',
-  age:'Age',breed:'Breed',notes:'Notes',
+  age:'Age',breed:'Breed',
   emergencyNotes:'Emergency notes',
   proFields:'Pro fields',baseFields:'Basic fields',
   saveChanges:'Save',saved:'Saved.',
@@ -378,7 +361,8 @@ en:{
   deletionCode:'Code from customer email',confirmDeleteCustomer:'Confirm deletion',
   scanTitle:'Tag scanned',notReg:'This tag is not yet registered.',
   safeHomeMsg:'Pet is safe at home',
-  scanOwnerName:'Owner name',scanPhone:'Owner phone',scanSecEmail:'Secondary email',
+  scanOwnerName:'Owner name',scanPhone:'Owner phone',
+  scanSecEmail:'Secondary email',scanContactEmail:'Contact email',
   emergency:'ALERT',
   activationTitle:'Tag needs activation',
   activationInfo:'This tag was transferred. Log in with the registered account to confirm ownership.',
@@ -436,7 +420,6 @@ function em(r){ return (r&&r.code&&ERRS[r.code]&&ERRS[r.code][L])||(r&&r.message
 function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function setLang(l){ L=l; localStorage.setItem('pxf_lang',l); render(); }
 
-/* ── Loading screen cycling text ── */
 (function(){
   const texts={lt:['Iššifruojama...','Tikrinami duomenys...','Tikrinami raktai...','Jungiamasi...'],en:['Decrypting...','Double checking data...','Verifying keys...','Connecting...']};
   const lang=localStorage.getItem('pxf_lang')||'lt';
@@ -497,8 +480,10 @@ const SM={
   async _ref(){
     if(!this.rt||!this.email) return;
     try{
-      const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'refreshSession',payload:{refreshToken:this.rt,email:this.email}})});
-      const d=await r.json();
+      const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'refreshSession',payload:{refreshToken:this.rt,email:this.email},_origin:ORIGIN})});
+      const raw=await r.json();
+      let d=raw;
+      if(raw.enc&&this.ek){ try{ const dec=await decPay(this.ek,raw.enc); d=Object.assign({},raw,dec); delete d.enc; }catch(_){} }
       if(d.success){this.save(d);}
       else if(d.code==='SESSION_REVOKED'||d.code==='SESSION_EXPIRED'){this.clear();navigate('login');toast(t('sessionExpired'),'error');}
       else{this._sched();}
@@ -514,20 +499,35 @@ const SM={
   get isDev()  { return this.role==='developer'; }
 };
 
+const SENS_REQ = new Set(['email','key','tagId','token','setupToken','code','oldPassword','newPassword','adminPassword','targetEmail','deletionCode','refreshToken','password']);
+const SENS_FIELDS = new Set(['Alert Email','Street Address','Additional Email','Notes']);
+
 const prog={
-  el:null,
-  start(){ if(!this.el) this.el=document.getElementById('prog'); if(this.el){this.el.style.cssText='width:65%;opacity:1';} },
-  done(){ if(!this.el) return; this.el.style.width='100%'; setTimeout(()=>{if(this.el)this.el.style.cssText='width:0;opacity:0';},300); }
+  start(){ document.getElementById('api-spin')?.classList.remove('hidden'); },
+  done(){  document.getElementById('api-spin')?.classList.add('hidden'); }
 };
 
 const API={
   async call(action,payload,raw){
     payload=Object.assign({},payload||{});
-    const body={action};
+    const body={action,_origin:ORIGIN};
     prog.start();
     if(SM.ek&&SM.at&&!raw){
       body.tok=SM.at;
-      body.enc=await encPay(SM.ek,payload);
+      const sensitive={},plain={};
+      Object.keys(payload).forEach(k=>{
+        if(k==='fields'){
+          const hasSF=Object.keys(payload.fields||{}).some(f=>SENS_FIELDS.has(f));
+          if(hasSF) sensitive.fields=payload.fields;
+          else plain.fields=payload.fields;
+        } else if(SENS_REQ.has(k)){
+          sensitive[k]=payload[k];
+        } else {
+          plain[k]=payload[k];
+        }
+      });
+      body.payload=plain;
+      if(Object.keys(sensitive).length) body.enc=await encPay(SM.ek,sensitive);
     } else {
       if(SM.at) payload.accessToken=SM.at;
       body.payload=payload;
@@ -538,8 +538,11 @@ const API={
       data=await r.json();
     }catch(_){prog.done();return {success:false,code:'NETWORK',message:t('networkError')};}
     if(data.enc&&SM.ek){
-      try{data=await decPay(SM.ek,data.enc);}
-      catch(_){prog.done();return {success:false,code:'DECRYPT',message:t('networkError')};}
+      try{
+        const dec=await decPay(SM.ek,data.enc);
+        Object.assign(data,dec);
+        delete data.enc;
+      }catch(_){prog.done();return {success:false,code:'DECRYPT',message:t('networkError')};}
     }
     prog.done();
     if(data.code==='SESSION_EXPIRED'||data.code==='SESSION_REVOKED'){SM.clear();navigate('login');toast(t('sessionExpired'),'error');}
@@ -548,6 +551,7 @@ const API={
   async pub(params){
     const url=new URL(API_URL);
     Object.keys(params).forEach(k=>url.searchParams.set(k,params[k]));
+    url.searchParams.set('_origin',ORIGIN);
     prog.start();
     try{const r=await fetch(url);const d=await r.json();prog.done();return d;}
     catch(_){prog.done();return {success:false,code:'NETWORK',message:t('networkError')};}
@@ -616,18 +620,7 @@ async function checkGeo(){
   return true;
 }
 
-/* ── AI overlay ── */
-function openAI(){
-  const frame=document.getElementById('ai-frame');
-  if(!frame.src||frame.src==='about:blank') frame.src='praxifold.github.io/AI.html';
-  document.getElementById('ai-overlay').classList.remove('hidden');
-  document.body.style.overflow='hidden';
-}
-function closeAI(){
-  document.getElementById('ai-overlay').classList.add('hidden');
-  document.getElementById('ai-frame').src='';
-  document.body.style.overflow='';
-}
+function openAI(){ window.location.href = ORIGIN+'/AI.html'; }
 function showAiTip(){ const tt=document.getElementById('ai-tt'); tt.textContent=t('aiTooltip'); tt.classList.add('vis'); }
 function hideAiTip(){ document.getElementById('ai-tt').classList.remove('vis'); }
 function toggleAiTip(e){
@@ -638,7 +631,16 @@ function toggleAiTip(e){
   setTimeout(()=>tt.classList.remove('vis'),5000);
 }
 document.addEventListener('click',()=>document.getElementById('ai-tt')?.classList.remove('vis'));
-document.getElementById('ai-overlay').addEventListener('click',e=>{ if(e.target===document.getElementById('ai-overlay')) closeAI(); });
+
+function showSmTip(id){ document.getElementById(id)?.classList.remove('hidden'); }
+function hideSmTip(id){ document.getElementById(id)?.classList.add('hidden'); }
+function toggleSmTip(e,id){
+  e.stopPropagation();
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.classList.toggle('hidden');
+  if(!el.classList.contains('hidden')) setTimeout(()=>el.classList.add('hidden'),5000);
+}
 
 const State={view:'landing',_tagResult:null,_tagParams:null,_setupParams:null,_resetParams:null,_dash:null,_stock:null};
 
@@ -838,7 +840,7 @@ function filterCatalog(){
 
 async function renderDash(){
   const app=document.getElementById('app');
-  app.innerHTML=`<p class="muted">${t('loading')}</p>`;
+  app.innerHTML=`<div style="text-align:center;padding:40px 0"><div class="ld-dots"><span></span><span></span><span></span></div></div>`;
   const r=await API.call('getUserData',{});
   if(!r.success){if(r.code==='SESSION_EXPIRED'){SM.clear();navigate('login');return;} app.innerHTML=`<div class="alert alert-error">${esc(em(r))}</div>`;return;}
   SM.save({fullName:r.fullName,role:r.role,userId:r.userId});
@@ -883,7 +885,8 @@ function renderTagsTab(){
   return tags.map(tag=>{
     const tid=esc(tag['Tag ID']||''),isPro=tag['Model']==='Pro';
     const emergEnabled=String(tag['Emergency Notes?']||'').toLowerCase()==='yes';
-    const urlRow=tag._url?`<div class="copy-row" style="margin-bottom:12px"><input id="url-${tid}" readonly value="${esc(tag._url)}"><button class="btn btn-ghost btn-sm" onclick="copyUrl('url-${tid}')">${t('copy')}</button></div>`:'';
+    const urlRow=tag._url?`<div class="copy-row" style="margin-bottom:12px"><input id="url-${tid}" readonly value="${esc(tag._url)}"><button class="btn btn-ghost btn-sm" onclick="copyUrl('url-${tid}')">${t('copy')}</button></div>`:'' ;
+    const smTipId=`sm-tip-${tid}`;
     return `<div class="card" style="margin-bottom:14px">
       <div class="tag-head">
         <div><strong>${esc(tag['Display Name']||tag['Tag ID'])}</strong> <span class="pill" style="margin-left:4px">${esc(tag['Tag ID'])}</span></div>
@@ -892,7 +895,13 @@ function renderTagsTab(){
       ${urlRow}
       ${tag['Status']==='Pending Activation'?`<div class="alert alert-info" style="margin-bottom:12px">${t('statusPending')}</div>`:''}
       <div class="switch-row">
-        <span><strong>${t('safeMode')}</strong></span>
+        <span style="display:flex;align-items:center;gap:0">
+          <strong>${t('safeMode')}</strong>
+          <span class="sm-info-wrap">
+            <span class="sm-info-icon" onmouseenter="showSmTip('${smTipId}')" onmouseleave="hideSmTip('${smTipId}')" onclick="toggleSmTip(event,'${smTipId}')">ⓘ</span>
+            <span class="sm-info-tip hidden" id="${smTipId}">${esc(t('safeModeInfo'))}</span>
+          </span>
+        </span>
         <label class="sw"><input type="checkbox" ${tag['Safe Mode']?'checked':''} onchange="toggleSafeModeUI(event,'${tid}')"><span class="sl"></span></label>
       </div>
       <form onsubmit="return false" style="margin-top:14px">
@@ -908,14 +917,13 @@ function renderTagsTab(){
         <div class="grid2">
           <div class="field"><label>${t('streetAddress')} <span class="opt-hint">${t('opt')}</span><input name="Street Address" value="${esc(tag['Street Address']||'')}"></label></div>
           <div class="field"><label>${t('secondaryEmail')} <span class="opt-hint">${t('opt')}</span><input name="Additional Email" type="email" value="${esc(tag['Additional Email']||'')}"></label></div>
-          <div class="field"><label>${t('meetingSpot')}<input name="Meeting Spot" value="${esc(tag['Meeting Spot']||'')}"></label></div>
-          <div class="field"><label>${t('vetInfo')}<input name="Vet Info" value="${esc(tag['Vet Info']||'')}"></label></div>
-          <div class="field"><label>${t('microchipNumber')}<input name="Microchip Number" value="${esc(tag['Microchip Number']||'')}"></label></div>
-          <div class="field"><label>${t('allergies')}<input name="Allergies" value="${esc(tag['Allergies']||'')}"></label></div>
-          <div class="field"><label>${t('age')}<input name="Age" value="${esc(String(tag['Age']||''))}"></label></div>
-          <div class="field"><label>${t('breed')}<input name="Breed" value="${esc(tag['Breed']||'')}"></label></div>
+          <div class="field"><label>${t('meetingSpot')} <span class="opt-hint">${t('opt')}</span><input name="Meeting Spot" value="${esc(tag['Meeting Spot']||'')}"></label></div>
+          <div class="field"><label>${t('vetInfo')} <span class="opt-hint">${t('opt')}</span><input name="Vet Info" value="${esc(tag['Vet Info']||'')}"></label></div>
+          <div class="field"><label>${t('microchipNumber')} <span class="opt-hint">${t('opt')}</span><input name="Microchip Number" value="${esc(tag['Microchip Number']||'')}"></label></div>
+          <div class="field"><label>${t('allergies')} <span class="opt-hint">${t('opt')}</span><input name="Allergies" value="${esc(tag['Allergies']||'')}"></label></div>
+          <div class="field"><label>${t('age')} <span class="opt-hint">${t('opt')}</span><input name="Age" value="${esc(String(tag['Age']||''))}"></label></div>
+          <div class="field"><label>${t('breed')} <span class="opt-hint">${t('opt')}</span><input name="Breed" value="${esc(tag['Breed']||'')}"></label></div>
         </div>
-        <div class="field"><label>${t('notes')}<textarea name="Notes">${esc(tag['Notes']||'')}</textarea></label></div>
         <p class="muted" style="margin-top:6px;font-size:12px">${t('proEditNote')}</p>`:''}
         <div id="tag-alert-${tid}"></div>
         <button class="btn btn-primary" style="margin-top:12px" onclick="withBtn(this,()=>submitEditTag('${tid}',this.closest('form')))">${t('saveChanges')}</button>
@@ -1043,7 +1051,7 @@ async function saveAdminTag(row,cols){
   const toId=c=>c.replace(/[^a-z0-9]/gi,'_');
   const fields={};
   cols.forEach(c=>{const el=document.getElementById('atf_'+toId(c));if(el)fields[c]=el.value;});
-  const r=await API.call('adminUpdateRecord',{sheetName:'Tags',row,fields});
+  const r=await API.call('adminUpdateRecord',{sheetName:'tags',row,fields});
   if(r.success)showAlert('adm-tag-alert',t('saved'),'ok');else showAlert('adm-tag-alert',em(r));
 }
 
@@ -1103,7 +1111,7 @@ async function saveDevUser(row,cols){
   const toId=c=>c.replace(/[^a-z0-9]/gi,'_');
   const fields={};
   cols.forEach(c=>{const el=document.getElementById('duf_'+toId(c));if(el)fields[c]=el.value;});
-  const r=await API.call('adminUpdateRecord',{sheetName:'Users',row,fields});
+  const r=await API.call('adminUpdateRecord',{sheetName:'users',row,fields});
   if(r.success)showAlert('dev-user-alert',t('saved'),'ok');else showAlert('dev-user-alert',em(r));
 }
 
@@ -1121,9 +1129,9 @@ function renderSettingsTab(){
        <button class="btn btn-danger" style="margin-top:10px" onclick="withBtn(this,submitDeleteAccount)">${t('confirmDelete')}</button>`;
   return `<div class="card">
     <h3 style="margin-bottom:14px">${t('accountInfo')}</h3>
-    <div class="info-row"><span class="lbl">${t('userId')}</span><code>${esc(d.userId||'')}</code></div>
-    <div class="info-row"><span class="lbl">${t('email')}</span>${esc(d.email||'')}</div>
-    <div class="info-row"><span class="lbl">${t('role')}</span>${esc({'admin':t('roleAdmin'),'developer':t('roleDev')}[SM.role]||t('roleCustomer'))}</div>
+    <div class="info-row"><span class="lbl">${t('userId')}</span><span class="val"><code>${esc(d.userId||'')}</code></span></div>
+    <div class="info-row"><span class="lbl">${t('email')}</span><span class="val">${esc(d.email||'')}</span></div>
+    <div class="info-row"><span class="lbl">${t('role')}</span><span class="val">${esc({'admin':t('roleAdmin'),'developer':t('roleDev')}[SM.role]||t('roleCustomer'))}</span></div>
     <div style="margin-top:16px"><a href="${POLICY_URL}" target="_blank" rel="noopener">${t('privacyPolicy')}</a></div>
   </div>
   <div class="card">
@@ -1155,23 +1163,32 @@ function vTagScan(){
   const tag=res.tag;
   if(!tag.registered) return `<div class="card scan-card"><h2 style="margin-bottom:12px">${t('scanTitle')}</h2><p class="muted">${t('notReg')}</p></div>`;
   const typeLabel=tag.type==='Key'?t('keyType'):t('petType');
+
+  if(tag.safeMode){
+    return `<div class="card scan-card">
+      <p class="muted" style="font-size:12px;margin-bottom:6px">${esc(typeLabel)} · ${esc(tag.model||'')} · ${esc(tag.tagId)}</p>
+      <h2 style="margin-bottom:10px">${esc(tag.displayName||tag.tagId)}</h2>
+      <div class="scan-safe">✓ ${t('safeHomeMsg')}</div>
+    </div>`;
+  }
+
   return `<div class="card scan-card">
-    <p class="muted" style="font-size:12px;margin-bottom:6px">${esc(typeLabel)} · ${esc(tag.model)} · ${esc(tag.tagId)}</p>
+    <p class="muted" style="font-size:12px;margin-bottom:6px">${esc(typeLabel)} · ${esc(tag.model||'')} · ${esc(tag.tagId)}</p>
     <h2 style="margin-bottom:6px">${esc(tag.displayName||tag.tagId)}</h2>
-    ${tag.safeMode?`<div class="scan-safe">✓ ${t('safeHomeMsg')}</div>`:''}
     ${tag.emergencyNotes?`<div class="scan-emg">⚕&nbsp;<strong>${t('emergency')}:</strong>&nbsp;${esc(tag.emergencyNotes)}</div>`:''}
     <div style="margin-top:14px">
-      ${tag.ownerFirstName?`<div class="info-row"><span class="lbl">${t('scanOwnerName')}</span>${esc(tag.ownerFirstName)}</div>`:''}
-      ${tag.contactPhone?`<div class="info-row"><span class="lbl">${t('scanPhone')}</span><a href="tel:${esc(tag.contactPhone)}">${esc(tag.contactPhone)}</a></div>`:''}
-      ${tag.model==='Pro'&&tag.additionalEmail?`<div class="info-row"><span class="lbl">${t('scanSecEmail')}</span><a href="mailto:${esc(tag.additionalEmail)}">${esc(tag.additionalEmail)}</a></div>`:''}
-      ${tag.model==='Pro'&&tag.streetAddress?`<div class="info-row"><span class="lbl">${t('streetAddress')}</span>${esc(tag.streetAddress)}</div>`:''}
-      ${tag.model==='Pro'&&tag.meetingSpot?`<div class="info-row"><span class="lbl">${t('meetingSpot')}</span>${esc(tag.meetingSpot)}</div>`:''}
-      ${tag.model==='Pro'&&tag.vetInfo?`<div class="info-row"><span class="lbl">${t('vetInfo')}</span>${esc(tag.vetInfo)}</div>`:''}
-      ${tag.model==='Pro'&&tag.microchipNumber?`<div class="info-row"><span class="lbl">${t('microchipNumber')}</span>${esc(tag.microchipNumber)}</div>`:''}
-      ${tag.model==='Pro'&&tag.allergies?`<div class="info-row"><span class="lbl">${t('allergies')}</span>${esc(tag.allergies)}</div>`:''}
-      ${tag.model==='Pro'&&tag.age?`<div class="info-row"><span class="lbl">${t('age')}</span>${esc(tag.age)}</div>`:''}
-      ${tag.model==='Pro'&&tag.breed?`<div class="info-row"><span class="lbl">${t('breed')}</span>${esc(tag.breed)}</div>`:''}
-      ${tag.model==='Pro'&&tag.notes?`<div class="info-row"><span class="lbl">${t('notes')}</span>${esc(tag.notes)}</div>`:''}
+      ${tag.ownerFirstName?`<div class="info-row"><span class="lbl">${t('scanOwnerName')}</span><span class="val">${esc(tag.ownerFirstName)}</span></div>`:''}
+      ${tag.contactPhone?`<div class="info-row"><span class="lbl">${t('scanPhone')}</span><span class="val"><a href="tel:${esc(tag.contactPhone)}">${esc(tag.contactPhone)}</a></span></div>`:''}
+      ${tag.contactEmail?`<div class="info-row"><span class="lbl">${t('scanContactEmail')}</span><span class="val"><a href="mailto:${esc(tag.contactEmail)}">${esc(tag.contactEmail)}</a></span></div>`:''}
+      ${tag.model==='Pro'&&tag.additionalEmail?`<div class="info-row"><span class="lbl">${t('scanSecEmail')}</span><span class="val"><a href="mailto:${esc(tag.additionalEmail)}">${esc(tag.additionalEmail)}</a></span></div>`:''}
+      ${tag.model==='Pro'&&tag.streetAddress?`<div class="info-row"><span class="lbl">${t('streetAddress')}</span><span class="val">${esc(tag.streetAddress)}</span></div>`:''}
+      ${tag.model==='Pro'&&tag.meetingSpot?`<div class="info-row"><span class="lbl">${t('meetingSpot')}</span><span class="val">${esc(tag.meetingSpot)}</span></div>`:''}
+      ${tag.model==='Pro'&&tag.vetInfo?`<div class="info-row"><span class="lbl">${t('vetInfo')}</span><span class="val">${esc(tag.vetInfo)}</span></div>`:''}
+      ${tag.model==='Pro'&&tag.microchipNumber?`<div class="info-row"><span class="lbl">${t('microchipNumber')}</span><span class="val">${esc(tag.microchipNumber)}</span></div>`:''}
+      ${tag.model==='Pro'&&tag.allergies?`<div class="info-row"><span class="lbl">${t('allergies')}</span><span class="val">${esc(tag.allergies)}</span></div>`:''}
+      ${tag.model==='Pro'&&tag.age?`<div class="info-row"><span class="lbl">${t('age')}</span><span class="val">${esc(tag.age)}</span></div>`:''}
+      ${tag.model==='Pro'&&tag.breed?`<div class="info-row"><span class="lbl">${t('breed')}</span><span class="val">${esc(tag.breed)}</span></div>`:''}
+      ${tag.model==='Pro'&&tag.notes?`<div class="info-row" style="flex-direction:column;gap:4px"><span class="lbl">${t('notes')}</span><span class="val" style="line-height:1.6">${esc(tag.notes)}</span></div>`:''}
     </div>
   </div>`;
 }
