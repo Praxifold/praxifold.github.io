@@ -1,1 +1,144 @@
-LAUKIA PERRASYMO
+================================================================================
+NAUDOJIMO SĄLYGOS IR PRIVATUMO POLITIKA (LT)
+================================================================================
+
+Galioja nuo: 2026 m.  
+Paslaugos teikėjas: Mokomoji mokinių bendrovė (MMB) „Praxifold“ (vykdanti Junior Achievement Lietuva programą).  
+Kontaktinis el. paštas: praxifold@gmail.com  
+
+--------------------------------------------------------------------------------
+I. BENDROSIOS NUOSTATOS IR TERITORINIAI APRIBOJIMAI
+--------------------------------------------------------------------------------
+
+1.1. Šios Naudojimo sąlygos ir Privatumo politika (toliau – Sąlygos) nustato naudojimosi „Praxifold“ svetaine, paskyromis bei fiziniais NFC ir QR kodų mediniais pakabukais ir raktų pakabukais (toliau – Produktai bei Paslaugos) tvarką.  
+1.2. „Praxifold“ veikia kaip mokomoji mokinių bendrovė (MMB), prižiūrima VšĮ „Lietuvos Junior Achievement“. Tai yra mokomasis, beta stadijos prototipinis projektas.  
+1.3. Teritorinis apribojimas: „Praxifold“ svetainė, fiziniai pakabukai ir visos susijusios paslaugos yra skirtos naudoti tik Lietuvos Respublikos teritorijoje. Geografinė vieta tikrinama naudojant trečiųjų šalių API paslaugas. Bandymai naudotis paslaugomis už Lietuvos ribų gali būti blokuojami ar ribojami.  
+1.4. Naudotojas, susikurdamas paskyrą arba naudodamasis „Praxifold“ Paslaugomis, patvirtina, kad perskaitė, suprato ir sutinka laikytis šių Sąlygų.
+
+--------------------------------------------------------------------------------
+II. AMŽIAUS APRIBOJIMAI IR ATSAKOMYBĖ
+--------------------------------------------------------------------------------
+
+2.1. Jaunesni nei 14 metų asmenys: Negali savarankiškai kurti paskyros. Paskyrą jų vardu privalo valdyti tėvai arba globėjai, kurie prisiima pilną teisinę atsakomybę.  
+2.2. 14–15 metų asmenys: Registruodamiesi patvirtina, kad jų tėvai ar globėjai žino apie paskyros kūrimą ir davė leidimą naudotis Paslaugomis. Teisinė atsakomybė už nepilnamečio veiksmus tenka tėvams/globėjams.  
+2.3. 16 metų ir vyresni asmenys: Registruodamiesi patvirtina, kad turi pilną teisinį veiksnumą savarankiškai sudaryti šį susitarimą.
+
+--------------------------------------------------------------------------------
+III. PASKYROS SAUGUMAS IR PROGRAMAVIMO ĮRANKIŲ (DEVELOPER TOOLS) DRAUDIMAS
+--------------------------------------------------------------------------------
+
+3.1. Registracija ir prisijungimas vykdomi tiesiogiai per „Praxifold“ sistemą.  
+3.2. Slaptažodžių ir duomenų saugumas: Vartotojų slaptažodžiai saugomi naudojant druską (angl. salted hash). Autorizacijai naudojami seansų žetonai (angl. session tokens). Visi jautrūs duomenys, be standartinio HTTPS šifravimo ryšio metu, yra papildomai šifruojami duomenų lygmenyje.  
+3.3. Programavimo įrankių (Developer Tools) draudimas: Naudotojams griežtai draudžiama „Praxifold“ svetainėje atidaryti arba naudoti naršyklės programavimo įrankius (angl. Developer Tools, Inspect Element, F12 klavišą, konsolės derinimo įrankius ir pan.). Bet koks bandymas analizuoti, ardyti ar klastoti svetainės kodą ar užklausas laikomas saugumo pažeidimu. Pažeidus šią taisyklę, paskyra gali būti nedelsiant blokuojama arba apribojama.  
+3.4. Vartotojo atsakomybė už paskyros saugumą: Nors „Praxifold“ taiko saugius duomenų saugojimo ir šifravimo metodus, vartotojas išlieka pilnai atsakingas už savo paskyros saugumo užtikrinimą. Tai apima:
+  • Pakankamai sudėtingo ir unikalaus slaptažodžio pasirinkimą bei jo apsaugą nuo trečiųjų asmenų;
+  • Įrenginyje saugomų raktų ir duomenų saugumą (įskaitant seansų žetonus (angl. session tokens), verifikacijos žetonus ir kitus vietinėje atmintyje (angl. local storage/cookies) esančius duomenis).
+„Praxifold“ neatsako už nuostolius ar duomenų nutotėkį, kilusį dėl to, kad vartotojas atskleidė savo prisijungimo duomenis, naudojo silpną slaptažodį arba prarado kontrolę prieš savo įrenginį ar jame esančius seanso žetonus.
+
+--------------------------------------------------------------------------------
+IV. PREKIŲ PARDAVIMAS IR GRĄŽINIMAS
+--------------------------------------------------------------------------------
+
+4.1. „Praxifold“ fiziniai mediniai pakabukai parduodami tik gyvai „Junior Achievement“ organizuojamose mugėse ir renginiuose. Atsiskaitymai vykdomi grynaisiais pinigais arba tiesioginiu bankiniu pavedimu. Svetainėje atsiskaitomųjų kortelių duomenys nėra renkami ar saugomi.  
+4.2. Garantija: Remiantis Junior Achievement MMB taisyklėmis, produktams nėra taikoma komercinė garantija ar privalomasis prekių grąžinimas.  
+4.3. Broko ar pažeidimų atvejai: Jei gaminys yra pažeistas ar neveikia NFC/QR mikroschema, pirkėjas gali kreiptis el. paštu. „Praxifold“ komanda individualiai įvertina žalos kilmę ir priima sprendimą dėl pakeitimo ar kompensavimo. Kadangi medis yra natūrali medžiaga, išvaizdos ir tekstūros skirtumai laikomi natūralia savybe, o ne broku.
+
+--------------------------------------------------------------------------------
+V. PRIVATUMO POLITIKA IR DUOMENŲ VALDYMAS
+--------------------------------------------------------------------------------
+
+5.1. Renkami ir saugomi duomenys:  
+  • Vartotojo ir sistemos duomenys: El. pašto adresas, atsarginis el. paštas, telefono numeris, paskyros ID (sugeneruojamas kūrimo metu), paskutinio prisijungimo data/laikas, paskyros sukūrimo data, nuobaudų / įspėjimų skaičius (angl. strikes), užblokavimo data, paskyros būsena (blokuota / apribota), paskyros ištrynimo užklausos būsena, vardas ir pavardė, suteikta rolė sistemoje.  
+  • Augintinio / Raktų duomenys: Augintinio mikroschemos (čipo) numeris, augintinio vardas, savininko vardas/pavardė, papildomas el. pašto adresas, medicininės pastabos (alergijos, vaistai) bei bet kokie kiti papildomi laukai, kuriuos vartotojas savo noru įveda į sistemą.  
+5.2. Saugos režimas („Safe Mode“): Vartotojas gali bet kada įjungti Saugos režimą („Safe Mode“). Įjungus šį režimą (pvz., kai augintinis yra saugus namuose), viešas duomenų rodymas nuskenavus pakabuką yra išjungiamas.  
+5.3. Dirbtinio intelekto (DI) pokalbių duomenys: Svetainėje veikia vietinis Dirbtinio Inkeleto (DI) asistentas. Visi vartotojo įvesti klausimai ir DI pateikti atsakymai yra renkami bei saugomi anonimizuota forma sistemos tobulinimo ir modelio apmokymo tikslais.  
+5.4. Pakabuką nuskenavusio asmens privatumas: Pakabuką radusiam ir nuskenavusiam asmeniui nereikia registruotis ar prisijungti. Skenavimo metu augintinio savininkui išsiunčiamas pranešimas apie nuskenavimo faktą. Nuskenavusio asmens asmeniniai duomenys nėra renkami ar saugomi.  
+5.5. Duomenų saugojimo terminas ir ištrynimas: Duomenys saugomi iki projekto gyvavimo pabaigos arba kol vartotojas pareikalauja juos ištrinti. Pašalinti paskyrą galima pateikiant užklausą el. paštu (ištrinama iškart) arba per paskyros nustatymus sistemoje (užklausa įvykdoma ne vėliau kaip per 1 mėnesį pagal GDPR reikalavimus).  
+5.6. Duomenų tvarkytojai ir infrastruktūra: Svetainės kodas talpinamas naudojant GitHub („GitHub Pages“). Duomenų bazės, backend logika ir saugojimas vykdomi naudojant Google Apps Script ir Google Sheets. Naudojantis paslaugomis taip pat taikomos „Google“ ir „GitHub“ privatumo politikos bei taisyklės.
+
+--------------------------------------------------------------------------------
+VI. ATSAKOMYBĖS RIBOJIMAS
+--------------------------------------------------------------------------------
+
+6.1. „Praxifold“ pakabukai ir sistema yra tik pagalbinė priemonė augintinio ar daikto savininkui surasti. „Praxifold“ negarantuoja, kad pamestas augintinis ar daiktas bus tikrai nuskenuotas, surastas ar grąžintas.  
+6.2. Kadangi tai yra mokomasis demonstracinis projektas, Paslaugos teikiamos „taip, kaip yra“ (angl. as-is). Bendrovė neatsako už laikinus svetainės sutrikimus, ryšio klinkas ar trečiųjų šalių paslaugų (GitHub, Google, geo-API) veikimo pertrūkius.
+
+--------------------------------------------------------------------------------
+VII. KONTAKTAI
+--------------------------------------------------------------------------------
+
+Kilus klausimams dėl šių Sąlygų arba norint ištrinti savo duomenis, susisiekite:  
+El. paštas: praxifold@protonmail.com
+
+
+================================================================================
+TERMS OF USE AND PRIVACY POLICY (EN)
+================================================================================
+
+Effective Date: 2026  
+Provider: Student Company (MMB) "Praxifold" (operating under Junior Achievement Lithuania).  
+Contact Email: praxifold@gmail.com  
+
+--------------------------------------------------------------------------------
+I. GENERAL PROVISIONS AND TERRITORIAL RESTRICTIONS
+--------------------------------------------------------------------------------
+
+1.1. These Terms of Use and Privacy Policy (hereinafter – Terms) govern the use of the "Praxifold" website, accounts, and physical NFC and QR code wooden pet tags and keychains (hereinafter – Products and Services).  
+1.2. "Praxifold" operates as a student company (MMB) supervised by Junior Achievement Lithuania. This is an educational, beta-stage prototype project.  
+1.3. Territorial Restriction: The "Praxifold" website, physical tags, and associated services are intended for use strictly within the territory of the Republic of Lithuania. Geographical location is verified using third-party API services. Attempts to use services outside Lithuania may be blocked or restricted.  
+1.4. By creating an account or using "Praxifold" Services, the User confirms that they have read, understood, and agreed to be bound by these Terms.
+
+--------------------------------------------------------------------------------
+II. AGE RESTRICTIONS AND RESPONSIBILITY
+--------------------------------------------------------------------------------
+
+2.1. Persons under 14 years old: May not create an account independently. Accounts must be managed on their behalf by parents or guardians, who assume full legal responsibility.  
+2.2. Persons aged 14–15: By registering, confirm that their parents or guardians are aware of the account creation and have granted permission to use the Services. Legal responsibility for a minor's actions rests with the parents/guardians.  
+2.3. Persons aged 16 and older: By registering, confirm that they possess full legal capacity to independently enter into this agreement.
+
+--------------------------------------------------------------------------------
+III. ACCOUNT SECURITY AND PROHIBITION OF DEVELOPER TOOLS
+--------------------------------------------------------------------------------
+
+3.1. Registration and login are handled directly through the "Praxifold" platform.  
+3.2. Password and Data Security: User passwords are not stored in plaintext and are hashed with salt. Session tokens are used for authentication. All sensitive data is subject to payload-level encryption in addition to standard HTTPS transport security.  
+3.3. Developer Tools Prohibition: Users are strictly forbidden from opening or using browser developer tools (e.g., Developer Tools, Inspect Element, F12 key, console debugging tools) on the "Praxifold" website. Any attempt to inspect, reverse-engineer, or tamper with website code or requests is considered a security breach. Violation of this rule may result in immediate account suspension or termination.  
+3.4. User Responsibility for Account Security: Although "Praxifold" employs secure data storage and encryption methods, you remain fully responsible for maintaining the security of your account. This includes:
+  • Creating a sufficiently strong and unique password and keeping it confidential from third parties;
+  • Securing any keys or tokens stored locally on your device (including session tokens, verification tokens, and other authentication data kept in local storage or cookies).
+"Praxifold" shall not be held liable for any loss, unauthorized access, or data breaches resulting from a user disclosing their login credentials, using a weak password, or losing control over their device or the session tokens stored on it.
+
+--------------------------------------------------------------------------------
+IV. SALES AND RETURNS
+--------------------------------------------------------------------------------
+
+4.1. Physical wooden tags from "Praxifold" are sold exclusively in person at fairs and events organized by Junior Achievement. Payments are handled via cash or direct bank transfer. No payment card data is collected or stored on the website.  
+4.2. Warranty: In accordance with Junior Achievement student company regulations, products do not carry a commercial warranty, nor are mandatory returns offered.  
+4.3. Defects and Damage: If a product is defective or the NFC/QR chip fails to function, the buyer may contact us by email. The "Praxifold" team evaluates damages on a case-by-case basis to determine replacement or compensation. As wood is a natural material, variations in grain and appearance are considered natural characteristics rather than defects.
+
+--------------------------------------------------------------------------------
+V. PRIVACY POLICY AND DATA MANAGEMENT
+--------------------------------------------------------------------------------
+
+5.1. Collected and Stored Data:  
+  • User and System Data: Primary email, spare email, phone number, system account ID, last login timestamp, account creation date, strikes count, lockout date, account state (blocked/restricted), account deletion request status, full name, assigned system role.  
+  • Pet and Item Data: Pet microchip number, pet name, owner name/surname, secondary email, medical notes (allergies, medications), and any additional custom fields typed by the user.  
+5.2. Safe Mode: Users can enable "Safe Mode" at any time. When enabled (e.g., when the pet is safe at home), public display of data upon scanning the tag is disabled.  
+5.3. On-Site AI Assistant Data: The site features a local AI assistant. User prompts and AI responses are collected and stored in an anonymized format for model training and service improvement purposes.  
+5.4. Finder Privacy: Persons who find and scan a tag do not need to register or log in. Scanning triggers a notification to the owner that the tag was scanned. Personal details of the scanner are neither requested nor stored.  
+5.5. Data Retention and Deletion: Data is retained for the operational duration of the project or until account deletion is requested. Accounts can be deleted immediately via email request or within 1 month via in-app account settings (in compliance with GDPR).  
+5.6. Processors and Infrastructure: Frontend hosting is provided by GitHub ("GitHub Pages"). Database storage, backend logic, and execution are handled via Google Apps Script and Google Sheets. Terms of Service and Privacy Policies of Google and GitHub apply accordingly.
+
+--------------------------------------------------------------------------------
+VI. LIMITATION OF LIABILITY
+--------------------------------------------------------------------------------
+
+6.1. "Praxifold" tags and digital services serve strictly as an aid in locating lost pets or items. "Praxifold" does not guarantee that a lost pet or item will be scanned, recovered, or returned.  
+6.2. As an educational prototype project, Services are provided on an "as-is" basis. The company bears no liability for temporary site outages, network failures, or disruptions in third-party services (GitHub, Google, geo-location APIs).
+
+--------------------------------------------------------------------------------
+VII. CONTACT
+--------------------------------------------------------------------------------
+
+For inquiries regarding these Terms or to submit a data deletion request, contact:  
+Email: praxifold@protonmail.com
