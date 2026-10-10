@@ -885,6 +885,16 @@ function renderNav(){
 
 async function doLogout(){ await API.call('logout',{}); SM.clear(); navigate('landing'); }
 
+function showHowToGetModal(){
+  modal(
+    `<h3 style="margin-bottom:12px">${t('howToGet')}</h3>
+     <p style="line-height:1.6;color:var(--dim)">${t('howToGetBody')}</p>
+     <div class="modal-btns">
+       <button class="btn btn-ghost btn-sm" onclick="closeModal()">${t('close')}</button>
+     </div>`
+  );
+}
+
 function vLanding(){
   return `<div class="hero">
     <h1>${t('heroTitle')}</h1>
@@ -894,7 +904,7 @@ function vLanding(){
       <button class="btn btn-ghost" onclick="navigate('login')">${t('login')}</button>
       <button class="btn btn-ghost" onclick="navigate('catalog')">${t('shopNow')}</button>
     </div>
-    <span class="sublink" onclick="modal('<h3 style=margin-bottom:12px>${t('howToGet')}</h3><p style=line-height:1.6;color:var(--dim)>${t('howToGetBody')}</p><div class=modal-btns><button class=\"btn btn-ghost btn-sm\" onclick=closeModal()>${t('close')}</button></div>')">${t('howToGet')}</span>
+    <span class="sublink" onclick="showHowToGetModal()">${t('howToGet')}</span>
   </div>`;
 }
 
