@@ -45,7 +45,7 @@ label.inline input[type=checkbox]{width:auto;margin:2px 0 0;flex-shrink:0}
 header{display:flex;justify-content:space-between;align-items:center;padding:13px 22px;border-bottom:1px solid var(--border);position:sticky;top:env(safe-area-inset-top,0px);background:rgba(0,0,0,.92);backdrop-filter:blur(10px);z-index:40}
 .brand{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:800;cursor:pointer;letter-spacing:-.02em}
 .brand .dot{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--accent),#60a5fa);flex-shrink:0;box-shadow:0 0 14px rgba(64,128,255,.4)}
-.topnav{display:flex;gap:8px;align-items:center}
+.topnav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 .lang-toggle{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;margin-right:4px}
 .lang-toggle button{background:none;border:none;color:var(--dim);padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);transition:background .15s,color .15s}
 .lang-toggle button.active{background:var(--panel2);color:var(--accent)}
@@ -99,7 +99,7 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:80;padding:16px;backdrop-filter:blur(4px)}
 .modal{background:var(--panel2);border:1px solid var(--border);border-radius:var(--r);padding:24px;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;animation:fi .18s ease}
 .modal h3{margin-bottom:14px}
-.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
 #cookie{position:fixed;bottom:0;left:0;right:0;background:var(--panel2);border-top:1px solid var(--border);padding:14px 20px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;z-index:60}
 #cookie p{font-size:14px;color:var(--dim);margin:0;max-width:580px}
 #cookie .ca{display:flex;gap:8px}
@@ -115,15 +115,21 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
 .info-row:last-child{border-bottom:none}
 .info-row .lbl{color:var(--dim);min-width:140px;flex-shrink:0}
 .info-row .val{flex:1;min-width:0;word-break:break-word;overflow-wrap:break-word}
-#geo-loading{position:fixed;inset:0;background:#000;z-index:200;display:flex;align-items:center;justify-content:center}
+#geo-loading{position:fixed;inset:0;background:#000;z-index:200;display:flex;align-items:center;justify-content:center;transition:opacity .35s ease}
 #geo-block{position:fixed;inset:0;background:#000;z-index:201;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
 #dev-warn{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:#7f1d1d;color:#fca5a5;border:1px solid #ef4444;padding:11px 20px;border-radius:8px;z-index:95;font-size:14px;animation:fi .2s ease;max-width:340px;text-align:center}
 .opt-hint{font-size:11px;color:var(--dim);font-weight:400;margin-left:4px;font-style:italic}
-.ld-dots{display:flex;gap:9px;justify-content:center;margin:18px 0 14px}
-.ld-dots span{display:inline-block;width:9px;height:9px;border-radius:50%;background:#4080ff;animation:ldbounce 1.4s ease-in-out infinite}
-.ld-dots span:nth-child(2){animation-delay:.22s}
-.ld-dots span:nth-child(3){animation-delay:.44s}
-@keyframes ldbounce{0%,80%,100%{transform:scale(.35);opacity:.25}40%{transform:scale(1);opacity:1}}
+.spin-ring{position:relative;width:44px;height:44px;margin:0 auto}
+.spin-ring span{position:absolute;top:50%;left:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:#4080ff;animation:spinRingFade 1.2s linear infinite;will-change:opacity}
+.spin-ring span:nth-child(1){transform:rotate(0deg) translateY(-17px);animation-delay:0s}
+.spin-ring span:nth-child(2){transform:rotate(45deg) translateY(-17px);animation-delay:-1.05s}
+.spin-ring span:nth-child(3){transform:rotate(90deg) translateY(-17px);animation-delay:-0.9s}
+.spin-ring span:nth-child(4){transform:rotate(135deg) translateY(-17px);animation-delay:-0.75s}
+.spin-ring span:nth-child(5){transform:rotate(180deg) translateY(-17px);animation-delay:-0.6s}
+.spin-ring span:nth-child(6){transform:rotate(225deg) translateY(-17px);animation-delay:-0.45s}
+.spin-ring span:nth-child(7){transform:rotate(270deg) translateY(-17px);animation-delay:-0.3s}
+.spin-ring span:nth-child(8){transform:rotate(315deg) translateY(-17px);animation-delay:-0.15s}
+@keyframes spinRingFade{0%,80%,100%{opacity:.15}40%{opacity:1}}
 #api-spin{position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;pointer-events:none}
 #ai-fab{position:fixed;bottom:28px;right:22px;z-index:50;display:flex;align-items:flex-end;gap:9px}
 .ai-info-btn{width:26px;height:26px;border-radius:50%;border:1px solid var(--border);background:var(--panel);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:12px;font-style:italic;font-weight:700;flex-shrink:0;margin-bottom:19px;transition:border-color .15s,color .15s;position:relative}
@@ -139,14 +145,69 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
 .sm-info-icon{cursor:pointer;color:var(--dim);font-size:13px;font-style:normal;margin-left:5px;user-select:none;transition:color .15s;line-height:1}
 .sm-info-icon:hover{color:var(--accent)}
 .sm-info-tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);width:230px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--text);line-height:1.5;z-index:60;box-shadow:0 4px 16px rgba(0,0,0,.5);white-space:normal;pointer-events:none;font-weight:400}
+.btn-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.scan-lang-toggle{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;margin-bottom:14px;width:fit-content}
+.scan-lang-toggle button{background:none;border:none;color:var(--dim);padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);transition:background .15s,color .15s}
+.scan-lang-toggle button.active{background:var(--panel2);color:var(--accent)}
+.dev-modal-bilingual{font-size:14px;line-height:1.7;color:var(--dim)}
+.dev-modal-bilingual strong{color:var(--text);display:block;margin-bottom:4px}
+.dev-modal-sep{border:none;border-top:1px solid var(--border);margin:14px 0}
+@media(max-width:768px){
+  main{padding:22px 14px 100px}
+  .hero h1{font-size:30px}
+  .hero{padding:44px 8px 10px}
+  header{padding:10px 16px}
+  .brand{font-size:17px}
+  .topnav{gap:5px}
+  .btn-sm{padding:5px 10px;font-size:12px}
+  .catalog-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+}
+@media(max-width:480px){
+  main{padding:16px 10px 90px}
+  .hero h1{font-size:24px}
+  .hero p{font-size:14px}
+  .hero{padding:32px 6px 10px}
+  .hero-btns{gap:8px}
+  header{padding:8px 12px}
+  .brand{font-size:15px}
+  .brand .dot{width:22px;height:22px;border-radius:6px}
+  .topnav{gap:3px}
+  .lang-toggle button{padding:4px 7px;font-size:11px}
+  .btn-sm{padding:5px 9px;font-size:12px}
+  .card{padding:15px}
+  .card+.card{margin-top:10px}
+  h2{font-size:20px}
+  h3{font-size:17px}
+  .modal{padding:16px;margin:8px}
+  .modal-btns{flex-direction:column-reverse;gap:6px}
+  .catalog-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  .tabs{gap:0}
+  .tab{padding:8px 10px;font-size:13px}
+  footer{padding:16px 10px 50px}
+  #ai-fab{bottom:16px;right:14px}
+  .ai-circle-btn{width:52px;height:52px}
+  .ai-label{font-size:14px}
+  .info-row{flex-direction:column;gap:3px}
+  .info-row .lbl{min-width:unset}
+  #toasts{top:10px;right:10px;left:10px}
+  .toast{max-width:100%}
+  .scan-card{margin:16px auto}
+  #cookie{padding:12px 14px;gap:10px}
+  #cookie p{font-size:13px}
+  .btn-row{flex-direction:column}
+  .btn-row .btn{width:100%}
+}
+@media(min-width:1200px){
+  main{padding:40px 28px 120px}
+}
 </style>
 </head>
 <body>
 <div id="geo-loading">
   <div style="text-align:center">
     <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#4080ff,#60a5fa);margin:0 auto 16px;box-shadow:0 0 22px rgba(64,128,255,.5)"></div>
-    <div style="color:#c8d8f0;font-size:20px;font-weight:800;letter-spacing:-.02em;font-family:'Segoe UI',system-ui,sans-serif;margin-bottom:2px">Praxifold</div>
-    <div class="ld-dots"><span></span><span></span><span></span></div>
+    <div style="color:#c8d8f0;font-size:20px;font-weight:800;letter-spacing:-.02em;font-family:'Segoe UI',system-ui,sans-serif;margin-bottom:12px">Praxifold</div>
+    <div class="spin-ring" style="margin-bottom:14px"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
     <div id="ld-msg" style="color:#4a6a9a;font-size:13px;font-family:'Segoe UI',system-ui,sans-serif;min-height:20px;transition:opacity .28s"></div>
   </div>
 </div>
@@ -161,7 +222,7 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
   </div>
 </div>
 <div id="dev-warn" class="hidden">Kūrėjų įrankiai yra užblokuoti. / Developer tools are blocked.</div>
-<div id="api-spin" class="hidden"><div class="ld-dots"><span></span><span></span><span></span></div></div>
+<div id="api-spin" class="hidden"><div class="spin-ring"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
 <header>
   <div class="brand" onclick="navigate('landing')"><div class="dot"></div>Praxifold</div>
   <div class="topnav" id="nav"></div>
@@ -192,10 +253,11 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
 </div>
 
 <script>
-const API_URL    = 'https://script.google.com/macros/s/AKfycbya9H41uNkL-N4KJUAbN5yUWYet5TbcBW5GOdJHQr1McrBq_p6u7vWWssZxahi6jYW7/exec';
+const API_URL    = 'https://script.google.com/macros/s/AKfycby0Yu8Xz0NEm-qSuLJ2UrqM2GK9VxIFqaUMOXNI_B2iRJU_HcG5XLDi9nB00nb5bvnb/exec';
 const POLICY_URL = 'https://praxifold.github.io/policy.txt';
 const REPORT_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header';
 const ORIGIN     = 'https://praxifold.github.io';
+const SESSION_TTL = 20*60*1000;
 
 const TR = {
 lt:{
@@ -293,6 +355,14 @@ lt:{
   lookupTagById:'Rasti pakabuką pagal ID',
   searchBtn:'Ieškoti',create:'Sukurti',
   aiTooltip:'Būkite pirmieji, kurie išbando mūsų AI ir padeda jį tobulinti. Pastaba: vis dar beta versija, gali klysti.',
+  cancelChanges:'Atšaukti',
+  editCooldownLocal:'Palaukite %m min. prieš redaguojant.',
+  scanLang:'Kalba',
+  devWarn1Title:'Kūrėjų įrankiai',
+  devWarn2Title:'Pakartotinis pažeidimas',
+  devWarn3Notice:'Pažeidimas užregistruotas jūsų paskyroje.',
+  devBanned:'Jūsų paskyra užblokuota. Susisiekite su palaikymo tarnyba. / Your account has been banned. Please contact support.',
+  devRepeat:'Pakartotiniai pažeidimai gali lemti veiksmus prieš jūsų paskyrą.',
 },
 en:{
   login:'Log in',register:'Register',logout:'Log out',
@@ -389,6 +459,14 @@ en:{
   lookupTagById:'Find tag by ID',
   searchBtn:'Search',create:'Create',
   aiTooltip:'Be the first to try our AI and help improve it for everyone. Note: still in Beta — it can make mistakes.',
+  cancelChanges:'Cancel',
+  editCooldownLocal:'Wait %m min. before editing again.',
+  scanLang:'Language',
+  devWarn1Title:'Developer Tools',
+  devWarn2Title:'Repeated Violation',
+  devWarn3Notice:'A violation has been recorded on your account.',
+  devBanned:'Jūsų paskyra užblokuota. Susisiekite su palaikymo tarnyba. / Your account has been banned. Please contact support.',
+  devRepeat:'Repeated violations may result in action against your account.',
 }};
 
 const ERRS = {
@@ -460,11 +538,19 @@ async function decPay(kh,enc){
 const LS={g:k=>{try{return localStorage.getItem(k);}catch(_){return null;}},s:(k,v)=>{try{localStorage.setItem(k,v);}catch(_){}}};
 
 const SM={
-  at:null,rt:null,ek:null,email:null,fullName:null,role:null,userId:null,_t:null,
+  at:null,rt:null,ek:null,email:null,fullName:null,role:null,userId:null,_t:null,_expired:false,
   load(){
     this.at=LS.g('at');this.rt=LS.g('rt');this.ek=LS.g('ek');
     this.email=LS.g('em');this.fullName=LS.g('fn');this.role=LS.g('ro')||'';this.userId=LS.g('uid');
-    if(this.at&&this.rt) this._sched();
+    if(this.at&&this.rt){
+      const exp=Number(LS.g('pxf_sexp')||0);
+      if(exp&&Date.now()>exp){
+        this._expired=true;
+        this.clear();
+        return;
+      }
+      this._sched();
+    }
   },
   save(d,email){
     if(email){this.email=email;LS.s('em',email);}
@@ -474,6 +560,8 @@ const SM={
     if(d.fullName!==undefined){this.fullName=d.fullName;LS.s('fn',d.fullName||'');}
     if(d.role!==undefined){this.role=d.role;LS.s('ro',d.role||'');}
     if(d.userId){this.userId=d.userId;LS.s('uid',d.userId);}
+    LS.s('pxf_sexp',String(Date.now()+SESSION_TTL));
+    this._expired=false;
     this._sched();
   },
   _sched(){ clearTimeout(this._t); this._t=setTimeout(()=>this._ref(), 18*60*1000); },
@@ -492,9 +580,18 @@ const SM={
   clear(){
     clearTimeout(this._t);
     this.at=this.rt=this.ek=this.email=this.fullName=this.role=this.userId=null;
-    ['at','rt','ek','em','fn','ro','uid'].forEach(k=>localStorage.removeItem(k));
+    ['at','rt','ek','em','fn','ro','uid','pxf_sexp'].forEach(k=>localStorage.removeItem(k));
   },
-  get ok(){ return !!(this.at&&this.rt); },
+  get ok(){
+    if(!this.at||!this.rt) return false;
+    const exp=Number(LS.g('pxf_sexp')||0);
+    if(exp&&Date.now()>exp){
+      this._expired=true;
+      this.clear();
+      return false;
+    }
+    return true;
+  },
   get isAdmin(){ return this.role==='admin'||this.role==='developer'; },
   get isDev()  { return this.role==='developer'; }
 };
@@ -510,6 +607,14 @@ const prog={
 const API={
   async call(action,payload,raw){
     payload=Object.assign({},payload||{});
+    if(SM.at&&!raw){
+      const exp=Number(LS.g('pxf_sexp')||0);
+      if(exp&&Date.now()>exp){
+        SM._expired=true; SM.clear(); navigate('login');
+        toast(t('sessionExpired'),'error');
+        return {success:false,code:'SESSION_EXPIRED',message:t('sessionExpired')};
+      }
+    }
     const body={action,_origin:ORIGIN};
     prog.start();
     if(SM.ek&&SM.at&&!raw){
@@ -569,8 +674,8 @@ function toast(msg,type='info'){
   document.getElementById('toasts').appendChild(el);
   setTimeout(()=>el.remove(),3800);
 }
-function modal(html){
-  document.getElementById('modal-root').innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">${html}<div class="modal-btns"><button class="btn btn-ghost btn-sm" onclick="closeModal()">${t('close')}</button></div></div></div>`;
+function modal(html,noClose){
+  document.getElementById('modal-root').innerHTML=`<div class="modal-bg" onclick="if(event.target===this&&!${!!noClose})closeModal()"><div class="modal">${html}${noClose?'':''}</div></div>`;
 }
 function closeModal(){ document.getElementById('modal-root').innerHTML=''; }
 function showAlert(id,msg,type='error'){ const e=document.getElementById(id); if(e) e.innerHTML=`<div class="alert alert-${type==='ok'?'ok':type==='info'?'info':'error'}">${esc(msg)}</div>`; }
@@ -587,22 +692,119 @@ function initCookies(){
   if(!localStorage.getItem('pxf_cookie')) document.getElementById('cookie').classList.remove('hidden');
 }
 
+function getSmCooldown(tagId){ return Number(LS.g('pxf_sm_'+tagId)||0)>Date.now(); }
+function setSmCooldown(tagId){ LS.s('pxf_sm_'+tagId,String(Date.now()+15000)); }
+function getEditCooldown(tagId){ const v=Number(LS.g('pxf_cool_'+tagId)||0); return v>Date.now()?v:0; }
+function setEditCooldown(tagId){ LS.s('pxf_cool_'+tagId,String(Date.now()+3600000)); }
+
+const DevGuard={
+  _clickTimes:[],
+  getState(){ try{return JSON.parse(LS.g('pxf_devg')||'{}');}catch(_){return {};} },
+  setState(s){ LS.s('pxf_devg',JSON.stringify(s)); },
+  getMonthAttempts(s){
+    const cutoff=Date.now()-30*24*60*60*1000;
+    return (s.attempts||[]).filter(t=>t>cutoff);
+  },
+  getBotEvents(){
+    const cutoff=Date.now()-30*24*60*60*1000;
+    try{return (JSON.parse(LS.g('pxf_bev')||'[]')).filter(t=>t>cutoff);}catch(_){return[];}
+  },
+  recordBotEvent(){
+    const evs=this.getBotEvents();
+    evs.push(Date.now());
+    LS.s('pxf_bev',JSON.stringify(evs));
+    if(evs.length>=3&&SM.ok){
+      this.addServerStrike('bot_detection');
+      LS.s('pxf_bev',JSON.stringify([]));
+    }
+  },
+  trackClick(){
+    const now=Date.now();
+    this._clickTimes.push(now);
+    this._clickTimes=this._clickTimes.filter(t=>now-t<500);
+    if(this._clickTimes.length>=8){ this.recordBotEvent(); this._clickTimes=[]; }
+  },
+  async addServerStrike(reason){
+    try{
+      const r=await API.call('addDevStrike',{reason});
+      if(r&&r.banned){
+        closeModal();
+        modal(`<h3 style="color:var(--danger);margin-bottom:12px">⛔ ${esc(t('devWarn1Title'))}</h3>
+          <p style="font-size:15px;line-height:1.7">${esc(t('devBanned'))}</p>
+          <div class="modal-btns"><button class="btn btn-ghost btn-sm" onclick="closeModal()">${esc(t('close'))}</button></div>`,true);
+        SM.clear(); return;
+      }
+    }catch(_){}
+  },
+  handle(){
+    const s=this.getState();
+    const atts=this.getMonthAttempts(s);
+    const warned1=s.warned1||false;
+    atts.push(Date.now());
+    s.attempts=atts;
+    const count=atts.length;
+    if(count===1){
+      if(!warned1){
+        this.setState(s);
+        modal(`<h3 style="margin-bottom:12px">⚠️ ${esc(t('devWarn1Title'))}</h3>
+          <div class="dev-modal-bilingual">
+            <strong>Lietuviškai</strong>
+            Kūrėjų įrankių naudojimas yra draudžiamas ir prieštarauja mūsų politikai.
+            <hr class="dev-modal-sep">
+            <strong>English</strong>
+            Developer tools are not permitted and are against our policy.
+          </div>
+          <div class="modal-btns">
+            <button class="btn btn-primary" onclick="DevGuard.ack1()">Suprantu / I understand</button>
+          </div>`,true);
+      } else {
+        this.setState(s);
+        toast(t('devRepeat'),'error');
+      }
+    } else if(count===2){
+      this.setState(s);
+      modal(`<h3 style="margin-bottom:12px">⚠️ ${esc(t('devWarn2Title'))}</h3>
+        <div class="dev-modal-bilingual">
+          <strong>Lietuviškai</strong>
+          Dar vienas pažeidimas gali lemti veiksmus prieš jūsų paskyrą.
+          <hr class="dev-modal-sep">
+          <strong>English</strong>
+          Another offence may result in action against your account.
+        </div>
+        <div class="modal-btns"><button class="btn btn-ghost btn-sm" onclick="closeModal()">${esc(t('close'))}</button></div>`);
+    } else {
+      s.attempts=[];
+      this.setState(s);
+      toast(t('devWarn3Notice'),'error');
+      if(SM.ok) this.addServerStrike('devtools');
+    }
+  },
+  ack1(){
+    const s=this.getState();
+    s.warned1=true;
+    this.setState(s);
+    closeModal();
+  }
+};
+
 function initDevBlock(){
   let warnTimer=null;
-  const warn=()=>{
+  const guard=()=>{
+    DevGuard.handle();
     const el=document.getElementById('dev-warn');
     el.classList.remove('hidden');
     clearTimeout(warnTimer);
     warnTimer=setTimeout(()=>el.classList.add('hidden'),3000);
   };
-  document.addEventListener('contextmenu',e=>{e.preventDefault();warn();});
+  document.addEventListener('contextmenu',e=>{e.preventDefault();guard();});
   document.addEventListener('keydown',e=>{
     const blocked=e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C','K'].includes(e.key.toUpperCase()))||(e.ctrlKey&&e.key.toLowerCase()==='u');
-    if(blocked){e.preventDefault();warn();}
+    if(blocked){e.preventDefault();guard();}
   });
+  document.addEventListener('click',()=>DevGuard.trackClick(),true);
 }
 
-async function checkGeo(){
+async function checkGeoOnly(){
   try{
     const ctrl=new AbortController();
     const timer=setTimeout(()=>ctrl.abort(),2500);
@@ -610,14 +812,15 @@ async function checkGeo(){
     clearTimeout(timer);
     const text=await r.text();
     const m=text.match(/loc=([A-Z]{2})/);
-    if(m&&m[1]!=='LT'){
-      document.getElementById('geo-loading').classList.add('hidden');
-      document.getElementById('geo-block').classList.remove('hidden');
-      return false;
-    }
+    if(m&&m[1]!=='LT') return false;
   }catch(_){}
-  document.getElementById('geo-loading').classList.add('hidden');
   return true;
+}
+
+function hideLoadingScreen(){
+  const el=document.getElementById('geo-loading');
+  el.style.opacity='0';
+  setTimeout(()=>el.classList.add('hidden'),360);
 }
 
 function openAI(){ window.location.href = ORIGIN+'/AI.html'; }
@@ -691,7 +894,7 @@ function vLanding(){
       <button class="btn btn-ghost" onclick="navigate('login')">${t('login')}</button>
       <button class="btn btn-ghost" onclick="navigate('catalog')">${t('shopNow')}</button>
     </div>
-    <span class="sublink" onclick="modal('<h3 style=margin-bottom:12px>${t('howToGet')}</h3><p style=line-height:1.6;color:var(--dim)>${t('howToGetBody')}</p>')">${t('howToGet')}</span>
+    <span class="sublink" onclick="modal('<h3 style=margin-bottom:12px>${t('howToGet')}</h3><p style=line-height:1.6;color:var(--dim)>${t('howToGetBody')}</p><div class=modal-btns><button class=\"btn btn-ghost btn-sm\" onclick=closeModal()>${t('close')}</button></div>')">${t('howToGet')}</span>
   </div>`;
 }
 
@@ -840,11 +1043,16 @@ function filterCatalog(){
 
 async function renderDash(){
   const app=document.getElementById('app');
-  app.innerHTML=`<div style="text-align:center;padding:40px 0"><div class="ld-dots"><span></span><span></span><span></span></div></div>`;
+  app.innerHTML=`<div style="text-align:center;padding:40px 0"><div class="spin-ring"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>`;
   const r=await API.call('getUserData',{});
   if(!r.success){if(r.code==='SESSION_EXPIRED'){SM.clear();navigate('login');return;} app.innerHTML=`<div class="alert alert-error">${esc(em(r))}</div>`;return;}
   SM.save({fullName:r.fullName,role:r.role,userId:r.userId});
   State._dash=r;
+  const tags=r.tags||[];
+  tags.forEach(tag=>{
+    const cool=tag['Edit Cooldown Until'];
+    if(cool){const exp=new Date(cool).getTime();if(exp>Date.now())LS.s('pxf_cool_'+tag['Tag ID'],String(exp));}
+  });
   let tabs=`<button class="tab active" data-tab="tags" onclick="switchTab('tags')">${t('myTags')}</button>`;
   if(SM.isAdmin) tabs+=`<button class="tab" data-tab="admin" onclick="switchTab('admin')">${t('adminTools')}</button>`;
   if(SM.isDev)   tabs+=`<button class="tab" data-tab="dev" onclick="switchTab('dev')">${t('devPanel')}</button>`;
@@ -867,17 +1075,17 @@ function switchTab(tab){
 
 function sPill(s){ if(s==='Active') return `<span class="pill active">${t('statusActive')}</span>`; if(s==='Pending Activation') return `<span class="pill pending">${t('statusPending')}</span>`; return `<span class="pill">${t('statusUnreg')}</span>`; }
 
-const smTimers={};
 async function toggleSafeModeUI(e,tagId){
   const cb=e.target;
-  if(smTimers[tagId]){cb.checked=!cb.checked;toast(t('smCooldown'),'info');return;}
+  if(getSmCooldown(tagId)){cb.checked=!cb.checked;toast(t('smCooldown'),'info');return;}
   cb.disabled=true;
-  smTimers[tagId]=true;
   const r=await API.call('toggleSafeMode',{tagId,safeMode:cb.checked});
   cb.disabled=false;
   if(!r.success){cb.checked=!cb.checked;toast(em(r),'error');}
-  setTimeout(()=>delete smTimers[tagId],15000);
+  else setSmCooldown(tagId);
 }
+
+function cancelTagEdit(){ document.getElementById('tc').innerHTML=renderTagsTab(); }
 
 function renderTagsTab(){
   const tags=(State._dash&&State._dash.tags)||[];
@@ -887,6 +1095,9 @@ function renderTagsTab(){
     const emergEnabled=String(tag['Emergency Notes?']||'').toLowerCase()==='yes';
     const urlRow=tag._url?`<div class="copy-row" style="margin-bottom:12px"><input id="url-${tid}" readonly value="${esc(tag._url)}"><button class="btn btn-ghost btn-sm" onclick="copyUrl('url-${tid}')">${t('copy')}</button></div>`:'' ;
     const smTipId=`sm-tip-${tid}`;
+    const coolExp=getEditCooldown(tag['Tag ID']||'');
+    const coolMins=coolExp?Math.ceil((coolExp-Date.now())/60000):0;
+    const coolNote=isPro&&coolExp?`<div class="alert alert-info" style="margin-bottom:10px">${esc(t('editCooldownLocal').replace('%m',coolMins))}</div>`:'';
     return `<div class="card" style="margin-bottom:14px">
       <div class="tag-head">
         <div><strong>${esc(tag['Display Name']||tag['Tag ID'])}</strong> <span class="pill" style="margin-left:4px">${esc(tag['Tag ID'])}</span></div>
@@ -905,6 +1116,7 @@ function renderTagsTab(){
         <label class="sw"><input type="checkbox" ${tag['Safe Mode']?'checked':''} onchange="toggleSafeModeUI(event,'${tid}')"><span class="sl"></span></label>
       </div>
       <form onsubmit="return false" style="margin-top:14px">
+        ${coolNote}
         <div class="sec-lbl">${t('baseFields')}</div>
         <div class="grid2">
           <div class="field"><label>${t('displayName')}<input name="Display Name" value="${esc(tag['Display Name']||'')}"></label></div>
@@ -926,16 +1138,32 @@ function renderTagsTab(){
         </div>
         <p class="muted" style="margin-top:6px;font-size:12px">${t('proEditNote')}</p>`:''}
         <div id="tag-alert-${tid}"></div>
-        <button class="btn btn-primary" style="margin-top:12px" onclick="withBtn(this,()=>submitEditTag('${tid}',this.closest('form')))">${t('saveChanges')}</button>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="withBtn(this,()=>submitEditTag('${tid}',this.closest('form')))"${isPro&&coolExp?' disabled':''}>
+            ${isPro&&coolExp?esc(t('editCooldownLocal').replace('%m',coolMins)):esc(t('saveChanges'))}
+          </button>
+          <button type="button" class="btn btn-ghost" onclick="cancelTagEdit()">${t('cancelChanges')}</button>
+        </div>
       </form>
     </div>`;
   }).join('');
 }
 async function submitEditTag(tagId,form){
+  const isPro=(State._dash&&State._dash.tags||[]).find(t=>t['Tag ID']===tagId)?.['Model']==='Pro';
+  if(isPro){
+    const coolExp=getEditCooldown(tagId);
+    if(coolExp){const mins=Math.ceil((coolExp-Date.now())/60000);showAlert('tag-alert-'+tagId,t('editCooldownLocal').replace('%m',mins));return;}
+  }
   const fields={};
   form.querySelectorAll('input[name],textarea[name]').forEach(el=>{ fields[el.name]=el.value; });
   const r=await API.call('editTag',{tagId,fields});
-  if(r.success) showAlert('tag-alert-'+tagId,t('saved'),'ok'); else showAlert('tag-alert-'+tagId,em(r));
+  if(r.success){
+    showAlert('tag-alert-'+tagId,t('saved'),'ok');
+    if(isPro) setEditCooldown(tagId);
+  } else {
+    showAlert('tag-alert-'+tagId,em(r));
+    if(r.code==='COOLDOWN'&&isPro) setEditCooldown(tagId);
+  }
 }
 
 function renderAdminTab(){
@@ -968,7 +1196,7 @@ function renderAdminTab(){
       <div class="field"><label>${t('tagId')}<input id="wa-tag" onkeydown="hk(event,'wa-submit')"></label></div>
     </div>
     <div id="wa-alert"></div>
-    <button id="wa-submit" class="btn btn-primary" onclick="withBtn(this,submitWarranty)">${t('openWarranty')}</button>
+    <button id="wa-submit" class="btn btn-primary" style="margin-top:10px" onclick="withBtn(this,submitWarranty)">${t('openWarranty')}</button>
   </div>
   <div class="adm-sec">
     <h4>${t('transferTitle')}</h4>
@@ -978,13 +1206,13 @@ function renderAdminTab(){
       <div class="field"><label>${t('newTagId')}<input id="tr-new" onkeydown="hk(event,'tr-submit')"></label></div>
     </div>
     <div id="tr-alert"></div>
-    <button id="tr-submit" class="btn btn-primary" onclick="withBtn(this,submitTransfer)">${t('transfer')}</button>
+    <button id="tr-submit" class="btn btn-primary" style="margin-top:10px" onclick="withBtn(this,submitTransfer)">${t('transfer')}</button>
   </div>
   <div class="adm-sec">
     <h4>${t('inviteTitle')}</h4>
     <div class="field"><label>${t('email')}<input id="inv-email" type="email" onkeydown="hk(event,'inv-submit')"></label></div>
     <div id="inv-alert"></div>
-    <button id="inv-submit" class="btn btn-primary" onclick="withBtn(this,submitInvite)">${t('sendInvite')}</button>
+    <button id="inv-submit" class="btn btn-primary" style="margin-top:10px" onclick="withBtn(this,submitInvite)">${t('sendInvite')}</button>
   </div>
   <div class="adm-sec">
     <h4>${t('manualTitle')}</h4>
@@ -993,7 +1221,7 @@ function renderAdminTab(){
       <div class="field"><label>${t('password')}<input id="mc-pw" type="password"></label></div>
     </div>
     <div id="mc-alert"></div>
-    <button class="btn btn-primary" onclick="withBtn(this,submitManualCustomer)">${t('create')}</button>
+    <button class="btn btn-primary" style="margin-top:10px" onclick="withBtn(this,submitManualCustomer)">${t('create')}</button>
   </div>
   <div class="adm-sec">
     <h4>${t('deleteCustomerTitle')}</h4>
@@ -1003,7 +1231,7 @@ function renderAdminTab(){
     </div>
     <div class="field"><label>${t('adminPw')}<input id="dc-apw" type="password"></label></div>
     <div id="dc-alert"></div>
-    <button class="btn btn-danger" onclick="withBtn(this,submitReqDelCustomer)">${t('requestCode')}</button>
+    <button class="btn btn-danger" style="margin-top:10px" onclick="withBtn(this,submitReqDelCustomer)">${t('requestCode')}</button>
     <div id="dc-step2" class="hidden" style="margin-top:14px">
       <label class="field">${t('deletionCode')}<input id="dc-code" onkeydown="hk(event,'dc-confirm')"></label>
       <button id="dc-confirm" class="btn btn-danger" style="margin-top:10px" onclick="withBtn(this,submitConfirmDelCustomer)">${t('confirmDeleteCustomer')}</button>
@@ -1044,7 +1272,10 @@ async function loadAdminTagById(){
     ${cols.map(c=>`<div class="field"><label style="margin-bottom:4px">${esc(c)}<input id="atf_${esc(toId(c))}" value="${esc(String(rec[c]??''))}" ${c==='Tag ID'?'readonly':''}></label></div>`).join('')}
     </div>
     <div id="adm-tag-alert" style="margin-top:8px"></div>
-    <button class="btn btn-primary" style="margin-top:12px" onclick="withBtn(this,()=>saveAdminTag(${rec._row},[${cols.filter(c=>c!=='Tag ID').map(c=>`'${esc(c)}'`).join(',')}]))">${t('save')}</button>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="withBtn(this,()=>saveAdminTag(${rec._row},[${cols.filter(c=>c!=='Tag ID').map(c=>`'${esc(c)}'`).join(',')}]))">${t('save')}</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('adm-tag-result').innerHTML=''">${t('cancel')}</button>
+    </div>
   </div>`;
 }
 async function saveAdminTag(row,cols){
@@ -1104,7 +1335,10 @@ async function loadUserByEmail(){
     ${cols.map(c=>`<div class="field"><label style="margin-bottom:4px">${esc(c)}<input id="duf_${esc(toId(c))}" value="${esc(String(rec[c]??''))}" ${c==='User ID'?'readonly':''}></label></div>`).join('')}
     </div>
     <div id="dev-user-alert" style="margin-top:8px"></div>
-    <button class="btn btn-primary" style="margin-top:12px" onclick="withBtn(this,()=>saveDevUser(${rec._row},[${cols.filter(c=>c!=='User ID').map(c=>`'${esc(c)}'`).join(',')}]))">${t('save')}</button>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="withBtn(this,()=>saveDevUser(${rec._row},[${cols.filter(c=>c!=='User ID').map(c=>`'${esc(c)}'`).join(',')}]))">${t('save')}</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('dev-user-result').innerHTML=''">${t('cancel')}</button>
+    </div>
   </div>`;
 }
 async function saveDevUser(row,cols){
@@ -1126,7 +1360,10 @@ function renderSettingsTab(){
     :`<p class="muted" style="margin-bottom:12px">${t('deleteAccountHint')}</p>
        <label>${t('password')}<input id="da-pw" type="password"></label>
        <div id="da-alert"></div>
-       <button class="btn btn-danger" style="margin-top:10px" onclick="withBtn(this,submitDeleteAccount)">${t('confirmDelete')}</button>`;
+       <div class="btn-row" style="margin-top:10px">
+         <button class="btn btn-danger" onclick="withBtn(this,submitDeleteAccount)">${t('confirmDelete')}</button>
+         <button class="btn btn-ghost" onclick="document.getElementById('da-pw').value='';clearAlert('da-alert')">${t('cancelChanges')}</button>
+       </div>`;
   return `<div class="card">
     <h3 style="margin-bottom:14px">${t('accountInfo')}</h3>
     <div class="info-row"><span class="lbl">${t('userId')}</span><span class="val"><code>${esc(d.userId||'')}</code></span></div>
@@ -1140,7 +1377,10 @@ function renderSettingsTab(){
     ${pwField('cp-new','newPassword','cp-submit')}
     <p class="muted" style="margin-top:6px">${t('pwHint')}</p>
     <div id="cp-alert"></div>
-    <button id="cp-submit" class="btn btn-primary" style="margin-top:12px" onclick="withBtn(this,submitChangePw)">${t('updatePw')}</button>
+    <div class="btn-row">
+      <button id="cp-submit" class="btn btn-primary" onclick="withBtn(this,submitChangePw)">${t('updatePw')}</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('cp-old').value='';document.getElementById('cp-new').value='';clearAlert('cp-alert')">${t('cancelChanges')}</button>
+    </div>
   </div>
   <div class="card">
     <h3 style="margin-bottom:14px;color:var(--danger)">${t('dangerZone')}</h3>
@@ -1158,14 +1398,19 @@ async function submitDeleteAccount(){
 async function submitCancelDeletion(){ const r=await API.call('cancelAccountDeletion',{}); if(r.success)renderDash();else toast(em(r),'error'); }
 
 function vTagScan(){
+  const langToggle=`<div class="scan-lang-toggle">
+    <button class="${L==='lt'?'active':''}" onclick="setLang('lt')">LT</button>
+    <button class="${L==='en'?'active':''}" onclick="setLang('en')">EN</button>
+  </div>`;
   const res=State._tagResult;
-  if(!res||!res.success) return `<div class="card scan-card"><h2>${t('scanTitle')}</h2><div class="alert alert-error" style="margin-top:12px">Access denied.</div></div>`;
+  if(!res||!res.success) return `<div class="card scan-card">${langToggle}<h2>${t('scanTitle')}</h2><div class="alert alert-error" style="margin-top:12px">Access denied.</div></div>`;
   const tag=res.tag;
-  if(!tag.registered) return `<div class="card scan-card"><h2 style="margin-bottom:12px">${t('scanTitle')}</h2><p class="muted">${t('notReg')}</p></div>`;
+  if(!tag.registered) return `<div class="card scan-card">${langToggle}<h2 style="margin-bottom:12px">${t('scanTitle')}</h2><p class="muted">${t('notReg')}</p></div>`;
   const typeLabel=tag.type==='Key'?t('keyType'):t('petType');
 
   if(tag.safeMode){
     return `<div class="card scan-card">
+      ${langToggle}
       <p class="muted" style="font-size:12px;margin-bottom:6px">${esc(typeLabel)} · ${esc(tag.model||'')} · ${esc(tag.tagId)}</p>
       <h2 style="margin-bottom:10px">${esc(tag.displayName||tag.tagId)}</h2>
       <div class="scan-safe">✓ ${t('safeHomeMsg')}</div>
@@ -1173,6 +1418,7 @@ function vTagScan(){
   }
 
   return `<div class="card scan-card">
+    ${langToggle}
     <p class="muted" style="font-size:12px;margin-bottom:6px">${esc(typeLabel)} · ${esc(tag.model||'')} · ${esc(tag.tagId)}</p>
     <h2 style="margin-bottom:6px">${esc(tag.displayName||tag.tagId)}</h2>
     ${tag.emergencyNotes?`<div class="scan-emg">⚕&nbsp;<strong>${t('emergency')}:</strong>&nbsp;${esc(tag.emergencyNotes)}</div>`:''}
@@ -1220,21 +1466,41 @@ async function doActivate(){
 
 async function init(){
   initDevBlock();
-  const allowed=await checkGeo();
-  if(!allowed) return;
+  const allowed=await checkGeoOnly();
+  if(!allowed){
+    const el=document.getElementById('geo-loading');
+    el.style.opacity='0';
+    setTimeout(()=>{el.classList.add('hidden');document.getElementById('geo-block').classList.remove('hidden');},360);
+    return;
+  }
   initCookies();
   SM.load();
   const params=new URLSearchParams(window.location.search);
   const resetTok=params.get('reset'),setupTok=params.get('setup'),uid=params.get('uid');
   const key=params.get('key'),tagId=params.get('tag_id'),isAct=params.get('activation')==='1';
-  if(resetTok&&uid){State._resetParams={token:resetTok,uid};State.view='resetForm';render();return;}
-  if(setupTok&&uid){State._setupParams={token:setupTok,uid};State.view='setup';render();return;}
+
+  if(resetTok&&uid){hideLoadingScreen();State._resetParams={token:resetTok,uid};State.view='resetForm';render();return;}
+  if(setupTok&&uid){hideLoadingScreen();State._setupParams={token:setupTok,uid};State.view='setup';render();return;}
+
+  if(SM._expired){
+    hideLoadingScreen();
+    State.view='login';
+    render();
+    setTimeout(()=>toast(t('sessionExpired'),'error'),200);
+    return;
+  }
+
   if(key&&tagId){
+    const ldMsg=document.getElementById('ld-msg');
+    if(ldMsg){ldMsg.style.opacity='0';setTimeout(()=>{ldMsg.textContent=L==='lt'?'Kraunama...':'Loading...';ldMsg.style.opacity='1';},280);}
     const res=await API.pub({key,tag_id:tagId});
     State._tagResult=res; State._tagParams={key,tagId};
     State.view=(res.success&&res.tag&&res.tag.status==='Pending Activation')||isAct?'activation':'tagScan';
+    hideLoadingScreen();
     render(); return;
   }
+
+  hideLoadingScreen();
   State.view=SM.ok?'dashboard':'landing';
   render();
 }
