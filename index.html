@@ -38,14 +38,15 @@ label.inline input[type=checkbox]{width:auto;margin:2px 0 0;flex-shrink:0}
 .btn-danger:hover:not(:disabled){opacity:.88}
 .btn-sm{padding:6px 13px;font-size:13px}
 .btn-block{width:100%;margin-top:14px}
+.mini-spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite;vertical-align:-2px;margin-right:7px}
+@keyframes rot{to{transform:rotate(360deg)}}
 .alert{padding:11px 14px;border-radius:8px;font-size:14px;margin:10px 0}
 .alert-error{background:rgba(229,62,62,.12);border:1px solid rgba(229,62,62,.4);color:#fca5a5}
 .alert-ok{background:rgba(56,161,105,.12);border:1px solid rgba(56,161,105,.4);color:#86efac}
 .alert-info{background:rgba(64,128,255,.1);border:1px solid rgba(64,128,255,.35);color:#93c5fd}
-header{display:flex;justify-content:space-between;align-items:center;padding:13px 22px;border-bottom:1px solid var(--border);position:sticky;top:env(safe-area-inset-top,0px);background:rgba(0,0,0,.92);backdrop-filter:blur(10px);z-index:40}
-.brand{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:800;cursor:pointer;letter-spacing:-.02em}
-/* Change 9: logo image replaces blue dot */
-.brand-logo{width:28px;height:28px;object-fit:contain;flex-shrink:0}
+header{display:flex;justify-content:space-between;align-items:center;padding:10px 22px;border-bottom:1px solid var(--border);position:sticky;top:env(safe-area-inset-top,0px);background:rgba(0,0,0,.92);backdrop-filter:blur(10px);z-index:40}
+.brand{display:flex;align-items:center;cursor:pointer}
+.brand img{height:32px;width:auto;display:block}
 .topnav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 .lang-toggle{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;margin-right:4px}
 .lang-toggle button{background:none;border:none;color:var(--dim);padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);transition:background .15s,color .15s}
@@ -53,6 +54,8 @@ header{display:flex;justify-content:space-between;align-items:center;padding:13p
 main{max-width:1060px;margin:0 auto;padding:30px 18px 120px}
 .fade-in{animation:fi .2s ease}
 @keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.dec-load{text-align:center;padding:70px 10px;color:var(--dim);font-size:15px;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45}}
 .hero{text-align:center;padding:64px 10px 10px}
 .hero h1{font-size:40px;font-weight:800;margin-bottom:10px;letter-spacing:-.03em;background:linear-gradient(135deg,var(--text),#93c5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero p{color:var(--dim);font-size:16px;margin-bottom:28px}
@@ -79,45 +82,34 @@ input:checked+.sl::before{transform:translateX(18px)}
 .pill{font-size:11px;padding:3px 9px;border-radius:999px;border:1px solid var(--border);color:var(--dim)}
 .pill.active{border-color:var(--ok);color:var(--ok)}
 .pill.pending{border-color:var(--accent);color:var(--accent)}
+.pill.lost{border-color:var(--danger);color:#fca5a5}
 .copy-row{display:flex;gap:6px;align-items:center;margin-top:6px}
 .copy-row input{flex:1;margin:0;font-size:12px;font-family:monospace;background:var(--bg)}
-/* Change 4: catalog grid & product card styles */
 .catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
 .pcard{overflow:hidden;padding:0;transition:border-color .15s;cursor:pointer}
 .pcard:hover{border-color:var(--accent)}
-/* Change 4: multi-photo strip */
-.pphoto-strip{display:flex;gap:2px;width:100%;aspect-ratio:1;background:var(--panel2);overflow:hidden}
-.pphoto-strip .pphoto-main{flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.pphoto-strip .pphoto-thumbs{display:flex;flex-direction:column;gap:2px;width:34%}
-.pphoto-strip .pphoto-thumb{flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--panel)}
-.pphoto-strip img{width:100%;height:100%;object-fit:cover}
-.pphoto-strip.single{display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:12px}
-.pphoto-strip.single img{width:100%;height:100%;object-fit:cover}
+.pphoto{width:100%;aspect-ratio:1;background:var(--panel2);display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:12px;overflow:hidden}
+.pphoto img{width:100%;height:100%;object-fit:cover}
 .pbody{padding:14px}
 .pbody h4{margin-bottom:4px;font-size:15px}
 .pprice{color:var(--accent);font-weight:700;font-size:18px;margin:5px 0}
 .cat-ctrls{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
 .cat-ctrls input{flex:1;min-width:160px;margin:0}
 .cat-ctrls select{width:auto;margin:0}
-/* Change 4: product detail modal */
-.pdetail-photos{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.pdetail-main-photo{width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--panel2);display:flex;align-items:center;justify-content:center;margin-bottom:8px}
-.pdetail-main-photo img{width:100%;height:100%;object-fit:cover}
-.pdetail-thumbs{display:flex;gap:6px}
-.pdetail-thumb{width:60px;height:60px;border-radius:6px;overflow:hidden;border:2px solid transparent;cursor:pointer;background:var(--panel2);display:flex;align-items:center;justify-content:center;transition:border-color .15s}
-.pdetail-thumb.active{border-color:var(--accent)}
-.pdetail-thumb img{width:100%;height:100%;object-fit:cover}
-.pdetail-row{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:14px}
-.pdetail-row:last-child{border-bottom:none}
-.pdetail-row .lbl{color:var(--dim);min-width:100px;flex-shrink:0;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding-top:1px}
-.pdetail-row .val{flex:1}
+.gal-main{background:var(--panel);border-radius:8px;aspect-ratio:1;max-height:380px;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--dim)}
+.gal-main img{width:100%;height:100%;object-fit:contain}
+.gal-th{display:flex;gap:8px;margin-top:8px}
+.gal-th img{width:64px;height:64px;object-fit:cover;border-radius:6px;border:2px solid var(--border);cursor:pointer;margin:0;padding:0}
+.gal-th img.on{border-color:var(--accent)}
+.hint{display:block;font-size:12px;color:var(--dim);margin-top:2px;line-height:1.4}
 .adm-sec{margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--border)}
 .adm-sec:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
 .adm-sec h4{margin-bottom:12px;font-size:15px;color:var(--text)}
 footer{text-align:center;padding:24px 18px 60px;color:var(--dim);font-size:13px}
 footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:80;padding:16px;backdrop-filter:blur(4px)}
-.modal{background:var(--panel2);border:1px solid var(--border);border-radius:var(--r);padding:24px;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;animation:fi .18s ease}
+.modal{background:var(--panel2);border:1px solid var(--border);border-radius:var(--r);padding:24px;max-width:440px;width:100%;max-height:88vh;overflow-y:auto;animation:fi .18s ease}
+.modal.wide{max-width:640px}
 .modal h3{margin-bottom:14px}
 .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
 #cookie{position:fixed;bottom:0;left:0;right:0;background:var(--panel2);border-top:1px solid var(--border);padding:14px 20px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;z-index:60}
@@ -131,27 +123,17 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
 .scan-card{max-width:480px;margin:40px auto;word-break:break-word;overflow-wrap:break-word}
 .scan-safe{display:flex;align-items:center;gap:8px;background:rgba(56,161,105,.12);border:1px solid rgba(56,161,105,.4);border-radius:8px;padding:10px 14px;margin:12px 0;color:var(--ok);font-weight:600}
 .scan-emg{display:flex;align-items:flex-start;gap:10px;background:rgba(229,62,62,.12);border:1px solid rgba(229,62,62,.5);border-radius:8px;padding:12px 14px;margin:12px 0;color:#fca5a5;font-size:14px;line-height:1.5}
+.scan-lost{background:rgba(229,62,62,.12);border:1px solid rgba(229,62,62,.5);border-radius:8px;padding:14px;margin:12px 0;color:#fca5a5;font-size:14px;line-height:1.6}
 .info-row{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px;flex-wrap:wrap}
 .info-row:last-child{border-bottom:none}
 .info-row .lbl{color:var(--dim);min-width:140px;flex-shrink:0}
 .info-row .val{flex:1;min-width:0;word-break:break-word;overflow-wrap:break-word}
-/* Change 1: replaced loading circles with text */
 #geo-loading{position:fixed;inset:0;background:#000;z-index:200;display:flex;align-items:center;justify-content:center;transition:opacity .35s ease}
 #geo-block{position:fixed;inset:0;background:#000;z-index:201;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
+#maint{position:fixed;inset:0;background:#000;z-index:150;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
+#maint .lang-toggle{position:absolute;top:16px;right:16px}
 #dev-warn{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:#7f1d1d;color:#fca5a5;border:1px solid #ef4444;padding:11px 20px;border-radius:8px;z-index:95;font-size:14px;animation:fi .2s ease;max-width:340px;text-align:center}
 .opt-hint{font-size:11px;color:var(--dim);font-weight:400;margin-left:4px;font-style:italic}
-.spin-ring{position:relative;width:44px;height:44px;margin:0 auto}
-.spin-ring span{position:absolute;top:50%;left:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:#4080ff;animation:spinRingFade 1.2s linear infinite;will-change:opacity}
-.spin-ring span:nth-child(1){transform:rotate(0deg) translateY(-17px);animation-delay:0s}
-.spin-ring span:nth-child(2){transform:rotate(45deg) translateY(-17px);animation-delay:-1.05s}
-.spin-ring span:nth-child(3){transform:rotate(90deg) translateY(-17px);animation-delay:-0.9s}
-.spin-ring span:nth-child(4){transform:rotate(135deg) translateY(-17px);animation-delay:-0.75s}
-.spin-ring span:nth-child(5){transform:rotate(180deg) translateY(-17px);animation-delay:-0.6s}
-.spin-ring span:nth-child(6){transform:rotate(225deg) translateY(-17px);animation-delay:-0.45s}
-.spin-ring span:nth-child(7){transform:rotate(270deg) translateY(-17px);animation-delay:-0.3s}
-.spin-ring span:nth-child(8){transform:rotate(315deg) translateY(-17px);animation-delay:-0.15s}
-@keyframes spinRingFade{0%,80%,100%{opacity:.15}40%{opacity:1}}
-#api-spin{position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;pointer-events:none}
 #ai-fab{position:fixed;bottom:28px;right:22px;z-index:50;display:flex;align-items:flex-end;gap:9px}
 .ai-info-btn{width:26px;height:26px;border-radius:50%;border:1px solid var(--border);background:var(--panel);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:12px;font-style:italic;font-weight:700;flex-shrink:0;margin-bottom:19px;transition:border-color .15s,color .15s;position:relative}
 .ai-info-btn:hover{border-color:var(--accent);color:var(--accent)}
@@ -173,24 +155,12 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
 .dev-modal-bilingual{font-size:14px;line-height:1.7;color:var(--dim)}
 .dev-modal-bilingual strong{color:var(--text);display:block;margin-bottom:4px}
 .dev-modal-sep{border:none;border-top:1px solid var(--border);margin:14px 0}
-/* Change 10: cache refresh notice */
-.cache-notice{display:flex;align-items:center;gap:10px;background:rgba(64,128,255,.08);border:1px solid rgba(64,128,255,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#93c5fd;flex-wrap:wrap}
-.cache-notice button{margin-left:auto;white-space:nowrap}
-/* Change 11: maintenance overlay */
-#maintenance-screen{position:fixed;inset:0;background:#000;z-index:300;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
-#maintenance-screen h1{font-size:28px;font-weight:800;margin-bottom:12px;letter-spacing:-.02em}
-#maintenance-screen p{color:var(--dim);font-size:15px;line-height:1.6}
-/* Change 2: reset button loading state inline */
-.btn-loading-wrap{position:relative;display:inline-flex;align-items:center;gap:8px}
-/* Change 6: scan register prompt */
-.scan-register-prompt{background:rgba(64,128,255,.1);border:1px solid rgba(64,128,255,.35);border-radius:8px;padding:14px 16px;margin:14px 0;font-size:14px;line-height:1.6;color:#93c5fd}
-.scan-register-prompt a{color:#60a5fa;font-weight:600;text-decoration:underline;cursor:pointer}
 @media(max-width:768px){
   main{padding:22px 14px 100px}
   .hero h1{font-size:30px}
   .hero{padding:44px 8px 10px}
-  header{padding:10px 16px}
-  .brand{font-size:17px}
+  header{padding:8px 16px}
+  .brand img{height:28px}
   .topnav{gap:5px}
   .btn-sm{padding:5px 10px;font-size:12px}
   .catalog-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
@@ -201,9 +171,8 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
   .hero p{font-size:14px}
   .hero{padding:32px 6px 10px}
   .hero-btns{gap:8px}
-  header{padding:8px 12px}
-  .brand{font-size:15px}
-  .brand-logo{width:22px;height:22px}
+  header{padding:6px 12px}
+  .brand img{height:24px}
   .topnav{gap:3px}
   .lang-toggle button{padding:4px 7px;font-size:11px}
   .btn-sm{padding:5px 9px;font-size:12px}
@@ -236,52 +205,31 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
 </style>
 </head>
 <body>
-
-<!-- ═══════════════════════════════════════════════════════════
-     CHANGE 11: Maintenance screen
-     To activate: set MAINTENANCE_MODE = true below.
-     Bypass in-browser: press Space + Z + X simultaneously.
-     NOTE: This screen does NOT appear when scanning a tag
-           (i.e. when ?key= and ?tag_id= are in the URL).
-     ═══════════════════════════════════════════════════════════ -->
-<div id="maintenance-screen" class="hidden">
-  <div>
-    <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#4080ff,#60a5fa);margin:0 auto 20px;box-shadow:0 0 22px rgba(64,128,255,.4)"></div>
-    <h1 id="maint-title">Praxifold</h1>
-    <p id="maint-msg"></p>
-    <p style="margin-top:20px;font-size:12px;color:#2a4a7a" id="maint-bypass-hint"></p>
-  </div>
-</div>
-
-<!-- Change 1: loading screen - no spinner circles, only text -->
 <div id="geo-loading">
   <div style="text-align:center">
-    <!-- Change 9: logo image -->
-    <img src="Praxifold.png" alt="Praxifold" style="width:48px;height:48px;object-fit:contain;margin:0 auto 16px;display:block" onerror="this.style.display='none'">
-    <div style="color:#c8d8f0;font-size:20px;font-weight:800;letter-spacing:-.02em;font-family:'Segoe UI',system-ui,sans-serif;margin-bottom:20px">Praxifold</div>
-    <div id="ld-msg" style="color:#4a6a9a;font-size:15px;font-family:'Segoe UI',system-ui,sans-serif;min-height:24px;transition:opacity .28s;font-weight:500"></div>
+    <img src="Praxifold.png" alt="Praxifold" style="height:52px;width:auto;margin:0 auto 18px;display:block">
+    <div id="ld-msg" style="color:#4a6a9a;font-size:13px;font-family:'Segoe UI',system-ui,sans-serif;min-height:20px;transition:opacity .28s"></div>
   </div>
 </div>
-
 <div id="geo-block" class="hidden">
   <div>
-    <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#4080ff,#60a5fa);margin:0 auto 20px"></div>
-    <h2 style="font-size:24px;color:#c8d8f0;font-family:'Segoe UI',system-ui,sans-serif">Praxifold</h2>
+    <img src="Praxifold.png" alt="Praxifold" style="height:56px;width:auto;margin:0 auto 20px;display:block">
     <p style="margin-top:14px;color:#4a6a9a;font-size:15px;font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6">
       Ši paslauga prieinama tik Lietuvoje.<br>
       <small style="font-size:13px">This service is only available in Lithuania.</small>
     </p>
   </div>
 </div>
-<div id="dev-warn" class="hidden">Kūrėjų įrankiai yra užblokuoti. / Developer tools are blocked.</div>
-<div id="api-spin" class="hidden"><div class="spin-ring"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
-
-<header>
-  <!-- Change 9: brand logo replaces blue dot square -->
-  <div class="brand" onclick="navigate('landing')">
-    <img src="Praxifold.png" alt="Praxifold" class="brand-logo" onerror="this.style.display='none'">
-    Praxifold
+<div id="maint" class="hidden">
+  <div class="lang-toggle" id="maint-lang"></div>
+  <div>
+    <img src="Praxifold.png" alt="Praxifold" style="height:56px;width:auto;margin:0 auto 22px;display:block">
+    <p id="maint-msg" style="color:#c8d8f0;font-size:17px;line-height:1.6;max-width:420px;font-family:'Segoe UI',system-ui,sans-serif"></p>
   </div>
+</div>
+<div id="dev-warn" class="hidden">Kūrėjų įrankiai yra užblokuoti. / Developer tools are blocked.</div>
+<header>
+  <div class="brand" onclick="navigate('landing')"><img src="Praxifold.png" alt="Praxifold"></div>
   <div class="topnav" id="nav"></div>
 </header>
 <main id="app"></main>
@@ -310,17 +258,18 @@ footer a{margin:0 8px;color:var(--dim)}footer a:hover{color:var(--accent)}
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// CHANGE 11: Set to true to enable maintenance mode
-// ═══════════════════════════════════════════════════════════
+/* ================= CONFIG ================= */
+// >>> WEBSITE MAINTENANCE: set to true to show the maintenance screen on the MAIN site only.
+// >>> Tag scanning pages (?key=...&tag_id=...) are never covered.
+// >>> Press SPACE + Z + X together to bypass the screen (for this browser session) and test everything.
 const MAINTENANCE_MODE = false;
 
-const API_URL    = 'https://script.google.com/macros/s/AKfycbz3Qx_ycL74KniHUBjcvhH76hYhse0ChsvIU37UbpuNaBHMbYtKdk-jAZJDlcILjsAs/exec';
+const API_URL    = 'https://script.google.com/macros/s/AKfycbyNTxFqgFopvcxs94Urfr5WuzSUeloRkHtHYnDHoGHXjr6xLSSvMliqSwijTqhof-M/exec';
 const POLICY_URL = 'https://praxifold.github.io/policy.txt';
 const REPORT_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfBm7oA7_OsDzFm0fcYcIS47u1CxHvBDRCdMEw3IeYzRsCkrA/viewform?usp=header';
 const ORIGIN     = 'https://praxifold.github.io';
 const SESSION_TTL = 20*60*1000;
-const CACHE_TTL  = 24*60*60*1000; // 24 hours for scan cache (Change 10)
+const TAG_CACHE_TTL = 24*60*60*1000;
 
 const TR = {
 lt:{
@@ -359,15 +308,21 @@ lt:{
   streetAddress:'Gatvės adresas',secondaryEmail:'Antrinis el. paštas',
   meetingSpot:'Susitikimo vieta',vetInfo:'Veterinaro duomenys',
   microchipNumber:'Mikroschemos numeris',allergies:'Alergijos',
-  age:'Amžius',breed:'Veislė',
+  age:'Amžius',breed:'Veislė',notes:'Pastabos',
   emergencyNotes:'Skubios pastabos',
+  maxChars:'maks. %n simbolių',
   proFields:'Pro laukai',baseFields:'Pagrindiniai laukai',
   saveChanges:'Išsaugoti',saved:'Išsaugota.',
-  noTags:'Neturite priregistruotų pakabukų. Nuskenuokite pakabuko QR kodą arba priglausite NFC, kad jį priregistruotumėte.',
+  noTags:'Neturite priregistruotų pakabukų. Nuskenuokite pakabuko QR kodą arba priglauskite NFC, kad jį priregistruotumėte.',
   tagUrl:'Nuoroda',copy:'Kopijuoti',copied:'Nukopijuota!',
-  statusActive:'Aktyvus',statusUnreg:'Neregistruotas',statusPending:'Laukia aktyvacijos',
+  statusActive:'Aktyvus',statusUnreg:'Neregistruotas',statusPending:'Laukia aktyvacijos',statusLost:'Pamestas / pavogtas',
   search:'Ieškoti...',allTypes:'Visi tipai',petType:'Augintinis',keyType:'Raktas',
   noStock:'Prekių nerasta.',
+  material:'Medžiaga',color:'Spalva',price:'Kaina',technologies:'Technologijos',description:'Aprašymas',availability:'Prieinamumas',inStock:'Yra sandėlyje',outStock:'Šiuo metu nėra',
+  typePetHint:'Skirtas augintinio apykaklei.',typeKeyHint:'Skirtas raktų pakabukui.',
+  modelBase:'Pagrindinis modelis: vardas, savininko vardas, telefonas, el. paštas ir skubios pastabos (iki 100 simbolių).',
+  modelPro:'Pro modelis: visi pagrindiniai laukai ir papildomai adresas, veterinaras, mikroschema, alergijos, amžius, veislė, pastabos bei skubios pastabos (iki 150 simbolių).',
+  techNFC:'NFC: priglauskite telefoną prie pakabuko.',techQR:'QR: nuskenuokite kodą telefono kamera.',techBoth:'NFC + QR: veikia abu būdai.',
   accountInfo:'Paskyros informacija',userId:'Vartotojo ID',role:'Rolė',
   privacyPolicy:'Privatumo politika',
   changePw:'Pakeisti slaptažodį',currentPw:'Dabartinis slaptažodis',
@@ -381,6 +336,8 @@ lt:{
   warrantyTitle:'Garantijos pretenzija',warrantyHint:'Vartotojo ID ir pakabuko ID iš sistemos.',
   openWarranty:'Atidaryti pretenziją',
   transferTitle:'Perkelti duomenis į naują pakabuką',transfer:'Perkelti',
+  transferHint:'Perkeliami visi laukai (išskyrus pakabuko ID ir raktą), įskaitant modelį ir Pro funkcijas. Seno pakabuko asmeniniai duomenys bus išvalyti.',
+  markOldLost:'Pažymėti seną pakabuką kaip pamestą / pavogtą',
   oldTagId:'Seno pakabuko ID',newTagId:'Naujo pakabuko ID',
   inviteTitle:'Kviesti klientą el. paštu',sendInvite:'Siųsti kvietimą',
   manualTitle:'Sukurti paskyrą rankiniu būdu',
@@ -388,11 +345,20 @@ lt:{
   targetUserId:'Kliento vartotojo ID',targetEmail:'Kliento el. paštas',
   adminPw:'Jūsų slaptažodis (patvirtinimas)',requestCode:'Gauti kodą',
   deletionCode:'Kodas iš kliento el. pašto',confirmDeleteCustomer:'Patvirtinti ištrynimą',
-  scanTitle:'Pakabukas nuskaitytas',notReg:'Šis pakabukas dar neregistruotas.',
+  markLost:'Pažymėti pamestu / pavogtu',unmarkLost:'Nuimti pamesto / pavogto žymą',
+  deleteTag:'Ištrinti pakabuką (visą eilutę)',deleteTagConfirm:'Ar tikrai ištrinti visą šio pakabuko eilutę? Šio veiksmo atšaukti negalima.',deleted:'Ištrinta.',
+  scanTitle:'Pakabukas nuskaitytas',
+  notRegA:'Pakabukas neregistruotas. Jei norite jį užregistruoti, ',notRegLink:'spauskite čia',notRegB:'.',
+  newTag:'Naujas',
+  tagRegTitle:'Pakabuko registracija',registerTagBtn:'Registruoti pakabuką',tagRegOk:'Pakabukas užregistruotas!',
+  tagRegLoginHint:'Prisijunkite, kad užregistruotumėte šį pakabuką. Jei jis skirtas konkrečiam el. paštui, turite prisijungti su juo.',
+  lostMsg:'Šis pakabukas buvo pranešta kaip pamestas. Susisiekite praxifold@protonmail.com, kad jį grąžintumėte arba saugiai išmestumėte.',
   safeHomeMsg:'Augintinis saugus namuose',
   scanOwnerName:'Savininko vardas',scanPhone:'Savininko telefonas',
   scanSecEmail:'Antrinis el. paštas',scanContactEmail:'Kontaktinis el. paštas',
   emergency:'SVARBU',
+  cacheNote:'Kažkas atrodo neteisinga? Spustelėkite, kad gautumėte naujausią informaciją.',
+  refreshPage:'Atnaujinti puslapį',cachedAt:'Duomenys išsaugoti:',
   activationTitle:'Pakabukui reikia aktyvacijos',
   activationInfo:'Šis pakabukas buvo perkeltas. Prisijunkite ir patvirtinkite savininkystę.',
   loginToActivate:'Prisijungti ir aktyvuoti',
@@ -403,7 +369,7 @@ lt:{
   devUsers:'Vartotojai',devTags:'Pakabukai',devStock:'Prekės',
   purge:'Ištrinti suplanuotas paskyras',purged:'Ištrinta paskyrų:',
   devCreateTitle:'Sukurti vartotoją tiesiogiai',createUser:'Sukurti vartotoją',
-  loading:'Kraunama...',cancel:'Atšaukti',close:'Uždaryti',
+  loading:'Kraunama...',decrypting:'Iššifruojama ir ruošiami jūsų duomenys',cancel:'Atšaukti',close:'Uždaryti',
   sessionExpired:'Sesija pasibaigė. Prisijunkite iš naujo.',
   networkError:'Nepavyko pasiekti serverio.',
   report:'Pranešti apie klaidą',
@@ -411,7 +377,6 @@ lt:{
   smCooldown:'Palaukite 15 sek. prieš keičiant vėl.',
   proEditNote:'Pro pakabukai: 1 val. pertrauka tarp duomenų pakeitimų. Saugaus režimo mygtukas nuo to nepriklauso.',
   opt:'(neprivaloma)',
-  max30:'maks. 30 simbolių',
   warranty:'Garantija',warrantyYes:'Taip',warrantyNo:'Ne',
   assignedToEmail:'Skirtas (el. paštas)',
   editByEmail:'Redaguoti vartotoją pagal el. paštą',
@@ -421,34 +386,12 @@ lt:{
   cancelChanges:'Atšaukti',
   editCooldownLocal:'Palaukite %m min. prieš redaguojant.',
   scanLang:'Kalba',
+  maintMsg:'Praxifold tvarkosi, atsiprašome už nepatogumus. Pakabukų skaitymas vis dar veikia.',
   devWarn1Title:'Kūrėjų įrankiai',
   devWarn2Title:'Pakartotinis pažeidimas',
   devWarn3Notice:'Pažeidimas užregistruotas jūsų paskyroje.',
   devBanned:'Jūsų paskyra užblokuota. Susisiekite su palaikymo tarnyba. / Your account has been banned. Please contact support.',
   devRepeat:'Pakartotiniai pažeidimai gali lemti veiksmus prieš jūsų paskyrą.',
-  // Change 1: decrypting text
-  decryptingData:'Iššifruojama ir paruošiami jūsų duomenys',
-  // Change 3: scan email text
-  scanEmailSubject:'Jūsų pakabukas nuskaitytas',
-  // Change 6: not registered scan messages
-  tagNotRegisteredClickable:'Šis pakabukas neregistruotas. Norėdami jį užregistruoti, ',
-  tagNotRegisteredClickHere:'spauskite čia',
-  tagEmptyError:'Atsiprašome, šio pakabuko duomenys tušti. Susisiekite su palaikymo tarnyba adresu praxifold@protonmail.com.',
-  tagAwaitingYou:'Šis pakabukas laukia jūsų aktyvacijos.',
-  tagAssignedLogin:'Prisijunkite naudodami paskyrą, skirtą šiam pakabukui, kad jį aktyvuotumėte.',
-  // Change 7: delete tag row
-  deleteTagRow:'Ištrinti pakabuką',
-  deleteTagRowConfirm:'Ar tikrai norite visiškai ištrinti šį pakabuką iš sistemos? Šis veiksmas negrįžtamas.',
-  deleteTagRowYes:'Taip, ištrinti',
-  // Change 10: cache
-  cacheNotice:'Rodomi išsaugoti duomenys. Paskutinis atnaujinimas: %t',
-  cacheRefresh:'Kas nors negerai? Spustelėkite, kad gautumėte naujausius duomenis',
-  // Change 11: maintenance
-  maintenanceMsg:'Praxifold tvarko svetainę. Atsiprašome už nepatogumus. Žymių skaitymas veikia toliau.',
-  maintenanceBypass:'(administratoriams: paspauskite Space + Z + X, kad patektumėte)',
-  // Product detail modal labels
-  pdType:'Tipas',pdMaterial:'Medžiaga',pdColor:'Spalva',pdModel:'Modelis',pdTech:'Technologijos',pdDesc:'Aprašymas',pdPrice:'Kaina',pdStock:'Sandėlyje',
-  viewDetails:'Peržiūrėti',
 },
 en:{
   login:'Log in',register:'Register',logout:'Log out',
@@ -486,15 +429,21 @@ en:{
   streetAddress:'Street address',secondaryEmail:'Secondary email',
   meetingSpot:'Nearby meeting spot',vetInfo:'Vet details',
   microchipNumber:'Microchip number',allergies:'Allergies',
-  age:'Age',breed:'Breed',
+  age:'Age',breed:'Breed',notes:'Notes',
   emergencyNotes:'Emergency notes',
+  maxChars:'max %n chars',
   proFields:'Pro fields',baseFields:'Basic fields',
   saveChanges:'Save',saved:'Saved.',
   noTags:"No registered tags. Scan your tag's QR code or tap NFC to register it.",
   tagUrl:'Tag URL',copy:'Copy',copied:'Copied!',
-  statusActive:'Active',statusUnreg:'Unregistered',statusPending:'Pending Activation',
+  statusActive:'Active',statusUnreg:'Unregistered',statusPending:'Pending Activation',statusLost:'Lost / stolen',
   search:'Search...',allTypes:'All types',petType:'Pet',keyType:'Key',
   noStock:'No products found.',
+  material:'Material',color:'Color',price:'Price',technologies:'Technologies',description:'Description',availability:'Availability',inStock:'In stock',outStock:'Currently unavailable',
+  typePetHint:'Made for a pet collar.',typeKeyHint:'Made as a key tag.',
+  modelBase:'Base model: name, owner first name, phone, email and emergency notes (up to 100 characters).',
+  modelPro:'Pro model: all base fields plus address, vet details, microchip, allergies, age, breed, notes and emergency notes (up to 150 characters).',
+  techNFC:'NFC: tap your phone on the tag.',techQR:'QR: scan the code with your phone camera.',techBoth:'NFC + QR: both methods work.',
   accountInfo:'Account information',userId:'User ID',role:'Role',
   privacyPolicy:'Privacy Policy',
   changePw:'Change password',currentPw:'Current password',
@@ -508,6 +457,8 @@ en:{
   warrantyTitle:'Warranty claim',warrantyHint:'Enter the user ID and tag ID from the system.',
   openWarranty:'Open claim',
   transferTitle:'Transfer data to new tag',transfer:'Transfer',
+  transferHint:'Every field (except Tag ID and key) is transferred, including model and Pro features. The old tag\'s personal data is cleared.',
+  markOldLost:'Mark old tag as lost / stolen',
   oldTagId:'Old tag ID',newTagId:'New tag ID',
   inviteTitle:'Invite customer by email',sendInvite:'Send invite',
   manualTitle:'Create account manually',
@@ -515,11 +466,20 @@ en:{
   targetUserId:'Customer user ID',targetEmail:'Customer email',
   adminPw:'Your password (confirmation)',requestCode:'Request code',
   deletionCode:'Code from customer email',confirmDeleteCustomer:'Confirm deletion',
-  scanTitle:'Tag scanned',notReg:'This tag is not yet registered.',
+  markLost:'Mark as lost / stolen',unmarkLost:'Remove lost / stolen mark',
+  deleteTag:'Delete tag (entire row)',deleteTagConfirm:'Really delete this tag\'s entire row? This cannot be undone.',deleted:'Deleted.',
+  scanTitle:'Tag scanned',
+  notRegA:'Tag not registered. If you would like to register it, ',notRegLink:'click here',notRegB:'.',
+  newTag:'New',
+  tagRegTitle:'Register tag',registerTagBtn:'Register tag',tagRegOk:'Tag registered!',
+  tagRegLoginHint:'Log in to register this tag. If it is assigned to a specific email, you must log in with that email.',
+  lostMsg:'This tag has been reported lost. Please contact praxifold@protonmail.com to return it or dispose of it safely.',
   safeHomeMsg:'Pet is safe at home',
   scanOwnerName:'Owner name',scanPhone:'Owner phone',
   scanSecEmail:'Secondary email',scanContactEmail:'Contact email',
   emergency:'ALERT',
+  cacheNote:'Something seems wrong? Click this to pull up the newest information.',
+  refreshPage:'Refresh page',cachedAt:'Data saved:',
   activationTitle:'Tag needs activation',
   activationInfo:'This tag was transferred. Log in with the registered account to confirm ownership.',
   loginToActivate:'Log in to activate',
@@ -530,7 +490,7 @@ en:{
   devUsers:'Users',devTags:'Tags',devStock:'Stock',
   purge:'Purge scheduled deletions',purged:'Deleted accounts:',
   devCreateTitle:'Create user directly',createUser:'Create user',
-  loading:'Loading...',cancel:'Cancel',close:'Close',
+  loading:'Loading...',decrypting:'Decrypting and preparing your data',cancel:'Cancel',close:'Close',
   sessionExpired:'Session expired. Please log in again.',
   networkError:'Could not reach server.',
   report:'Report a problem',
@@ -538,7 +498,6 @@ en:{
   smCooldown:'Wait 15 sec before toggling again.',
   proEditNote:'Pro tags: 1-hour cooldown between data edits. Safe mode toggle is independent.',
   opt:'(optional)',
-  max30:'max 30 chars',
   warranty:'Warranty',warrantyYes:'Yes',warrantyNo:'No',
   assignedToEmail:'Assigned to (email)',
   editByEmail:'Edit user by email',
@@ -548,34 +507,12 @@ en:{
   cancelChanges:'Cancel',
   editCooldownLocal:'Wait %m min. before editing again.',
   scanLang:'Language',
+  maintMsg:'Praxifold is cleaning up, sorry for any inconvenience. Tag reading will still work.',
   devWarn1Title:'Developer Tools',
   devWarn2Title:'Repeated Violation',
   devWarn3Notice:'A violation has been recorded on your account.',
   devBanned:'Jūsų paskyra užblokuota. Susisiekite su palaikymo tarnyba. / Your account has been banned. Please contact support.',
   devRepeat:'Repeated violations may result in action against your account.',
-  // Change 1
-  decryptingData:'Decrypting and preparing your data',
-  // Change 3
-  scanEmailSubject:'Your tag has been scanned',
-  // Change 6
-  tagNotRegisteredClickable:'This tag is not registered. To register it, ',
-  tagNotRegisteredClickHere:'click here',
-  tagEmptyError:"Oops — this tag's data appears to be empty. Please contact support at praxifold@protonmail.com to sort this out.",
-  tagAwaitingYou:'This tag is awaiting your activation.',
-  tagAssignedLogin:'Log in with the account assigned to this tag to activate it.',
-  // Change 7
-  deleteTagRow:'Delete tag',
-  deleteTagRowConfirm:'Are you sure you want to permanently delete this tag from the system? This cannot be undone.',
-  deleteTagRowYes:'Yes, delete',
-  // Change 10
-  cacheNotice:'Showing cached data. Last updated: %t',
-  cacheRefresh:'Something seems wrong? Click to pull the newest information',
-  // Change 11
-  maintenanceMsg:'Praxifold is cleaning up, sorry for any inconveniences. Tag reading will still work.',
-  maintenanceBypass:'(administrators: press Space + Z + X to bypass)',
-  // Product detail modal
-  pdType:'Type',pdMaterial:'Material',pdColor:'Colour',pdModel:'Model',pdTech:'Technologies',pdDesc:'Description',pdPrice:'Price',pdStock:'In stock',
-  viewDetails:'View details',
 }};
 
 const ERRS = {
@@ -587,10 +524,11 @@ const ERRS = {
   COOLDOWN:{lt:'Pro pakabukams taikoma 1 val. pertrauka tarp pakeitimų.',en:'Pro tags: 1-hour cooldown between edits.'},
   DEST_HAS_OWNER:{lt:'Naujas pakabukas jau turi savininką.',en:'Destination tag already has an owner.'},
   EMAIL_EXISTS:{lt:'Šis el. paštas jau užregistruotas.',en:'Email already registered.'},
-  EMAIL_MISMATCH:{lt:'Šis pakabukas priklauso kitai paskyrai.',en:'This tag belongs to a different account.'},
+  EMAIL_MISMATCH:{lt:'Šis pakabukas skirtas kitai paskyrai. Prisijunkite su tinkamu el. paštu.',en:'This tag is assigned to a different account. Log in with the correct email.'},
   INVALID_CODE:{lt:'Neteisingas arba pasibaigęs kodas.',en:'Invalid or expired code.'},
   INVALID_CREDS:{lt:'Neteisingas el. paštas arba slaptažodis.',en:'Invalid email or password.'},
   INVALID_TOKEN:{lt:'Nuoroda negalioja arba pasibaigė.',en:'Link invalid or expired.'},
+  LOST:{lt:'Šis pakabukas pažymėtas kaip pamestas.',en:'This tag is marked as lost.'},
   MAIL_FAILED:{lt:'Nepavyko išsiųsti laiško.',en:'Failed to send email.'},
   MISSING:{lt:'Užpildykite visus laukus.',en:'Fill all fields.'},
   NEEDS_ACT:{lt:'Pirmiausia aktyvuokite pakabuką.',en:'Activate this tag first.'},
@@ -604,45 +542,29 @@ const ERRS = {
 let L = localStorage.getItem('pxf_lang')||'lt';
 function t(k){ return TR[L][k]!==undefined?TR[L][k]:(TR.lt[k]||k); }
 function em(r){ return (r&&r.code&&ERRS[r.code]&&ERRS[r.code][L])||(r&&r.message)||t('networkError'); }
-function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function setLang(l){ L=l; localStorage.setItem('pxf_lang',l); render(); }
+function esc(s){ return String(s===null||s===undefined?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function setLang(l){ L=l; localStorage.setItem('pxf_lang',l); render(); if(!document.getElementById('maint').classList.contains('hidden')) showMaint(); }
+function nType(v){
+  const s=String(v||'').trim().toLowerCase();
+  if(['key','keys','raktas','raktai','raktų'].includes(s)) return 'Key';
+  if(['pet','pets','augintinis','augintiniai'].includes(s)) return 'Pet';
+  return String(v||'').trim();
+}
+function typeLbl(v){ return nType(v)==='Key'?t('keyType'):t('petType'); }
+function emgMax(model){ return model==='Pro'?150:100; }
+function maxTxt(n){ return t('maxChars').replace('%n',n); }
 
-// ═══════════════════════════════════════════════════════════
-// CHANGE 1: Loading screen — single text message, no spinners
-// ═══════════════════════════════════════════════════════════
 (function(){
+  const texts={lt:['Iššifruojama...','Tikrinami duomenys...','Tikrinami raktai...','Jungiamasi...'],en:['Decrypting...','Double checking data...','Verifying keys...','Connecting...']};
+  const lang=localStorage.getItem('pxf_lang')||'lt';
+  const list=texts[lang]||texts.lt;
   const el=document.getElementById('ld-msg');
   if(!el) return;
-  const lang=localStorage.getItem('pxf_lang')||'lt';
-  const msg=lang==='en'?'Decrypting and preparing your data':'Iššifruojama ir paruošiami jūsų duomenys';
-  el.textContent=msg;
-})();
-
-// ═══════════════════════════════════════════════════════════
-// CHANGE 11: Maintenance mode + Space+Z+X bypass
-// ═══════════════════════════════════════════════════════════
-(function(){
-  const params=new URLSearchParams(window.location.search);
-  const isTagScan=params.get('key')&&params.get('tag_id');
-  if(!MAINTENANCE_MODE||isTagScan) return;
-  const ms=document.getElementById('maintenance-screen');
-  if(!ms) return;
-  const lang=localStorage.getItem('pxf_lang')||'lt';
-  const msg=lang==='en'?'Praxifold is cleaning up, sorry for any inconveniences. Tag reading will still work.':'Praxifold tvarko svetainę. Atsiprašome už nepatogumus. Žymių skaitymas veikia toliau.';
-  const bypass=lang==='en'?'(administrators: press Space + Z + X to bypass)':'(administratoriams: paspauskite Space + Z + X, kad patektumėte)';
-  document.getElementById('maint-msg').textContent=msg;
-  document.getElementById('maint-bypass-hint').textContent=bypass;
-  ms.classList.remove('hidden');
-  // Bypass: Space+Z+X all held within 1 second
-  const held=new Set();
-  const needed=new Set([' ','z','x']);
-  document.addEventListener('keydown',function(e){
-    held.add(e.key.toLowerCase()==='z'?'z':e.key.toLowerCase()==='x'?'x':e.key===' '?' ':e.key);
-    if(held.has(' ')&&held.has('z')&&held.has('x')){ms.classList.add('hidden');}
-  });
-  document.addEventListener('keyup',function(e){
-    held.delete(e.key.toLowerCase()==='z'?'z':e.key.toLowerCase()==='x'?'x':e.key===' '?' ':e.key);
-  });
+  let i=0; el.textContent=list[0];
+  setInterval(()=>{
+    el.style.opacity='0';
+    setTimeout(()=>{ i=(i+1)%list.length; el.textContent=list[i]; el.style.opacity='1'; },280);
+  },1600);
 })();
 
 async function hmacHex(kh,msg){
@@ -669,7 +591,7 @@ async function decPay(kh,enc){
   return JSON.parse(new TextDecoder().decode(new Uint8Array(ct.map((b,i)=>b^k[i]))));
 }
 
-const LS={g:k=>{try{return localStorage.getItem(k);}catch(_){return null;}},s:(k,v)=>{try{localStorage.setItem(k,v);}catch(_){}}};
+const LS={g:k=>{try{return localStorage.getItem(k);}catch(_){return null;}},s:(k,v)=>{try{localStorage.setItem(k,v);}catch(_){}},r:k=>{try{localStorage.removeItem(k);}catch(_){}}};
 
 const SM={
   at:null,rt:null,ek:null,email:null,fullName:null,role:null,userId:null,_t:null,_expired:false,
@@ -678,7 +600,11 @@ const SM={
     this.email=LS.g('em');this.fullName=LS.g('fn');this.role=LS.g('ro')||'';this.userId=LS.g('uid');
     if(this.at&&this.rt){
       const exp=Number(LS.g('pxf_sexp')||0);
-      if(exp&&Date.now()>exp){this._expired=true;this.clear();return;}
+      if(exp&&Date.now()>exp){
+        this._expired=true;
+        this.clear();
+        return;
+      }
       this._sched();
     }
   },
@@ -710,42 +636,50 @@ const SM={
   clear(){
     clearTimeout(this._t);
     this.at=this.rt=this.ek=this.email=this.fullName=this.role=this.userId=null;
-    ['at','rt','ek','em','fn','ro','uid','pxf_sexp'].forEach(k=>localStorage.removeItem(k));
+    ['at','rt','ek','em','fn','ro','uid','pxf_sexp'].forEach(k=>LS.r(k));
   },
   get ok(){
     if(!this.at||!this.rt) return false;
     const exp=Number(LS.g('pxf_sexp')||0);
-    if(exp&&Date.now()>exp){this._expired=true;this.clear();return false;}
+    if(exp&&Date.now()>exp){
+      this._expired=true;
+      this.clear();
+      return false;
+    }
     return true;
   },
   get isAdmin(){ return this.role==='admin'||this.role==='developer'; },
   get isDev()  { return this.role==='developer'; }
 };
 
-const SENS_REQ = new Set(['email','key','tagId','token','setupToken','code','oldPassword','newPassword','adminPassword','targetEmail','deletionCode','refreshToken','password']);
+const SENS_REQ = new Set(['email','key','tagId','token','setupToken','code','oldPassword','newPassword','adminPassword','targetEmail','deletionCode','refreshToken','password','alertEmail','streetAddress','additionalEmail']);
 const SENS_FIELDS = new Set(['Alert Email','Street Address','Additional Email','Notes']);
-
-const prog={
-  start(){ document.getElementById('api-spin')?.classList.remove('hidden'); },
-  done(){  document.getElementById('api-spin')?.classList.add('hidden'); }
-};
 
 const API={
   async call(action,payload,raw){
     payload=Object.assign({},payload||{});
     if(SM.at&&!raw){
       const exp=Number(LS.g('pxf_sexp')||0);
-      if(exp&&Date.now()>exp){SM._expired=true;SM.clear();navigate('login');toast(t('sessionExpired'),'error');return {success:false,code:'SESSION_EXPIRED',message:t('sessionExpired')};}
+      if(exp&&Date.now()>exp){
+        SM._expired=true; SM.clear(); navigate('login');
+        toast(t('sessionExpired'),'error');
+        return {success:false,code:'SESSION_EXPIRED',message:t('sessionExpired')};
+      }
     }
     const body={action,_origin:ORIGIN};
-    prog.start();
     if(SM.ek&&SM.at&&!raw){
       body.tok=SM.at;
       const sensitive={},plain={};
       Object.keys(payload).forEach(k=>{
-        if(k==='fields'){const hasSF=Object.keys(payload.fields||{}).some(f=>SENS_FIELDS.has(f));if(hasSF)sensitive.fields=payload.fields;else plain.fields=payload.fields;}
-        else if(SENS_REQ.has(k)){sensitive[k]=payload[k];}
-        else{plain[k]=payload[k];}
+        if(k==='fields'){
+          const hasSF=Object.keys(payload.fields||{}).some(f=>SENS_FIELDS.has(f));
+          if(hasSF) sensitive.fields=payload.fields;
+          else plain.fields=payload.fields;
+        } else if(SENS_REQ.has(k)){
+          sensitive[k]=payload[k];
+        } else {
+          plain[k]=payload[k];
+        }
       });
       body.payload=plain;
       if(Object.keys(sensitive).length) body.enc=await encPay(SM.ek,sensitive);
@@ -757,12 +691,14 @@ const API={
     try{
       const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});
       data=await r.json();
-    }catch(_){prog.done();return {success:false,code:'NETWORK',message:t('networkError')};}
+    }catch(_){return {success:false,code:'NETWORK',message:t('networkError')};}
     if(data.enc&&SM.ek){
-      try{const dec=await decPay(SM.ek,data.enc);Object.assign(data,dec);delete data.enc;}
-      catch(_){prog.done();return {success:false,code:'DECRYPT',message:t('networkError')};}
+      try{
+        const dec=await decPay(SM.ek,data.enc);
+        Object.assign(data,dec);
+        delete data.enc;
+      }catch(_){return {success:false,code:'DECRYPT',message:t('networkError')};}
     }
-    prog.done();
     if(data.code==='SESSION_EXPIRED'||data.code==='SESSION_REVOKED'){SM.clear();navigate('login');toast(t('sessionExpired'),'error');}
     return data;
   },
@@ -770,9 +706,8 @@ const API={
     const url=new URL(API_URL);
     Object.keys(params).forEach(k=>url.searchParams.set(k,params[k]));
     url.searchParams.set('_origin',ORIGIN);
-    prog.start();
-    try{const r=await fetch(url);const d=await r.json();prog.done();return d;}
-    catch(_){prog.done();return {success:false,code:'NETWORK',message:t('networkError')};}
+    try{const r=await fetch(url);return await r.json();}
+    catch(_){return {success:false,code:'NETWORK',message:t('networkError')};}
   }
 };
 
@@ -787,8 +722,8 @@ function toast(msg,type='info'){
   document.getElementById('toasts').appendChild(el);
   setTimeout(()=>el.remove(),3800);
 }
-function modal(html,noClose){
-  document.getElementById('modal-root').innerHTML=`<div class="modal-bg" onclick="if(event.target===this&&!${!!noClose})closeModal()"><div class="modal">${html}</div></div>`;
+function modal(html,noClose,wide){
+  document.getElementById('modal-root').innerHTML=`<div class="modal-bg" onclick="if(event.target===this&&!${!!noClose})closeModal()"><div class="modal${wide?' wide':''}">${html}</div></div>`;
 }
 function closeModal(){ document.getElementById('modal-root').innerHTML=''; }
 function showAlert(id,msg,type='error'){ const e=document.getElementById(id); if(e) e.innerHTML=`<div class="alert alert-${type==='ok'?'ok':type==='info'?'info':'error'}">${esc(msg)}</div>`; }
@@ -814,31 +749,90 @@ const DevGuard={
   _clickTimes:[],
   getState(){ try{return JSON.parse(LS.g('pxf_devg')||'{}');}catch(_){return {};} },
   setState(s){ LS.s('pxf_devg',JSON.stringify(s)); },
-  getMonthAttempts(s){ const cutoff=Date.now()-30*24*60*60*1000; return (s.attempts||[]).filter(t=>t>cutoff); },
-  getBotEvents(){ const cutoff=Date.now()-30*24*60*60*1000; try{return (JSON.parse(LS.g('pxf_bev')||'[]')).filter(t=>t>cutoff);}catch(_){return[];} },
-  recordBotEvent(){ const evs=this.getBotEvents(); evs.push(Date.now()); LS.s('pxf_bev',JSON.stringify(evs)); if(evs.length>=3&&SM.ok){this.addServerStrike('bot_detection');LS.s('pxf_bev',JSON.stringify([]));} },
-  trackClick(){ const now=Date.now(); this._clickTimes.push(now); this._clickTimes=this._clickTimes.filter(t=>now-t<500); if(this._clickTimes.length>=8){this.recordBotEvent();this._clickTimes=[];} },
+  getMonthAttempts(s){
+    const cutoff=Date.now()-30*24*60*60*1000;
+    return (s.attempts||[]).filter(t=>t>cutoff);
+  },
+  getBotEvents(){
+    const cutoff=Date.now()-30*24*60*60*1000;
+    try{return (JSON.parse(LS.g('pxf_bev')||'[]')).filter(t=>t>cutoff);}catch(_){return[];}
+  },
+  recordBotEvent(){
+    const evs=this.getBotEvents();
+    evs.push(Date.now());
+    LS.s('pxf_bev',JSON.stringify(evs));
+    if(evs.length>=3&&SM.ok){
+      this.addServerStrike('bot_detection');
+      LS.s('pxf_bev',JSON.stringify([]));
+    }
+  },
+  trackClick(){
+    const now=Date.now();
+    this._clickTimes.push(now);
+    this._clickTimes=this._clickTimes.filter(t=>now-t<500);
+    if(this._clickTimes.length>=8){ this.recordBotEvent(); this._clickTimes=[]; }
+  },
   async addServerStrike(reason){
     try{
       const r=await API.call('addDevStrike',{reason});
-      if(r&&r.banned){closeModal();modal(`<h3 style="color:var(--danger);margin-bottom:12px">⛔ ${esc(t('devWarn1Title'))}</h3><p style="font-size:15px;line-height:1.7">${esc(t('devBanned'))}</p><div class="modal-btns"><button class="btn btn-ghost btn-sm" onclick="closeModal()">${esc(t('close'))}</button></div>`,true);SM.clear();}
+      if(r&&r.banned){
+        closeModal();
+        modal(`<h3 style="color:var(--danger);margin-bottom:12px">⛔ ${esc(t('devWarn1Title'))}</h3>
+          <p style="font-size:15px;line-height:1.7">${esc(t('devBanned'))}</p>
+          <div class="modal-btns"><button class="btn btn-ghost btn-sm" onclick="closeModal()">${esc(t('close'))}</button></div>`,true);
+        SM.clear(); return;
+      }
     }catch(_){}
   },
   handle(){
-    const s=this.getState(),atts=this.getMonthAttempts(s),warned1=s.warned1||false;
-    atts.push(Date.now()); s.attempts=atts;
+    const s=this.getState();
+    const atts=this.getMonthAttempts(s);
+    const warned1=s.warned1||false;
+    atts.push(Date.now());
+    s.attempts=atts;
     const count=atts.length;
     if(count===1){
-      if(!warned1){this.setState(s);modal(`<h3 style="margin-bottom:12px">⚠️ ${esc(t('devWarn1Title'))}</h3><div class="dev-modal-bilingual"><strong>Lietuviškai</strong>Kūrėjų įrankių naudojimas yra draudžiamas ir prieštarauja mūsų politikai.<hr class="dev-modal-sep"><strong>English</strong>Developer tools are not permitted and are against our policy.</div><div class="modal-btns"><button class="btn btn-primary" onclick="DevGuard.ack1()">Suprantu / I understand</button></div>`,true);}
-      else{this.setState(s);toast(t('devRepeat'),'error');}
+      if(!warned1){
+        this.setState(s);
+        modal(`<h3 style="margin-bottom:12px">⚠️ ${esc(t('devWarn1Title'))}</h3>
+          <div class="dev-modal-bilingual">
+            <strong>Lietuviškai</strong>
+            Kūrėjų įrankių naudojimas yra draudžiamas ir prieštarauja mūsų politikai.
+            <hr class="dev-modal-sep">
+            <strong>English</strong>
+            Developer tools are not permitted and are against our policy.
+          </div>
+          <div class="modal-btns">
+            <button class="btn btn-primary" onclick="DevGuard.ack1()">Suprantu / I understand</button>
+          </div>`,true);
+      } else {
+        this.setState(s);
+        toast(t('devRepeat'),'error');
+      }
     } else if(count===2){
-      this.setState(s);modal(`<h3 style="margin-bottom:12px">⚠️ ${esc(t('devWarn2Title'))}</h3><div class="dev-modal-bilingual"><strong>Lietuviškai</strong>Dar vienas pažeidimas gali lemti veiksmus prieš jūsų paskyrą.<hr class="dev-modal-sep"><strong>English</strong>Another offence may result in action against your account.</div><div class="modal-btns"><button class="btn btn-ghost btn-sm" onclick="closeModal()">${esc(t('close'))}</button></div>`);
+      this.setState(s);
+      modal(`<h3 style="margin-bottom:12px">⚠️ ${esc(t('devWarn2Title'))}</h3>
+        <div class="dev-modal-bilingual">
+          <strong>Lietuviškai</strong>
+          Dar vienas pažeidimas gali lemti veiksmus prieš jūsų paskyrą.
+          <hr class="dev-modal-sep">
+          <strong>English</strong>
+          Another offence may result in action against your account.
+        </div>
+        <div class="modal-btns"><button class="btn btn-ghost btn-sm" onclick="closeModal()">${esc(t('close'))}</button></div>`);
     } else {
-      s.attempts=[];this.setState(s);toast(t('devWarn3Notice'),'error');
+      s.attempts=[];
+      this.setState(s);
+      toast(t('devWarn3Notice'),'error');
       if(SM.ok) this.addServerStrike('devtools');
     }
   },
-  ack1(){ const s=this.getState(); s.warned1=true; this.setState(s); closeModal(); }
+  ack1(){
+    const s=this.getState();
+    s.warned1=true;
+    this.setState(s);
+    closeModal();
+  }
 };
 
 function initDevBlock(){
@@ -877,6 +871,31 @@ function hideLoadingScreen(){
   setTimeout(()=>el.classList.add('hidden'),360);
 }
 
+/* ---------- Maintenance ---------- */
+function showMaint(){
+  const m=document.getElementById('maint'); m.classList.remove('hidden');
+  document.getElementById('maint-msg').textContent=t('maintMsg');
+  document.getElementById('maint-lang').innerHTML=`<button class="${L==='lt'?'active':''}" onclick="setLang('lt')">LT</button><button class="${L==='en'?'active':''}" onclick="setLang('en')">EN</button>`;
+}
+function maintBypassed(){ try{return sessionStorage.getItem('pxf_mb')==='1';}catch(_){return false;} }
+function initMaintKeys(onBypass){
+  const down=new Set();
+  const kd=e=>{
+    const k=e.key.toLowerCase();
+    if(k===' ') e.preventDefault();
+    down.add(k);
+    if(down.has(' ')&&down.has('z')&&down.has('x')){
+      document.removeEventListener('keydown',kd); document.removeEventListener('keyup',ku);
+      try{sessionStorage.setItem('pxf_mb','1');}catch(_){}
+      document.getElementById('maint').classList.add('hidden');
+      onBypass();
+    }
+  };
+  const ku=e=>down.delete(e.key.toLowerCase());
+  document.addEventListener('keydown',kd); document.addEventListener('keyup',ku);
+  window.addEventListener('blur',()=>down.clear());
+}
+
 function openAI(){ window.location.href = ORIGIN+'/AI.html'; }
 function showAiTip(){ const tt=document.getElementById('ai-tt'); tt.textContent=t('aiTooltip'); tt.classList.add('vis'); }
 function hideAiTip(){ document.getElementById('ai-tt').classList.remove('vis'); }
@@ -899,7 +918,7 @@ function toggleSmTip(e,id){
   if(!el.classList.contains('hidden')) setTimeout(()=>el.classList.add('hidden'),5000);
 }
 
-const State={view:'landing',_tagResult:null,_tagParams:null,_setupParams:null,_resetParams:null,_dash:null,_stock:null};
+const State={view:'landing',_tagResult:null,_tagParams:null,_cachedAt:null,_regMode:'login',_setupParams:null,_resetParams:null,_dash:null,_stock:null,_shown:[],_gal:[],_galX:{}};
 
 function navigate(v){ State.view=v; render(); }
 
@@ -921,6 +940,7 @@ function render(){
     case 'catalog':    renderCatalog();                            break;
     case 'dashboard':  renderDash();                               break;
     case 'tagScan':    app.innerHTML=vTagScan();                   break;
+    case 'tagReg':     app.innerHTML=vTagReg();                    break;
     case 'activation': app.innerHTML=vActivation();                break;
     default:           app.innerHTML=vLanding();
   }
@@ -940,7 +960,13 @@ function renderNav(){
 async function doLogout(){ await API.call('logout',{}); SM.clear(); navigate('landing'); }
 
 function showHowToGetModal(){
-  modal(`<h3 style="margin-bottom:12px">${t('howToGet')}</h3><p style="line-height:1.6;color:var(--dim)">${t('howToGetBody')}</p><div class="modal-btns"><button class="btn btn-ghost btn-sm" onclick="closeModal()">${t('close')}</button></div>`);
+  modal(
+    `<h3 style="margin-bottom:12px">${t('howToGet')}</h3>
+     <p style="line-height:1.6;color:var(--dim)">${t('howToGetBody')}</p>
+     <div class="modal-btns">
+       <button class="btn btn-ghost btn-sm" onclick="closeModal()">${t('close')}</button>
+     </div>`
+  );
 }
 
 function vLanding(){
@@ -959,7 +985,7 @@ function vLanding(){
 function pwField(id,labelKey,submitBtnId){
   return `<label>${t(labelKey)}
     <div class="pw-wrap">
-      <input id="${id}" type="password" autocomplete="${id==='rg-pw'||id==='su-pw'||id==='rf-pw'?'new-password':'current-password'}" onkeydown="hk(event,'${submitBtnId}')">
+      <input id="${id}" type="password" autocomplete="${id==='rg-pw'||id==='su-pw'||id==='rf-pw'||id==='tl-pw'&&State._regMode==='register'?'new-password':'current-password'}" onkeydown="hk(event,'${submitBtnId}')">
       <button type="button" class="pw-eye" onclick="togglePwVis('${id}',this)">👁</button>
     </div></label>`;
 }
@@ -1014,12 +1040,6 @@ async function submitReg(){
   SM.save(r,email); navigate('dashboard');
 }
 
-// ═══════════════════════════════════════════════════════════
-// CHANGE 2: Password reset — block button after first send,
-//           clear email field, show loading animation
-// ═══════════════════════════════════════════════════════════
-let _resetSending=false;
-
 function vResetReq(){
   return `<div class="card" style="max-width:400px;margin:0 auto">
     <h2 style="margin-bottom:10px">${t('resetTitle')}</h2>
@@ -1031,28 +1051,19 @@ function vResetReq(){
   </div>`;
 }
 async function submitResetReq(btn){
-  if(_resetSending) return;
-  const emailEl=document.getElementById('rq-email');
-  const email=emailEl.value.trim();
+  const inp=document.getElementById('rq-email');
+  const email=inp.value.trim();
   if(!email.includes('@')){showAlert('reset-alert',t('badEmailFmt'));return;}
-  // Block button immediately
-  _resetSending=true;
-  btn.disabled=true;
-  btn.innerHTML=`<span style="display:inline-flex;align-items:center;gap:8px">${t('loading')}<span style="display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite"></span></span>`;
-  if(!document.getElementById('pxf-spin-style')){
-    const st=document.createElement('style');
-    st.id='pxf-spin-style';
-    st.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
-    document.head.appendChild(st);
+  const orig=btn.innerHTML;
+  btn.disabled=true; inp.disabled=true;
+  btn.innerHTML='<span class="mini-spin"></span>'+esc(t('loading'));
+  try{
+    await API.call('requestPasswordReset',{email},true);
+    showAlert('reset-alert',t('resetSent'),'ok');
+    inp.value='';
+  }finally{
+    btn.disabled=false; inp.disabled=false; btn.innerHTML=orig;
   }
-  await API.call('requestPasswordReset',{email},true);
-  // Empty email field after send
-  emailEl.value='';
-  showAlert('reset-alert',t('resetSent'),'ok');
-  // Keep button blocked — do not re-enable to prevent multi-send
-  btn.innerHTML=t('sendReset');
-  btn.disabled=true;
-  _resetSending=false;
 }
 
 function vResetForm(){
@@ -1092,10 +1103,7 @@ async function submitSetup(){
   SM.save(r,r.email); navigate('dashboard');
 }
 
-// ═══════════════════════════════════════════════════════════
-// CHANGE 4 & 5: Catalog with multi-photo, clickable detail,
-//               fixed Key type filter
-// ═══════════════════════════════════════════════════════════
+/* ================= SHOP ================= */
 async function renderCatalog(){
   const app=document.getElementById('app');
   app.innerHTML=`<h2 style="margin-bottom:16px">${t('catalog')}</h2>
@@ -1110,153 +1118,82 @@ async function renderCatalog(){
     <div id="cg" class="catalog-grid"><p class="muted">${t('loading')}</p></div>`;
   if(!State._stock){
     const r=await API.pub({action:'stock'});
-    State._stock=r.success?r.items:[];
+    if(r&&r.success) State._stock=r.items||[]; else { document.getElementById('cg').innerHTML=`<p class="muted">${esc(em(r))}</p>`; return; }
   }
   filterCatalog();
 }
-
-// Change 5: type comparison is now case-insensitive and trims
 function filterCatalog(){
-  const s=(document.getElementById('cs')?.value||'').toLowerCase();
-  const f=(document.getElementById('cf')?.value||'').toLowerCase();
+  const s=(document.getElementById('cs')?.value||'').trim().toLowerCase(),f=document.getElementById('cf')?.value||'';
   const items=(State._stock||[]).filter(i=>{
-    const nameMatch=String(i['Name']).toLowerCase().includes(s);
-    // Change 5 fix: compare lowercase so 'Key' always matches 'key'
-    const typeVal=String(i['Type']||'').trim().toLowerCase();
-    const typeMatch=!f||(typeVal===f);
-    return nameMatch&&typeMatch;
+    if(f&&nType(i['Type'])!==f) return false;
+    if(!s) return true;
+    const hay=[i['Name'],i['Material'],i['Color'],i['Model'],i['Technologies'],i['Description'],i['Product ID'],typeLbl(i['Type'])].map(v=>String(v===undefined||v===null?'':v).toLowerCase()).join(' ');
+    return hay.includes(s);
   });
+  State._shown=items;
   const g=document.getElementById('cg'); if(!g) return;
   if(!items.length){g.innerHTML=`<p class="muted">${t('noStock')}</p>`;return;}
-  g.innerHTML=items.map(i=>renderProductCard(i)).join('');
-}
-
-// Change 4: render product card with up to 3 photos
-function renderProductCard(i){
-  const pid=esc(i['Product ID']||'');
-  const hasImg2=true; // We attempt to load; onerror hides
-  // We always try to show main photo; extras are attempted
-  return `<div class="card pcard" onclick="openProductDetail(${JSON.stringify(JSON.stringify(i))})">
-    <div class="pphoto-strip" id="strip-${pid}">
-      <div class="pphoto-main">
-        <img src="${pid}.png" alt="${esc(i['Name'])}"
-          onerror="this.parentElement.innerHTML='<span style=&quot;color:var(--dim);font-size:12px&quot;>—</span>'"
-          onload="checkExtraPhotos('${pid}')">
-      </div>
-      <div class="pphoto-thumbs hidden" id="thumbs-${pid}">
-        <div class="pphoto-thumb" id="thumb2-${pid}" style="display:none">
-          <img src="${pid}_2.png" alt="" onerror="this.parentElement.style.display='none';maybeShrinkThumbs('${pid}')">
-        </div>
-        <div class="pphoto-thumb" id="thumb3-${pid}" style="display:none">
-          <img src="${pid}_3.png" alt="" onerror="this.parentElement.style.display='none';maybeShrinkThumbs('${pid}')">
-        </div>
-      </div>
-    </div>
+  g.innerHTML=items.map((i,idx)=>`<div class="card pcard" onclick="openProduct(${idx})">
+    <div class="pphoto"><img src="${esc(i['Product ID'])}.png" alt="${esc(i['Name'])}" onerror="this.style.display='none';this.parentElement.textContent='—'"></div>
     <div class="pbody">
       <h4>${esc(i['Name'])}</h4>
       <div class="muted">${esc(i['Material']||'')}${i['Color']?' · '+esc(i['Color']):''}</div>
-      <div class="pprice">€${esc(String(i['Price']??''))}</div>
-      <div class="muted" style="font-size:12px">${esc(i['Technologies']||'')} · ${esc(i['Model']||'')} · ${esc(String(i['Type']||'').toLowerCase()==='key'?t('keyType'):t('petType'))}</div>
+      <div class="pprice">€${esc(i['Price'])}</div>
+      <div class="muted" style="font-size:12px">${esc(i['Technologies']||'')} · ${esc(i['Model']||'')} · ${esc(typeLbl(i['Type']))}</div>
     </div>
-  </div>`;
+  </div>`).join('');
 }
-
-function checkExtraPhotos(pid){
-  // After main loads, attempt to show thumb strip
-  const t2=document.getElementById('thumb2-'+pid);
-  const t3=document.getElementById('thumb3-'+pid);
-  const thumbsWrap=document.getElementById('thumbs-'+pid);
-  if(t2){ t2.style.display='flex'; }
-  if(t3){ t3.style.display='flex'; }
-  if(thumbsWrap) thumbsWrap.classList.remove('hidden');
-  // maybeShrinkThumbs will hide the container if both fail
-  setTimeout(()=>maybeShrinkThumbs(pid),400);
+function techHint(v){
+  const s=String(v||'').toUpperCase().replace(/\s/g,'');
+  if(s.includes('NFC')&&s.includes('QR')) return t('techBoth');
+  if(s.includes('NFC')) return t('techNFC');
+  if(s.includes('QR')) return t('techQR');
+  return '';
 }
-
-function maybeShrinkThumbs(pid){
-  const thumbsWrap=document.getElementById('thumbs-'+pid);
-  if(!thumbsWrap) return;
-  const visible=[...thumbsWrap.querySelectorAll('.pphoto-thumb')].filter(el=>el.style.display!=='none');
-  if(visible.length===0) thumbsWrap.classList.add('hidden');
-}
-
-// Change 4: Product detail modal with field labels and photo switcher
-function openProductDetail(jsonStr){
-  const i=JSON.parse(jsonStr);
-  const pid=String(i['Product ID']||'');
-  const typeLabel=String(i['Type']||'').toLowerCase()==='key'?t('keyType'):t('petType');
-  const photos=[pid+'.png',pid+'_2.png',pid+'_3.png'];
-
-  const thumbsHtml=photos.map((src,idx)=>
-    `<div class="pdetail-thumb ${idx===0?'active':''}" id="pdt-${idx}" onclick="switchDetailPhoto(${idx},'${esc(pid)}')">
-      <img src="${esc(src)}" alt="" onerror="this.parentElement.style.display='none'">
-    </div>`
-  ).join('');
-
+function openProduct(idx){
+  const p=State._shown[idx]; if(!p) return;
+  const id=String(p['Product ID']||'');
+  State._gal=[id+'.png']; State._galX={};
+  const ty=nType(p['Type']);
+  const hasStock=p['Stock Quantity']!==undefined&&p['Stock Quantity']!==null&&String(p['Stock Quantity'])!=='';
   const rows=[
-    {l:t('pdType'),v:typeLabel},
-    {l:t('pdMaterial'),v:i['Material']||''},
-    {l:t('pdColor'),v:i['Color']||''},
-    {l:t('pdModel'),v:i['Model']||''},
-    {l:t('pdTech'),v:i['Technologies']||''},
-    {l:t('pdPrice'),v:i['Price']!==undefined?'€'+i['Price']:''},
-    {l:t('pdStock'),v:i['Stock Quantity']!==undefined?String(i['Stock Quantity']):''},
-    {l:t('pdDesc'),v:i['Description']||''},
-  ].filter(r=>r.v);
-
-  modal(`<h3 style="margin-bottom:14px">${esc(i['Name'])}</h3>
-    <div class="pdetail-main-photo">
-      <img id="pdetail-main-img" src="${esc(photos[0])}" alt="${esc(i['Name'])}"
-        onerror="this.style.display='none';this.parentElement.innerHTML='<span style=&quot;color:var(--dim)&quot;>—</span>'">
-    </div>
-    <div class="pdetail-thumbs" style="margin-bottom:14px">${thumbsHtml}</div>
-    <div>
-      ${rows.map(r=>`<div class="pdetail-row"><span class="lbl">${esc(r.l)}</span><span class="val">${esc(r.v)}</span></div>`).join('')}
-    </div>
-    <div class="modal-btns"><button class="btn btn-ghost btn-sm" onclick="closeModal()">${t('close')}</button></div>`);
+    [t('type'),typeLbl(p['Type']),ty==='Key'?t('typeKeyHint'):t('typePetHint')],
+    [t('material'),p['Material'],''],
+    [t('color'),p['Color'],''],
+    [t('price'),p['Price']!==undefined&&p['Price']!==''?'€'+p['Price']:'',''],
+    [t('technologies'),p['Technologies'],techHint(p['Technologies'])],
+    [t('model'),p['Model'],p['Model']==='Pro'?t('modelPro'):(p['Model']==='Base'?t('modelBase'):'')],
+    [t('description'),p['Description'],''],
+    hasStock?[t('availability'),Number(p['Stock Quantity'])>0?t('inStock'):t('outStock'),'']:null,
+  ].filter(r=>r&&r[1]!==undefined&&r[1]!==null&&String(r[1])!=='');
+  modal(`<h3>${esc(p['Name'])}</h3>
+    <div class="gal-main"><img id="gal-main" src="${esc(id)}.png" alt="${esc(p['Name'])}" onerror="this.style.display='none'"></div>
+    <div id="gal-th" class="gal-th"></div>
+    <div style="margin-top:14px">${rows.map(r=>`<div class="info-row"><span class="lbl">${esc(r[0])}</span><span class="val">${esc(r[1])}${r[2]?`<span class="hint">${esc(r[2])}</span>`:''}</span></div>`).join('')}</div>
+    <div class="modal-btns"><button class="btn btn-ghost btn-sm" onclick="closeModal()">${t('close')}</button></div>`,false,true);
+  [2,3].forEach(n=>{
+    const src=id+'_'+n+'.png'; const im=new Image();
+    im.onload=()=>{ State._galX[n]=src; State._gal=[id+'.png'].concat([2,3].filter(k=>State._galX[k]).map(k=>State._galX[k])); galThumbs(); };
+    im.src=src;
+  });
+}
+function galThumbs(){
+  const th=document.getElementById('gal-th'); if(!th) return;
+  if(State._gal.length<2){th.innerHTML='';return;}
+  th.innerHTML=State._gal.map((s,i)=>`<img src="${esc(s)}" class="${i===0?'on':''}" onclick="setGal(${i})" alt="">`).join('');
+}
+function setGal(i){
+  const m=document.getElementById('gal-main'); if(!m) return;
+  m.style.display='block'; m.src=State._gal[i];
+  document.querySelectorAll('#gal-th img').forEach((el,k)=>el.classList.toggle('on',k===i));
 }
 
-// Store photo sources for the detail switcher
-const _detailPhotos={};
-function switchDetailPhoto(idx,pid){
-  const main=document.getElementById('pdetail-main-img');
-  if(!main) return;
-  const src=pid+(idx===0?'':('_'+(idx+1)))+'.png';
-  main.src=src;
-  document.querySelectorAll('.pdetail-thumb').forEach((el,i)=>el.classList.toggle('active',i===idx));
-}
-
+/* ================= DASHBOARD ================= */
 async function renderDash(){
   const app=document.getElementById('app');
-  app.innerHTML=`<div style="text-align:center;padding:40px 0"><p class="muted" style="font-size:15px;margin-bottom:16px">${t('decryptingData')}</p></div>`;
-
-  // ═══════════════════════════════════════════════════════
-  // CHANGE 10: Cache dashboard data, 24hr logic
-  // ═══════════════════════════════════════════════════════
-  const CACHE_KEY='pxf_dash_cache';
-  const CACHE_TIME_KEY='pxf_dash_cache_time';
-  const cachedRaw=LS.g(CACHE_KEY);
-  const cachedTime=Number(LS.g(CACHE_TIME_KEY)||0);
-  const cacheAge=Date.now()-cachedTime;
-  const cacheValid=cachedRaw&&cacheAge<CACHE_TTL;
-
-  let r;
-  let fromCache=false;
-  if(cacheValid){
-    try{ r=JSON.parse(cachedRaw); fromCache=true; }catch(_){ r=null; }
-  }
-  if(!fromCache){
-    r=await API.call('getUserData',{});
-    if(r&&r.success){
-      try{ LS.s(CACHE_KEY,JSON.stringify(r)); LS.s(CACHE_TIME_KEY,String(Date.now())); }catch(_){}
-    }
-  }
-
-  if(!r||!r.success){
-    if(r&&r.code==='SESSION_EXPIRED'){SM.clear();navigate('login');return;}
-    app.innerHTML=`<div class="alert alert-error">${esc(em(r||{code:'NETWORK'}))}</div>`;
-    return;
-  }
+  app.innerHTML=`<div class="dec-load">${esc(t('decrypting'))}</div>`;
+  const r=await API.call('getUserData',{});
+  if(!r.success){if(r.code==='SESSION_EXPIRED'){SM.clear();navigate('login');return;} app.innerHTML=`<div class="alert alert-error">${esc(em(r))}</div>`;return;}
   SM.save({fullName:r.fullName,role:r.role,userId:r.userId});
   State._dash=r;
   const tags=r.tags||[];
@@ -1264,32 +1201,15 @@ async function renderDash(){
     const cool=tag['Edit Cooldown Until'];
     if(cool){const exp=new Date(cool).getTime();if(exp>Date.now())LS.s('pxf_cool_'+tag['Tag ID'],String(exp));}
   });
-
   let tabs=`<button class="tab active" data-tab="tags" onclick="switchTab('tags')">${t('myTags')}</button>`;
   if(SM.isAdmin) tabs+=`<button class="tab" data-tab="admin" onclick="switchTab('admin')">${t('adminTools')}</button>`;
   if(SM.isDev)   tabs+=`<button class="tab" data-tab="dev" onclick="switchTab('dev')">${t('devPanel')}</button>`;
   tabs+=`<button class="tab" data-tab="settings" onclick="switchTab('settings')">${t('settings')}</button>`;
-
-  // Change 10: show cache notice if data is from cache
-  const cacheNoticeHtml=fromCache
-    ?`<div class="cache-notice">
-        <span>${t('cacheNotice').replace('%t',new Date(cachedTime).toLocaleTimeString(L==='en'?'en-GB':'lt-LT',{hour:'2-digit',minute:'2-digit'}))}</span>
-        <button class="btn btn-ghost btn-sm" onclick="refreshDashCache()">${t('cacheRefresh')}</button>
-      </div>`
-    :'';
-
   app.innerHTML=`<h2 style="margin-bottom:2px">${esc(r.fullName)}</h2>
     <p class="muted" style="margin-bottom:4px">${esc(r.email)} · ${esc({'admin':t('roleAdmin'),'developer':t('roleDev')}[SM.role]||t('roleCustomer'))}</p>
-    ${cacheNoticeHtml}
     <div class="tabs">${tabs}</div>
     <div id="tc"></div>`;
   switchTab('tags');
-}
-
-// Change 10: manual cache refresh
-async function refreshDashCache(){
-  LS.s('pxf_dash_cache_time','0');
-  await renderDash();
 }
 
 function switchTab(tab){
@@ -1304,6 +1224,7 @@ function switchTab(tab){
 function sPill(s){
   if(s==='Active') return `<span class="pill active">${t('statusActive')}</span>`;
   if(s==='Pending Activation') return `<span class="pill pending">${t('statusPending')}</span>`;
+  if(s==='Lost/Stolen') return `<span class="pill lost">${t('statusLost')}</span>`;
   return `<span class="pill">${t('statusUnreg')}</span>`;
 }
 
@@ -1324,8 +1245,9 @@ function renderTagsTab(){
   if(!tags.length) return `<div class="card"><p class="muted">${t('noTags')}</p></div>`;
   return tags.map(tag=>{
     const tid=esc(tag['Tag ID']||''),isPro=tag['Model']==='Pro';
-    const emergEnabled=String(tag['Emergency Notes?']||'').toLowerCase()==='yes';
-    const urlRow=tag._url?`<div class="copy-row" style="margin-bottom:12px"><input id="url-${tid}" readonly value="${esc(tag._url)}"><button class="btn btn-ghost btn-sm" onclick="copyUrl('url-${tid}')">${t('copy')}</button></div>`:'';
+    const emergEnabled=isPro||String(tag['Emergency Notes?']||'').toLowerCase()==='yes';
+    const emax=emgMax(tag['Model']);
+    const urlRow=tag._url?`<div class="copy-row" style="margin-bottom:12px"><input id="url-${tid}" readonly value="${esc(tag._url)}"><button class="btn btn-ghost btn-sm" onclick="copyUrl('url-${tid}')">${t('copy')}</button></div>`:'' ;
     const smTipId=`sm-tip-${tid}`;
     const coolExp=getEditCooldown(tag['Tag ID']||'');
     const coolMins=coolExp?Math.ceil((coolExp-Date.now())/60000):0;
@@ -1333,7 +1255,7 @@ function renderTagsTab(){
     return `<div class="card" style="margin-bottom:14px">
       <div class="tag-head">
         <div><strong>${esc(tag['Display Name']||tag['Tag ID'])}</strong> <span class="pill" style="margin-left:4px">${esc(tag['Tag ID'])}</span></div>
-        <div style="display:flex;gap:5px;flex-wrap:wrap">${sPill(tag['Status'])} <span class="pill">${esc(tag['Model'])}</span> <span class="pill">${esc(String(tag['Type']||'').toLowerCase()==='key'?t('keyType'):t('petType'))}</span></div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">${sPill(tag['Status'])} <span class="pill">${esc(tag['Model'])}</span> <span class="pill">${esc(typeLbl(tag['Type']))}</span></div>
       </div>
       ${urlRow}
       ${tag['Status']==='Pending Activation'?`<div class="alert alert-info" style="margin-bottom:12px">${t('statusPending')}</div>`:''}
@@ -1356,7 +1278,7 @@ function renderTagsTab(){
           <div class="field"><label>${t('contactPhone')} <span class="opt-hint">${t('opt')}</span><input name="Contact Phone" value="${esc(tag['Contact Phone']||'')}"></label></div>
           <div class="field"><label>${t('alertEmail')}<input name="Alert Email" type="email" value="${esc(tag['Alert Email']||'')}"></label></div>
         </div>
-        ${emergEnabled?`<div class="field" style="margin-top:10px"><label style="color:#fca5a5">${t('emergencyNotes')} <span class="opt-hint" style="color:#fca5a5;font-style:normal">${t('max30')}</span><input name="Emergency Notes" maxlength="30" value="${esc(tag['Emergency Notes']||'')}"></label></div>`:''}
+        ${emergEnabled?`<div class="field" style="margin-top:10px"><label style="color:#fca5a5">${t('emergencyNotes')} <span class="opt-hint" style="color:#fca5a5;font-style:normal">${maxTxt(emax)}</span><input name="Emergency Notes" maxlength="${emax}" value="${esc(tag['Emergency Notes']||'')}"></label></div>`:''}
         ${isPro?`<div class="sec-lbl">${t('proFields')}</div>
         <div class="grid2">
           <div class="field"><label>${t('streetAddress')} <span class="opt-hint">${t('opt')}</span><input name="Street Address" value="${esc(tag['Street Address']||'')}"></label></div>
@@ -1367,6 +1289,7 @@ function renderTagsTab(){
           <div class="field"><label>${t('allergies')} <span class="opt-hint">${t('opt')}</span><input name="Allergies" value="${esc(tag['Allergies']||'')}"></label></div>
           <div class="field"><label>${t('age')} <span class="opt-hint">${t('opt')}</span><input name="Age" value="${esc(String(tag['Age']||''))}"></label></div>
           <div class="field"><label>${t('breed')} <span class="opt-hint">${t('opt')}</span><input name="Breed" value="${esc(tag['Breed']||'')}"></label></div>
+          <div class="field" style="grid-column:1/-1"><label>${t('notes')} <span class="opt-hint">${t('opt')}</span><input name="Notes" value="${esc(tag['Notes']||'')}"></label></div>
         </div>
         <p class="muted" style="margin-top:6px;font-size:12px">${t('proEditNote')}</p>`:''}
         <div id="tag-alert-${tid}"></div>
@@ -1380,9 +1303,8 @@ function renderTagsTab(){
     </div>`;
   }).join('');
 }
-
 async function submitEditTag(tagId,form){
-  const isPro=(State._dash&&State._dash.tags||[]).find(tt=>tt['Tag ID']===tagId)?.['Model']==='Pro';
+  const isPro=(State._dash&&State._dash.tags||[]).find(x=>x['Tag ID']===tagId)?.['Model']==='Pro';
   if(isPro){
     const coolExp=getEditCooldown(tagId);
     if(coolExp){const mins=Math.ceil((coolExp-Date.now())/60000);showAlert('tag-alert-'+tagId,t('editCooldownLocal').replace('%m',mins));return;}
@@ -1393,17 +1315,13 @@ async function submitEditTag(tagId,form){
   if(r.success){
     showAlert('tag-alert-'+tagId,t('saved'),'ok');
     if(isPro) setEditCooldown(tagId);
-    // Invalidate cache so next dashboard load is fresh
-    LS.s('pxf_dash_cache_time','0');
   } else {
     showAlert('tag-alert-'+tagId,em(r));
     if(r.code==='COOLDOWN'&&isPro) setEditCooldown(tagId);
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-// Admin tab with changes 6, 7, 8
-// ═══════════════════════════════════════════════════════════
+/* ================= ADMIN ================= */
 function renderAdminTab(){
   return `<div class="card">
   <div class="adm-sec">
@@ -1411,10 +1329,9 @@ function renderAdminTab(){
     <div class="grid2">
       <div class="field"><label>${t('model')}<select id="gen-model"><option value="Base">Base</option><option value="Pro">Pro</option></select></label></div>
       <div class="field"><label>${t('type')}<select id="gen-type"><option value="Pet">${t('petType')}</option><option value="Key">${t('keyType')}</option></select></label></div>
-      <div class="field"><label>Technologies<select id="gen-tech"><option value="NFC+QR">NFC+QR</option><option value="NFC">NFC</option><option value="QR">QR</option></select></label></div>
+      <div class="field"><label>${t('technologies')}<select id="gen-tech"><option value="NFC+QR">NFC+QR</option><option value="NFC">NFC</option><option value="QR">QR</option></select></label></div>
       <div class="field"><label>${t('warranty')}<select id="gen-warranty"><option value="no">${t('warrantyNo')}</option><option value="yes">${t('warrantyYes')}</option></select></label></div>
-      <div class="field" style="grid-column:1/-1"><label>${t('assignedToEmail')} <span class="opt-hint">${t('opt')}</span>
-        <input id="gen-assigned" type="email" placeholder="vartotojas@email.com"></label></div>
+      <div class="field" style="grid-column:1/-1"><label>${t('assignedToEmail')} <span class="opt-hint">${t('opt')}</span><input id="gen-assigned" type="email" placeholder="vartotojas@email.com"></label></div>
     </div>
     <button class="btn btn-primary" style="margin-top:14px" onclick="withBtn(this,submitGenTag)">${t('generate')}</button>
     <div id="gen-result" style="margin-top:12px"></div>
@@ -1439,11 +1356,12 @@ function renderAdminTab(){
   </div>
   <div class="adm-sec">
     <h4>${t('transferTitle')}</h4>
-    <p class="muted" style="margin-bottom:10px">Duomenys bus perkelti iš seno pakabuko į naują. Senas pakabukas bus išvalytas.</p>
+    <p class="muted" style="margin-bottom:10px">${t('transferHint')}</p>
     <div class="grid2">
       <div class="field"><label>${t('oldTagId')}<input id="tr-old" onkeydown="hk(event,'tr-submit')"></label></div>
       <div class="field"><label>${t('newTagId')}<input id="tr-new" onkeydown="hk(event,'tr-submit')"></label></div>
     </div>
+    <label class="inline"><input type="checkbox" id="tr-lost"> ${t('markOldLost')}</label>
     <div id="tr-alert"></div>
     <button id="tr-submit" class="btn btn-primary" style="margin-top:10px" onclick="withBtn(this,submitTransfer)">${t('transfer')}</button>
   </div>
@@ -1479,35 +1397,22 @@ function renderAdminTab(){
   </div>`;
 }
 
-// ═══════════════════════════════════════════════════════════
-// CHANGE 8: generateTag — no email = Unregistered (anyone),
-//           email = Pending Activation (only that email)
-// Backend already supports Assigned To Email.
-// Status is set server-side. Frontend just shows what came back.
-// ═══════════════════════════════════════════════════════════
 async function submitGenTag(){
-  const assignedEmail=(document.getElementById('gen-assigned').value||'').trim();
   const r=await API.call('generateTag',{
     model:document.getElementById('gen-model').value,
     type:document.getElementById('gen-type').value,
     technologies:document.getElementById('gen-tech').value,
     warranty:document.getElementById('gen-warranty').value,
-    assignedToEmail:assignedEmail,
+    assignedToEmail:(document.getElementById('gen-assigned').value||'').trim(),
   });
   const el=document.getElementById('gen-result');
   if(!r.success){el.innerHTML=`<div class="alert alert-error">${esc(em(r))}</div>`;return;}
-  const statusLabel=r.assignedToEmail
-    ?(L==='lt'?'Laukia aktyvacijos':'Pending Activation')
-    :(L==='lt'?'Neregistruotas':'Unregistered');
-  el.innerHTML=`<div class="alert alert-ok">${esc(r.tagId)} — ${esc(r.model)} — ${esc(r.type)} — ${esc(r.technologies)} — ${t('warranty')}: ${esc(r.warranty)} — ${esc(statusLabel)}</div>
+  el.innerHTML=`<div class="alert alert-ok">${esc(r.tagId)} — ${esc(r.model)} — ${esc(r.type)} — ${esc(r.technologies)} — ${t('warranty')}: ${esc(r.warranty)}</div>
     <label>${t('tagUrl')}<div class="copy-row"><input id="gen-url" readonly value="${esc(r.url)}"><button class="btn btn-ghost btn-sm" onclick="copyUrl('gen-url')">${t('copy')}</button></div></label>
     <p class="muted" style="margin-top:6px;font-size:12px">Key: <code style="word-break:break-all">${esc(r.key)}</code></p>
     ${r.assignedToEmail?`<p class="muted" style="font-size:12px;margin-top:4px">${t('assignedToEmail')}: ${esc(r.assignedToEmail)}</p>`:''}`;
 }
 
-// ═══════════════════════════════════════════════════════════
-// CHANGE 7: Admin tag lookup with delete row button
-// ═══════════════════════════════════════════════════════════
 async function loadAdminTagById(){
   const tagId=(document.getElementById('adm-tag-id').value||'').trim();
   const wrap=document.getElementById('adm-tag-result');
@@ -1518,6 +1423,8 @@ async function loadAdminTagById(){
   const rec=r.row;
   const cols=r.columns.filter(c=>c!=='Cryptographic Key');
   const toId=c=>c.replace(/[^a-z0-9]/gi,'_');
+  const isLost=rec['Status']==='Lost/Stolen';
+  const tidEsc=esc(rec['Tag ID']);
   wrap.innerHTML=`<div class="srp">
     ${rec._url?`<label>${t('tagUrl')}<div class="copy-row"><input id="adm-tag-url" readonly value="${esc(rec._url)}"><button class="btn btn-ghost btn-sm" onclick="copyUrl('adm-tag-url')">${t('copy')}</button></div></label>`:''}
     <div class="grid2" style="margin-top:10px">
@@ -1526,32 +1433,12 @@ async function loadAdminTagById(){
     <div id="adm-tag-alert" style="margin-top:8px"></div>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="withBtn(this,()=>saveAdminTag(${rec._row},[${cols.filter(c=>c!=='Tag ID').map(c=>`'${esc(c)}'`).join(',')}]))">${t('save')}</button>
-      <button class="btn btn-danger" onclick="confirmDeleteAdminTag(${rec._row},'${esc(tagId)}')">${t('deleteTagRow')}</button>
+      <button class="btn btn-ghost" onclick="withBtn(this,()=>markTagLost('${tidEsc}',${isLost?'false':'true'}))">${isLost?t('unmarkLost'):t('markLost')}</button>
+      <button class="btn btn-danger" onclick="withBtn(this,()=>deleteTagRow('${tidEsc}'))">${t('deleteTag')}</button>
       <button class="btn btn-ghost" onclick="document.getElementById('adm-tag-result').innerHTML=''">${t('cancel')}</button>
     </div>
   </div>`;
 }
-
-// Change 7: confirm and delete entire tag row
-function confirmDeleteAdminTag(row,tagId){
-  modal(`<h3 style="margin-bottom:12px;color:var(--danger)">${t('deleteTagRow')}: ${esc(tagId)}</h3>
-    <p style="font-size:14px;line-height:1.6;color:var(--dim)">${t('deleteTagRowConfirm')}</p>
-    <div class="modal-btns">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal()">${t('cancel')}</button>
-      <button class="btn btn-danger" onclick="withBtn(this,()=>doDeleteAdminTag(${row},'${esc(tagId)}')).then(closeModal)">${t('deleteTagRowYes')}</button>
-    </div>`);
-}
-async function doDeleteAdminTag(row,tagId){
-  const r=await API.call('adminDeleteRecord',{sheetName:'tags',row});
-  if(r.success){
-    closeModal();
-    document.getElementById('adm-tag-result').innerHTML=`<div class="alert alert-ok">${esc(tagId)} ${L==='lt'?'ištrinta.':'deleted.'}</div>`;
-    toast(L==='lt'?'Pakabukas ištrintas.':'Tag deleted.','ok');
-  } else {
-    showAlert('adm-tag-alert',em(r));
-  }
-}
-
 async function saveAdminTag(row,cols){
   const toId=c=>c.replace(/[^a-z0-9]/gi,'_');
   const fields={};
@@ -1559,9 +1446,22 @@ async function saveAdminTag(row,cols){
   const r=await API.call('adminUpdateRecord',{sheetName:'tags',row,fields});
   if(r.success)showAlert('adm-tag-alert',t('saved'),'ok');else showAlert('adm-tag-alert',em(r));
 }
+async function markTagLost(tagId,lost){
+  const r=await API.call('adminMarkLost',{tagId,lost});
+  if(!r.success){showAlert('adm-tag-alert',em(r));return;}
+  document.getElementById('adm-tag-id').value=tagId;
+  await loadAdminTagById();
+  showAlert('adm-tag-alert',t('saved'),'ok');
+}
+async function deleteTagRow(tagId){
+  if(!window.confirm(t('deleteTagConfirm'))) return;
+  const r=await API.call('adminDeleteTag',{tagId});
+  if(!r.success){showAlert('adm-tag-alert',em(r));return;}
+  document.getElementById('adm-tag-result').innerHTML=`<div class="alert alert-ok">${esc(t('deleted'))}</div>`;
+}
 
 async function submitWarranty(){ const r=await API.call('openWarrantyClaim',{userId:document.getElementById('wa-uid').value.trim(),tagId:document.getElementById('wa-tag').value.trim()}); if(r.success)showAlert('wa-alert',t('saved'),'ok');else showAlert('wa-alert',em(r)); }
-async function submitTransfer(){ const r=await API.call('transferTagData',{oldTagId:document.getElementById('tr-old').value.trim(),newTagId:document.getElementById('tr-new').value.trim()}); if(r.success){showAlert('tr-alert',t('saved'),'ok');}else showAlert('tr-alert',em(r)); }
+async function submitTransfer(){ const r=await API.call('transferTagData',{oldTagId:document.getElementById('tr-old').value.trim(),newTagId:document.getElementById('tr-new').value.trim(),markLost:document.getElementById('tr-lost').checked}); if(r.success){showAlert('tr-alert',t('saved'),'ok');}else showAlert('tr-alert',em(r)); }
 async function submitInvite(){ const r=await API.call('adminInviteCustomer',{email:document.getElementById('inv-email').value.trim()}); if(r.success){showAlert('inv-alert','ID: '+r.userId,'ok');document.getElementById('inv-email').value='';}else showAlert('inv-alert',em(r)); }
 async function submitManualCustomer(){ const r=await API.call('adminManualCreateCustomer',{email:document.getElementById('mc-email').value.trim(),password:document.getElementById('mc-pw').value}); if(r.success)showAlert('mc-alert','ID: '+r.userId,'ok');else showAlert('mc-alert',em(r)); }
 async function submitReqDelCustomer(){ const r=await API.call('adminRequestDeleteCustomer',{targetUserId:document.getElementById('dc-uid').value.trim(),targetEmail:document.getElementById('dc-email').value.trim(),adminPassword:document.getElementById('dc-apw').value}); if(r.success){showAlert('dc-alert',t('loading'),'info');document.getElementById('dc-step2').classList.remove('hidden');}else showAlert('dc-alert',em(r)); }
@@ -1602,7 +1502,7 @@ async function loadUserByEmail(){
   wrap.innerHTML=`<p class="muted">${t('loading')}</p>`;
   const r=await API.call('adminGetUserByEmail',{email});
   if(!r.success){wrap.innerHTML=`<div class="alert alert-error">${esc(em(r))}</div>`;return;}
-  const rec=r.row,cols=r.columns;
+  const rec=r.row, cols=r.columns;
   const toId=c=>c.replace(/[^a-z0-9]/gi,'_');
   wrap.innerHTML=`<div class="srp">
     <div class="grid2">
@@ -1671,88 +1571,62 @@ async function submitDeleteAccount(){
 }
 async function submitCancelDeletion(){ const r=await API.call('cancelAccountDeletion',{}); if(r.success)renderDash();else toast(em(r),'error'); }
 
-// ═══════════════════════════════════════════════════════════
-// CHANGE 3, 6, 10: Tag scan view
-// - Change 3: nicer email scan notification
-// - Change 6: unregistered → show register prompt with logic
-// - Change 10: cache scan result 24hr, show refresh option
-// ═══════════════════════════════════════════════════════════
-function vTagScan(){
-  const langToggle=`<div class="scan-lang-toggle">
+/* ================= TAG SCAN PAGE (+24h cache) ================= */
+function cacheTag(tagId,key,res){
+  const k='pxf_tc_'+tagId, tg=res&&res.success&&res.tag;
+  if(tg&&tg.registered&&tg.status==='Active'&&!tg.safeMode&&!tg.lost){
+    LS.s(k,JSON.stringify({t:Date.now(),k:key,res}));
+  } else { LS.r(k); }
+}
+async function refreshTag(){
+  const p=State._tagParams; if(!p) return;
+  const res=await API.pub({key:p.key,tag_id:p.tagId});
+  if(res&&res.success===false&&res.code==='NETWORK'){toast(em(res),'error');return;}
+  State._tagResult=res; State._cachedAt=null;
+  cacheTag(p.tagId,p.key,res);
+  render();
+}
+
+function scanLangToggle(){
+  return `<div class="scan-lang-toggle">
     <button class="${L==='lt'?'active':''}" onclick="setLang('lt')">LT</button>
     <button class="${L==='en'?'active':''}" onclick="setLang('en')">EN</button>
   </div>`;
+}
+function goTagReg(){ State.view='tagReg'; render(); }
 
-  const p=State._tagParams||{};
-  const fromCache=State._scanFromCache||false;
-  const cachedAt=State._scanCachedAt||0;
-
+function vTagScan(){
+  const langToggle=scanLangToggle();
   const res=State._tagResult;
   if(!res||!res.success) return `<div class="card scan-card">${langToggle}<h2>${t('scanTitle')}</h2><div class="alert alert-error" style="margin-top:12px">Access denied.</div></div>`;
-
   const tag=res.tag;
-
-  // Change 6: tag data completely empty (no assigned email, no owner)
-  if(tag.dataEmpty){
-    return `<div class="card scan-card">${langToggle}
-      <h2 style="margin-bottom:12px">${t('scanTitle')}</h2>
-      <div class="alert alert-error">${t('tagEmptyError')}</div>
-    </div>`;
-  }
-
-  // Change 6: not registered — show friendly prompt
+  if(tag.lost) return `<div class="card scan-card">${langToggle}<p class="muted" style="font-size:12px;margin-bottom:6px">${esc(tag.tagId)}</p><div class="scan-lost">⚠ ${esc(t('lostMsg'))}</div></div>`;
   if(!tag.registered){
-    const assignedEmail=tag.assignedToEmail||'';
-    // If there's an assigned email: only that user can register; show login prompt
-    if(assignedEmail){
-      return `<div class="card scan-card">${langToggle}
-        <h2 style="margin-bottom:12px">${t('scanTitle')}: ${esc(tag.tagId)}</h2>
-        <div class="scan-register-prompt">
-          ${t('tagAwaitingYou')}<br>
-          <span style="color:var(--dim);font-size:13px">${t('tagAssignedLogin')}</span>
-        </div>
-        <button class="btn btn-primary btn-block" onclick="navigate('login')">${t('loginToActivate')}</button>
-      </div>`;
-    }
-    // No assigned email: anyone can register
     return `<div class="card scan-card">${langToggle}
-      <h2 style="margin-bottom:12px">${t('scanTitle')}: ${esc(tag.tagId)}</h2>
-      <div class="scan-register-prompt">
-        ${t('tagNotRegisteredClickable')}<a onclick="navigate(SM.ok?'dashboard':'login')">${t('tagNotRegisteredClickHere')}</a>.
-      </div>
+      <h2 style="margin-bottom:10px">${t('scanTitle')}${tag.isNew?` <span class="pill pending" style="vertical-align:middle;margin-left:6px">${t('newTag')}</span>`:''}</h2>
+      <p class="muted" style="font-size:15px;line-height:1.6">${t('notRegA')}<a href="#" onclick="goTagReg();return false">${t('notRegLink')}</a>${t('notRegB')}</p>
     </div>`;
   }
-
-  if(tag.status==='Pending Activation'){
-    return `<div class="card scan-card">${langToggle}
-      <h2 style="margin-bottom:12px">${t('activationTitle')}</h2>
-      <p class="muted" style="margin-bottom:16px">${t('activationInfo')}</p>
-      <button class="btn btn-primary btn-block" onclick="navigate('activation')">${t('loginToActivate')}</button>
-    </div>`;
-  }
-
-  // Change 10: cache notice for scan page
-  const cacheNotice=fromCache
-    ?`<div class="cache-notice" style="margin-bottom:12px">
-        <span>${t('cacheNotice').replace('%t',new Date(cachedAt).toLocaleTimeString(L==='en'?'en-GB':'lt-LT',{hour:'2-digit',minute:'2-digit'}))}</span>
-        <button class="btn btn-ghost btn-sm" onclick="refreshScanCache()">${t('cacheRefresh')}</button>
-      </div>`
-    :'';
+  const typeLabel=typeLbl(tag.type);
 
   if(tag.safeMode){
     return `<div class="card scan-card">
       ${langToggle}
-      ${cacheNotice}
-      <p class="muted" style="font-size:12px;margin-bottom:6px">${esc(String(tag.type||'').toLowerCase()==='key'?t('keyType'):t('petType'))} · ${esc(tag.model||'')} · ${esc(tag.tagId)}</p>
+      <p class="muted" style="font-size:12px;margin-bottom:6px">${esc(typeLabel)} · ${esc(tag.model||'')} · ${esc(tag.tagId)}</p>
       <h2 style="margin-bottom:10px">${esc(tag.displayName||tag.tagId)}</h2>
       <div class="scan-safe">✓ ${t('safeHomeMsg')}</div>
     </div>`;
   }
 
+  const cacheBlock=State._cachedAt?`<div class="alert alert-info" style="margin-top:16px">
+      ${t('cacheNote')}
+      <div class="muted" style="margin-top:6px;font-size:12px">${t('cachedAt')} ${esc(new Date(State._cachedAt).toLocaleString(L==='en'?'en-GB':'lt-LT'))}</div>
+      <button class="btn btn-primary btn-sm" style="margin-top:10px" onclick="withBtn(this,refreshTag)">${t('refreshPage')}</button>
+    </div>`:'';
+
   return `<div class="card scan-card">
     ${langToggle}
-    ${cacheNotice}
-    <p class="muted" style="font-size:12px;margin-bottom:6px">${esc(String(tag.type||'').toLowerCase()==='key'?t('keyType'):t('petType'))} · ${esc(tag.model||'')} · ${esc(tag.tagId)}</p>
+    <p class="muted" style="font-size:12px;margin-bottom:6px">${esc(typeLabel)} · ${esc(tag.model||'')} · ${esc(tag.tagId)}</p>
     <h2 style="margin-bottom:6px">${esc(tag.displayName||tag.tagId)}</h2>
     ${tag.emergencyNotes?`<div class="scan-emg">⚕&nbsp;<strong>${t('emergency')}:</strong>&nbsp;${esc(tag.emergencyNotes)}</div>`:''}
     <div style="margin-top:14px">
@@ -1767,30 +1641,78 @@ function vTagScan(){
       ${tag.model==='Pro'&&tag.allergies?`<div class="info-row"><span class="lbl">${t('allergies')}</span><span class="val">${esc(tag.allergies)}</span></div>`:''}
       ${tag.model==='Pro'&&tag.age?`<div class="info-row"><span class="lbl">${t('age')}</span><span class="val">${esc(tag.age)}</span></div>`:''}
       ${tag.model==='Pro'&&tag.breed?`<div class="info-row"><span class="lbl">${t('breed')}</span><span class="val">${esc(tag.breed)}</span></div>`:''}
-      ${tag.model==='Pro'&&tag.notes?`<div class="info-row" style="flex-direction:column;gap:4px"><span class="lbl">${t('notes')||'Notes'}</span><span class="val" style="line-height:1.6">${esc(tag.notes)}</span></div>`:''}
+      ${tag.model==='Pro'&&tag.notes?`<div class="info-row" style="flex-direction:column;gap:4px"><span class="lbl">${t('notes')}</span><span class="val" style="line-height:1.6">${esc(tag.notes)}</span></div>`:''}
     </div>
+    ${cacheBlock}
   </div>`;
 }
 
-// Change 10: manual refresh for scan cache
-async function refreshScanCache(){
-  const p=State._tagParams||{};
-  if(!p.key||!p.tagId) return;
-  const cacheKey='pxf_scan_'+p.tagId;
-  LS.s(cacheKey+'_time','0');
-  State._scanFromCache=false;
-  const res=await API.pub({key:p.key,tag_id:p.tagId});
-  if(res&&res.success&&res.tag){
-    // Change 10: only cache if safe mode is off and tag has details
-    const shouldCache=res.tag.registered&&!res.tag.safeMode;
-    if(shouldCache){
-      try{ LS.s(cacheKey,JSON.stringify(res)); LS.s(cacheKey+'_time',String(Date.now())); }catch(_){}
-    }
-    State._tagResult=res;
-    State._scanCachedAt=Date.now();
-    // Change 10: do NOT send scan email on cache refresh (server handles dedup via ALERT_TTL)
+/* ---------- Register a scanned (unregistered) tag ---------- */
+function setRegMode(m){ State._regMode=m; render(); }
+function vTagReg(){
+  const tag=((State._tagResult||{}).tag)||{}; const p=State._tagParams;
+  if(!p||!tag.tagId) return vLanding();
+  const head=`${scanLangToggle()}<h2 style="margin-bottom:4px">${t('tagRegTitle')}</h2><p class="muted" style="margin-bottom:12px">${esc(tag.tagId)}</p>`;
+  if(!SM.ok){
+    const reg=State._regMode==='register';
+    return `<div class="card scan-card">${head}
+      <p class="muted" style="margin-bottom:10px">${t('tagRegLoginHint')}</p>
+      <div id="tl-alert"></div>
+      ${reg?`<label>${t('fullName')}<input id="tl-name" autocomplete="name"></label>`:''}
+      <label>${t('email')}<input id="tl-email" type="email" autocomplete="email" onkeydown="hk(event,'tl-submit')"></label>
+      ${pwField('tl-pw','password','tl-submit')}
+      ${reg?`<label class="inline"><input type="checkbox" id="tl-policy"> ${t('policyCheck')}<a href="${POLICY_URL}" target="_blank">${t('policyLink')}</a></label>`:''}
+      <button id="tl-submit" class="btn btn-primary btn-block" onclick="withBtn(this,submitTagAuth)">${reg?t('createAccount'):t('signIn')}</button>
+      <p style="margin-top:12px;font-size:14px;color:var(--dim)">${reg?t('haveAccount')+`<a href="#" onclick="setRegMode('login');return false">${t('loginHere')}</a>`:t('noAccount')+`<a href="#" onclick="setRegMode('register');return false">${t('registerHere')}</a>`}</p>
+    </div>`;
   }
-  navigate('tagScan');
+  const isPro=tag.model==='Pro', emerg=isPro||tag.emergencyNotesEnabled, emax=emgMax(tag.model);
+  const f=(name,label,opt,type,extra)=>`<div class="field"><label>${t(label)}${opt?` <span class="opt-hint">${t('opt')}</span>`:''}<input name="${name}" type="${type||'text'}" ${extra||''}></label></div>`;
+  return `<div class="card scan-card" style="max-width:560px">${head}
+    <form id="treg-form" onsubmit="return false">
+      <div class="grid2">
+        ${f('displayName','displayName')}
+        ${f('ownerFirstName','ownerFirstName')}
+        ${f('contactPhone','contactPhone',true)}
+        ${f('alertEmail','alertEmail',false,'email','value="'+esc(SM.email||'')+'"')}
+      </div>
+      ${emerg?`<div class="field" style="margin-top:10px"><label style="color:#fca5a5">${t('emergencyNotes')} <span class="opt-hint" style="color:#fca5a5;font-style:normal">${maxTxt(emax)}</span><input name="emergencyNotes" maxlength="${emax}"></label></div>`:''}
+      ${isPro?`<div class="sec-lbl">${t('proFields')}</div><div class="grid2">
+        ${f('streetAddress','streetAddress',true)}${f('additionalEmail','secondaryEmail',true,'email')}
+        ${f('meetingSpot','meetingSpot',true)}${f('vetInfo','vetInfo',true)}
+        ${f('microchipNumber','microchipNumber',true)}${f('allergies','allergies',true)}
+        ${f('age','age',true)}${f('breed','breed',true)}
+        <div class="field" style="grid-column:1/-1"><label>${t('notes')} <span class="opt-hint">${t('opt')}</span><input name="notes"></label></div>
+      </div>`:''}
+      <label class="inline"><input type="checkbox" name="safeMode"> ${t('safeMode')}</label>
+      <div id="treg-alert"></div>
+      <button class="btn btn-primary btn-block" onclick="withBtn(this,submitTagReg)">${t('registerTagBtn')}</button>
+    </form>
+  </div>`;
+}
+async function submitTagAuth(){
+  const email=document.getElementById('tl-email').value.trim(), pw=document.getElementById('tl-pw').value;
+  let r;
+  if(State._regMode==='register'){
+    const name=(document.getElementById('tl-name').value||'').trim();
+    if(!document.getElementById('tl-policy').checked){showAlert('tl-alert',em({code:'POLICY'}));return;}
+    r=await API.call('register',{fullName:name,email,password:pw,policyAccepted:true},true);
+  } else {
+    r=await API.call('login',{email,password:pw},true);
+  }
+  if(!r.success){showAlert('tl-alert',em(r));return;}
+  SM.save(r,email); render();
+}
+async function submitTagReg(){
+  const p=State._tagParams, f=document.getElementById('treg-form');
+  const payload={tagId:p.tagId,key:p.key};
+  f.querySelectorAll('input[name]').forEach(el=>{ payload[el.name]=el.type==='checkbox'?el.checked:el.value; });
+  const r=await API.call('registerTag',payload);
+  if(!r.success){showAlert('treg-alert',em(r));return;}
+  showAlert('treg-alert',t('tagRegOk'),'ok');
+  LS.r('pxf_tc_'+p.tagId);
+  State._tagResult=null; State._tagParams=null;
+  setTimeout(()=>navigate('dashboard'),1400);
 }
 
 function vActivation(){
@@ -1798,16 +1720,14 @@ function vActivation(){
     <h2 style="margin-bottom:10px">${t('activationTitle')}</h2>
     <p class="muted" style="margin-bottom:16px">${t('activationInfo')}</p>
     <div id="act-alert"></div>
-    ${!SM.ok
-      ?`<label>${t('email')}<input id="act-email" type="email" onkeydown="hk(event,'act-submit')"></label>
-        ${pwField('act-pw','password','act-submit')}
-        <button id="act-submit" class="btn btn-primary btn-block" onclick="withBtn(this,loginAndActivate)">${t('loginToActivate')}</button>`
-      :`<button id="act-submit" class="btn btn-primary btn-block" onclick="withBtn(this,doActivate)">${t('activateBtn')}</button>`}
+    ${!SM.ok?`<label>${t('email')}<input id="act-email" type="email" onkeydown="hk(event,'act-submit')"></label>
+      ${pwField('act-pw','password','act-submit')}
+      <button id="act-submit" class="btn btn-primary btn-block" onclick="withBtn(this,loginAndActivate)">${t('loginToActivate')}</button>`
+    :`<button id="act-submit" class="btn btn-primary btn-block" onclick="withBtn(this,doActivate)">${t('activateBtn')}</button>`}
   </div>`;
 }
 async function loginAndActivate(){
-  const email=document.getElementById('act-email').value.trim();
-  const pw=document.getElementById('act-pw').value;
+  const email=document.getElementById('act-email').value.trim(),pw=document.getElementById('act-pw').value;
   const lr=await API.call('login',{email,password:pw},true);
   if(!lr.success){showAlert('act-alert',em(lr));return;}
   SM.save(lr,email); await doActivate();
@@ -1815,13 +1735,56 @@ async function loginAndActivate(){
 async function doActivate(){
   const p=State._tagParams||{};
   const r=await API.call('activateTag',{tagId:p.tagId,key:p.key});
-  if(r.success){showAlert('act-alert',t('activationOk'),'ok');setTimeout(()=>navigate('dashboard'),1600);}
+  if(r.success){showAlert('act-alert',t('activationOk'),'ok');LS.r('pxf_tc_'+p.tagId);setTimeout(()=>navigate('dashboard'),1600);}
   else showAlert('act-alert',em(r));
 }
 
-// ═══════════════════════════════════════════════════════════
-// Main init — with Change 10 scan cache logic
-// ═══════════════════════════════════════════════════════════
+/* ================= INIT ================= */
+async function startMain(){
+  const params=new URLSearchParams(window.location.search);
+  const resetTok=params.get('reset'),setupTok=params.get('setup'),uid=params.get('uid');
+  const key=params.get('key'),tagId=params.get('tag_id'),isAct=params.get('activation')==='1';
+
+  if(resetTok&&uid){hideLoadingScreen();State._resetParams={token:resetTok,uid};State.view='resetForm';render();return;}
+  if(setupTok&&uid){hideLoadingScreen();State._setupParams={token:setupTok,uid};State.view='setup';render();return;}
+
+  if(SM._expired&&!(key&&tagId)){
+    hideLoadingScreen();
+    State.view='login';
+    render();
+    setTimeout(()=>toast(t('sessionExpired'),'error'),200);
+    return;
+  }
+
+  if(key&&tagId){
+    State._tagParams={key,tagId};
+    // 24h cache of owner details (never cached when safe mode is on)
+    if(!isAct){
+      let c=null; try{c=JSON.parse(LS.g('pxf_tc_'+tagId)||'null');}catch(_){}
+      if(c){
+        if(Date.now()-c.t>TAG_CACHE_TTL){ LS.r('pxf_tc_'+tagId); window.location.replace(ORIGIN+'/'); return; }
+        if(c.k===key&&c.res){
+          State._tagResult=c.res; State._cachedAt=c.t; State.view='tagScan';
+          hideLoadingScreen(); render(); return;
+        }
+        LS.r('pxf_tc_'+tagId);
+      }
+    }
+    const ldMsg=document.getElementById('ld-msg');
+    if(ldMsg){ldMsg.style.opacity='0';setTimeout(()=>{ldMsg.textContent=L==='lt'?'Kraunama...':'Loading...';ldMsg.style.opacity='1';},280);}
+    const res=await API.pub({key,tag_id:tagId});
+    State._tagResult=res; State._cachedAt=null;
+    if(!isAct) cacheTag(tagId,key,res);
+    State.view=(res.success&&res.tag&&res.tag.status==='Pending Activation')||isAct?'activation':'tagScan';
+    hideLoadingScreen();
+    render(); return;
+  }
+
+  hideLoadingScreen();
+  State.view=SM.ok?'dashboard':'landing';
+  render();
+}
+
 async function init(){
   initDevBlock();
   const allowed=await checkGeoOnly();
@@ -1833,76 +1796,15 @@ async function init(){
   }
   initCookies();
   SM.load();
-  const params=new URLSearchParams(window.location.search);
-  const resetTok=params.get('reset'),setupTok=params.get('setup'),uid=params.get('uid');
-  const key=params.get('key'),tagId=params.get('tag_id'),isAct=params.get('activation')==='1';
-
-  if(resetTok&&uid){hideLoadingScreen();State._resetParams={token:resetTok,uid};State.view='resetForm';render();return;}
-  if(setupTok&&uid){hideLoadingScreen();State._setupParams={token:setupTok,uid};State.view='setup';render();return;}
-
-  if(SM._expired){
+  const q=new URLSearchParams(window.location.search);
+  const isTagPage=!!(q.get('key')&&q.get('tag_id'));
+  if(MAINTENANCE_MODE&&!isTagPage&&!maintBypassed()){
     hideLoadingScreen();
-    State.view='login';
-    render();
-    setTimeout(()=>toast(t('sessionExpired'),'error'),200);
+    showMaint();
+    initMaintKeys(()=>startMain());
     return;
   }
-
-  if(key&&tagId){
-    // ═══ CHANGE 10: Scan cache logic ═══
-    const cacheKey='pxf_scan_'+tagId;
-    const cachedRaw=LS.g(cacheKey);
-    const cachedTime=Number(LS.g(cacheKey+'_time')||0);
-    const cacheAge=Date.now()-cachedTime;
-    const cacheValid=cachedRaw&&cacheAge<CACHE_TTL;
-
-    // If within 24hrs and cache exists, use it and DON'T call server (no email sent)
-    if(cacheValid){
-      try{
-        const cached=JSON.parse(cachedRaw);
-        // Only use cache for active tags with details (not safe mode — that's fine to cache)
-        if(cached&&cached.success&&cached.tag&&cached.tag.registered){
-          State._tagResult=cached;
-          State._tagParams={key,tagId};
-          State._scanFromCache=true;
-          State._scanCachedAt=cachedTime;
-          // If 24hrs passed since we last visited: redirect to main site
-          // (Already handled by cacheValid check above — if >24hr, cacheValid is false)
-          State.view='tagScan';
-          hideLoadingScreen();
-          render();
-          return;
-        }
-      }catch(_){}
-    }
-
-    // No valid cache: fetch from server
-    const res=await API.pub({key,tag_id:tagId});
-    State._tagResult=res;
-    State._tagParams={key,tagId};
-    State._scanFromCache=false;
-    State._scanCachedAt=Date.now();
-
-    // Change 10: cache scan result if appropriate (registered, safe mode off)
-    if(res&&res.success&&res.tag&&res.tag.registered&&!res.tag.safeMode){
-      try{ LS.s(cacheKey,JSON.stringify(res)); LS.s(cacheKey+'_time',String(Date.now())); }catch(_){}
-    }
-
-    // If > 24hrs expired (cache was stale), clear and redirect to main site
-    if(cachedRaw&&!cacheValid){
-      // Clear old cache
-      try{localStorage.removeItem(cacheKey);localStorage.removeItem(cacheKey+'_time');}catch(_){}
-    }
-
-    State.view=(res.success&&res.tag&&res.tag.status==='Pending Activation')||isAct?'activation':'tagScan';
-    hideLoadingScreen();
-    render();
-    return;
-  }
-
-  hideLoadingScreen();
-  State.view=SM.ok?'dashboard':'landing';
-  render();
+  startMain();
 }
 init();
 </script>
